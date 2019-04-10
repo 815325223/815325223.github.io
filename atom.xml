@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-04-10T07:05:17.335Z</updated>
+  <updated>2019-04-10T07:56:03.953Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,16 +17,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>123</title>
-    <link href="http://yoursite.com/2019/04/10/123/"/>
-    <id>http://yoursite.com/2019/04/10/123/</id>
-    <published>2019-04-10T06:41:00.000Z</published>
-    <updated>2019-04-10T07:05:17.335Z</updated>
+    <title>456</title>
+    <link href="http://yoursite.com/2019/04/10/456-1/"/>
+    <id>http://yoursite.com/2019/04/10/456-1/</id>
+    <published>2019-04-10T07:55:00.000Z</published>
+    <updated>2019-04-10T07:56:03.953Z</updated>
     
     <summary type="html">
     
     </summary>
     
+      <category term="Windows" scheme="http://yoursite.com/categories/Windows/"/>
+    
+    
+      <category term="IIS" scheme="http://yoursite.com/tags/IIS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>123</title>
+    <link href="http://yoursite.com/2019/04/10/123/"/>
+    <id>http://yoursite.com/2019/04/10/123/</id>
+    <published>2019-04-10T06:41:00.000Z</published>
+    <updated>2019-04-10T07:08:38.727Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://yoursite.com/categories/Linux/"/>
+    
+    
+      <category term="Nginx" scheme="http://yoursite.com/tags/Nginx/"/>
     
   </entry>
   

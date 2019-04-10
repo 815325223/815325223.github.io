@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[456]]></title>
+    <url>%2F2019%2F04%2F10%2F456-1%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>IIS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[123]]></title>
     <url>%2F2019%2F04%2F10%2F123%2F</url>
     <content type="text"></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[Hello World]]></title>
