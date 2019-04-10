@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[456]]></title>
-    <url>%2F2019%2F04%2F10%2F456-1%2F</url>
-    <content type="text"></content>
+    <title><![CDATA[k8s配置secret拉取私有仓库镜像]]></title>
+    <url>%2F2019%2F04%2F10%2Fk8s%E9%85%8D%E7%BD%AEsecret%E6%8B%89%E5%8F%96%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93%E9%95%9C%E5%83%8F%2F</url>
+    <content type="text"><![CDATA[https://kubernetes.io/docs 样例1234567891011# cat ~/.docker/config.json &#123; &quot;auths&quot;: &#123; &quot;harbor.station.com&quot;: &#123; &quot;auth&quot;: &quot;YWRtaW46SGFyYm9yMTIzNDU=&quot; &#125; &#125;, &quot;HttpHeaders&quot;: &#123; &quot;User-Agent&quot;: &quot;Docker-Client/18.06.1-ce (linux)&quot; &#125;&#125; 这个时候我们虽然可以通过交互式登录，使用docker pull拉取镜像，但无法通过k8s创建Pod时拉取镜像。 生成密钥secret1# kubectl create secret docker-registry harbor --docker-server=x.x.x.x --docker-username=admin --docker-password=Harbor12345 --docker-email=xx@qq.com 1) harbor: 指定密钥的键名称，可自行定义 2）–docker-server：指定docker仓库地址 3）–docker-username：指定docker仓库帐号 4) –docker-password：指定docker仓库密码 5) –docker-email：指定邮件地址（选填）` 查看密钥可以看到当前除了默认的密钥, 还有我们刚才生成的. 另外要注意的是, 该密钥只能在对应namespace使用, 也就是这里的default, 如果需要用到其他namespace, 比如说test, 就需要在生成的时候指定参数 -n test。1234# kubectl get secretsNAME TYPE DATA AGEdefault-token-mzmtj kubernetes.io/service-account-token 3 22mharbor kubernetes.io/dockerconfigjson 1 22m YAML例子其中imagePullSecrets是声明拉取镜像时需要指定密钥, harbor必须和上面生成密钥的键名一致, 另外检查一下pod和密钥是否在同一个namespace, 之后k8s便可以拉取镜像。1234567891011121314151617apiVersion: extensions/v1beta1kind: Deploymentmetadata: name: nginx-deploy namespace: harborspec: replicas: 3 template: metadata: labels: app: web_server spec: containers: - name: nginx image: harbor.station.com/library/nginx:latest imagePullSecrets: - name: harbor]]></content>
       <categories>
-        <category>Windows</category>
+        <category>Kubernetes</category>
       </categories>
       <tags>
-        <tag>IIS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[123]]></title>
-    <url>%2F2019%2F04%2F10%2F123%2F</url>
-    <content type="text"></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Nginx</tag>
+        <tag>Harbor</tag>
       </tags>
   </entry>
   <entry>
