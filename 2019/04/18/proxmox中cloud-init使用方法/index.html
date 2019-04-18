@@ -147,7 +147,7 @@
 <meta property="og:description" content="模版制作标准分区ext4，不添加swap分区，原因下文说。 系统装完后，将网卡配置文件内的onboot打开，清除uuid。关闭selinux和firewalld以及碍事的NetworkManager。123systemctl disable --now firewalld NetworkManagersetenforce 0sed -ri &apos;/^[^#]*SELINUX=/s#=.+$#=disa">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/pasted-1.png">
-<meta property="og:updated_time" content="2019-04-18T03:16:23.261Z">
+<meta property="og:updated_time" content="2019-04-18T03:17:43.622Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="proxmox中cloud-init使用方法">
 <meta name="twitter:description" content="模版制作标准分区ext4，不添加swap分区，原因下文说。 系统装完后，将网卡配置文件内的onboot打开，清除uuid。关闭selinux和firewalld以及碍事的NetworkManager。123systemctl disable --now firewalld NetworkManagersetenforce 0sed -ri &apos;/^[^#]*SELINUX=/s#=.+$#=disa">
@@ -536,7 +536,7 @@
 
       
         <h6 id="模版制作"><a href="#模版制作" class="headerlink" title="模版制作"></a>模版制作</h6><p>标准分区ext4，不添加swap分区，原因下文说。<br><img src="/images/pasted-1.png" alt="upload successful"></p>
-<p>系统装完后，将网卡配置文件内的onboot打开，清除uuid。关闭selinux和firewalld以及碍事的NetworkManager。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl disable --now firewalld NetworkManager</span><br><span class="line">setenforce 0</span><br><span class="line">sed -ri '/^[^#]*SELINUX=/s#=.+$#=disabled#' /etc/selinux/config</span><br></pre></td></tr></table></figure></p>
+<p>系统装完后，将网卡配置文件内的onboot打开，清除uuid。关闭selinux和firewalld以及碍事的NetworkManager。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> --now firewalld NetworkManager</span><br><span class="line">setenforce 0</span><br><span class="line">sed -ri <span class="string">'/^[^#]*SELINUX=/s#=.+$#=disabled#'</span> /etc/selinux/config</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
