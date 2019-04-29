@@ -138,19 +138,20 @@
 
 
 
-  <meta name="description" content="kubectl是api-server的客户端工具，可以连接至它，实现对kubernetes相关对象资源的增删改查等基本操作。 基本对象：pod, service, replicaSet, deployment, statefulSet, daemonSet, job, cronjob, node 查看集群信息1$ kubectl cluster-info 查看节点的详细信息1$ kubectl d">
+  <meta name="description" content="Docker镜像层镜像为什么是有层的？镜像分层是为了解决什么？ 虽然镜像解决了打包，但是实际应用中我们的应用都是基于同一个rootfs来打包和迭代的，难道每个rootfs都会多份吗？ 为此docker利用了存储驱动AUFS，devicemapper，overlay，overlay2的存储技术实现了分层。初期是AUFS，到现在的overlay2驱动（不推荐devicemapper坑很多）。例如一个n">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kubernetes应用快速入门">
-<meta property="og:url" content="http://yoursite.com/2019/04/16/ubernetes应用快速入门/index.html">
+<meta property="og:title" content="Docker镜像01">
+<meta property="og:url" content="http://yoursite.com/2019/04/29/Docker镜像01/index.html">
 <meta property="og:site_name" content="Mr.Cheng">
-<meta property="og:description" content="kubectl是api-server的客户端工具，可以连接至它，实现对kubernetes相关对象资源的增删改查等基本操作。 基本对象：pod, service, replicaSet, deployment, statefulSet, daemonSet, job, cronjob, node 查看集群信息1$ kubectl cluster-info 查看节点的详细信息1$ kubectl d">
+<meta property="og:description" content="Docker镜像层镜像为什么是有层的？镜像分层是为了解决什么？ 虽然镜像解决了打包，但是实际应用中我们的应用都是基于同一个rootfs来打包和迭代的，难道每个rootfs都会多份吗？ 为此docker利用了存储驱动AUFS，devicemapper，overlay，overlay2的存储技术实现了分层。初期是AUFS，到现在的overlay2驱动（不推荐devicemapper坑很多）。例如一个n">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/pasted-0.png">
-<meta property="og:updated_time" content="2019-04-16T12:58:41.833Z">
+<meta property="og:image" content="http://yoursite.com/images/pasted-3.png">
+<meta property="og:image" content="http://yoursite.com/images/pasted-4.png">
+<meta property="og:updated_time" content="2019-04-29T02:20:31.125Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kubernetes应用快速入门">
-<meta name="twitter:description" content="kubectl是api-server的客户端工具，可以连接至它，实现对kubernetes相关对象资源的增删改查等基本操作。 基本对象：pod, service, replicaSet, deployment, statefulSet, daemonSet, job, cronjob, node 查看集群信息1$ kubectl cluster-info 查看节点的详细信息1$ kubectl d">
-<meta name="twitter:image" content="http://yoursite.com/images/pasted-0.png">
+<meta name="twitter:title" content="Docker镜像01">
+<meta name="twitter:description" content="Docker镜像层镜像为什么是有层的？镜像分层是为了解决什么？ 虽然镜像解决了打包，但是实际应用中我们的应用都是基于同一个rootfs来打包和迭代的，难道每个rootfs都会多份吗？ 为此docker利用了存储驱动AUFS，devicemapper，overlay，overlay2的存储技术实现了分层。初期是AUFS，到现在的overlay2驱动（不推荐devicemapper坑很多）。例如一个n">
+<meta name="twitter:image" content="http://yoursite.com/images/pasted-3.png">
 
 
 
@@ -160,7 +161,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/04/16/ubernetes应用快速入门/">
+  <link rel="canonical" href="http://yoursite.com/2019/04/29/Docker镜像01/">
 
 
 
@@ -170,7 +171,7 @@
   };
 </script>
 
-  <title>kubernetes应用快速入门 | Mr.Cheng</title>
+  <title>Docker镜像01 | Mr.Cheng</title>
   
 
 
@@ -437,7 +438,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/16/ubernetes应用快速入门/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/29/Docker镜像01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Mr.Cheng">
@@ -454,7 +455,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">kubernetes应用快速入门
+          <h1 class="post-title" itemprop="name headline">Docker镜像01
 
               
             
@@ -480,7 +481,7 @@
                 
               
 
-              <time title="创建时间：2019-04-16 20:31:00" itemprop="dateCreated datePublished" datetime="2019-04-16T20:31:00+08:00">2019-04-16 20:31:00</time>
+              <time title="创建时间：2019-04-29 10:12:00" itemprop="dateCreated datePublished" datetime="2019-04-29T10:12:00+08:00">2019-04-29 10:12:00</time>
             
 
             
@@ -498,7 +499,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a></span>
 
                 
                 
@@ -534,22 +535,12 @@
       
 
       
-        <p>kubectl是api-server的客户端工具，可以连接至它，实现对kubernetes相关对象资源的增删改查等基本操作。</p>
-<p>基本对象：pod, service, replicaSet, deployment, statefulSet, daemonSet, job, cronjob, node</p>
-<h6 id="查看集群信息"><a href="#查看集群信息" class="headerlink" title="查看集群信息"></a>查看集群信息</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl cluster-info</span><br></pre></td></tr></table></figure>
-<h6 id="查看节点的详细信息"><a href="#查看节点的详细信息" class="headerlink" title="查看节点的详细信息"></a>查看节点的详细信息</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl describe node k8s-node01</span><br></pre></td></tr></table></figure>
-<h6 id="查看客户端和服务器侧的版本信息"><a href="#查看客户端和服务器侧的版本信息" class="headerlink" title="查看客户端和服务器侧的版本信息"></a>查看客户端和服务器侧的版本信息</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl version</span><br></pre></td></tr></table></figure>
-<h6 id="命令行启动Pod控制器"><a href="#命令行启动Pod控制器" class="headerlink" title="命令行启动Pod控制器"></a>命令行启动Pod控制器</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run nginx-deploy --image=nginx:1.14-alpine --port=80 --replicas=1</span><br><span class="line">$ kubectl get deployment</span><br><span class="line">NAME           DESIRED(期望)   CURRENT(目前)   UP-TO-DATE(最新状态)   AVAILABLE(就绪性探测)   AGE</span><br><span class="line">nginx-deploy   1               1               1                     1                      19s</span><br><span class="line">$ kubectl get pods -o wide</span><br><span class="line">NAME                           READY   STATUS    RESTARTS   AGE     IP           NODE         NOMINATED NODE</span><br><span class="line">nginx-deploy-86bf78c77-xss6n   1/1     Running   0          7m16s   10.244.1.2   k8s-node01   &lt;none&gt;</span><br><span class="line">$ curl 10.244.1.2 (供集群内部访问)</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br></pre></td></tr></table></figure>
-<h6 id="因为Pod控制器，删除的Pod又会重新被创建"><a href="#因为Pod控制器，删除的Pod又会重新被创建" class="headerlink" title="因为Pod控制器，删除的Pod又会重新被创建"></a>因为Pod控制器，删除的Pod又会重新被创建</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get pods</span><br><span class="line">NAME                           READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-deploy-86bf78c77-xss6n   1/1     Running   0          48m</span><br><span class="line">$ kubectl delete pod nginx-deploy-86bf78c77-xss6n</span><br><span class="line">pod &quot;nginx-deploy-86bf78c77-xss6n&quot; deleted</span><br><span class="line">$ kubectl get pods</span><br><span class="line">NAME                           READY   STATUS              RESTARTS   AGE</span><br><span class="line">nginx-deploy-86bf78c77-xpddl   0/1     ContainerCreating   0          4s</span><br><span class="line">$ kubectl get pods -owide</span><br><span class="line">NAME                           READY   STATUS    RESTARTS   AGE   IP           NODE         NOMINATED NODE</span><br><span class="line">nginx-deploy-86bf78c77-xpddl   1/1     Running   0          86s   10.244.2.2   k8s-node02   &lt;none&gt;</span><br></pre></td></tr></table></figure>
-<p>创建固定访问端点service，通过标签选择器绑定了Pod，就算Pod重建，仍然可以访问；宿主机不能解析是因为搜索域的问题。默认类型ClusterIP，只拥有一个service IP，只能在集群内被各Pod客户端访问，而不能突破集群边界，被集群外部的客户端访问。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl expose --name=nginx deployment nginx-deploy --port=80 --target-port=80 --protocol=TCP</span><br><span class="line">service/nginx exposed</span><br><span class="line">$ kubectl get svc</span><br><span class="line">NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">kubernetes   ClusterIP   10.96.0.1      &lt;none&gt;        443/TCP   16d</span><br><span class="line">nginx        ClusterIP   10.111.72.29   &lt;none&gt;        80/TCP    34s</span><br><span class="line">$ $ kubectl run client --image=busybox --rm -it sh</span><br><span class="line">/ # cat /etc/resolv.conf </span><br><span class="line">nameserver 10.96.0.10</span><br><span class="line">search default.svc.cluster.local svc.cluster.local cluster.local</span><br><span class="line">options ndots:5</span><br><span class="line">/ # wget -O - -q http://nginx:80</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">$ dig -t A nginx.default.svc.cluster.local @10.96.0.10</span><br><span class="line"> </span><br><span class="line">; &lt;&lt;&gt;&gt; DiG 9.9.4-RedHat-9.9.4-72.el7 &lt;&lt;&gt;&gt; -t A nginx.default.svc.cluster.local @10.96.0.10</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 12874</span><br><span class="line">;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1</span><br><span class="line"> </span><br><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 4096</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;nginx.default.svc.cluster.local. IN	A</span><br><span class="line"> </span><br><span class="line">;; ANSWER SECTION:</span><br><span class="line">nginx.default.svc.cluster.local. 5 IN	A	10.111.72.29</span><br><span class="line"> </span><br><span class="line">;; Query time: 0 msec</span><br><span class="line">;; SERVER: 10.96.0.10#53(10.96.0.10)</span><br><span class="line">;; WHEN: Thu Jan 24 22:06:20 CST 2019</span><br><span class="line">;; MSG SIZE  rcvd: 107</span><br></pre></td></tr></table></figure></p>
-<h6 id="service根据pod的标签进行绑定"><a href="#service根据pod的标签进行绑定" class="headerlink" title="service根据pod的标签进行绑定"></a>service根据pod的标签进行绑定</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl describe svc nginx</span><br><span class="line">Name:              nginx</span><br><span class="line">Namespace:         default</span><br><span class="line">Labels:            run=nginx-deploy</span><br><span class="line">Annotations:       &lt;none&gt;</span><br><span class="line">Selector:          run=nginx-deploy</span><br><span class="line">Type:              ClusterIP</span><br><span class="line">IP:                10.111.72.29</span><br><span class="line">Port:              &lt;unset&gt;  80/TCP</span><br><span class="line">TargetPort:        80/TCP</span><br><span class="line">Endpoints:         10.244.2.2:80</span><br><span class="line">Session Affinity:  None</span><br><span class="line">Events:            &lt;none&gt;</span><br><span class="line">$ kubectl delete pod nginx-deploy-86bf78c77-xpddl</span><br><span class="line">pod &quot;nginx-deploy-86bf78c77-xpddl&quot; deleted</span><br><span class="line">$ kubectl describe svc nginx</span><br><span class="line">Name:              nginx</span><br><span class="line">Namespace:         default</span><br><span class="line">Labels:            run=nginx-deploy</span><br><span class="line">Annotations:       &lt;none&gt;</span><br><span class="line">Selector:          run=nginx-deploy</span><br><span class="line">Type:              ClusterIP</span><br><span class="line">IP:                10.111.72.29</span><br><span class="line">Port:              &lt;unset&gt;  80/TCP</span><br><span class="line">TargetPort:        80/TCP</span><br><span class="line">Endpoints:         10.244.1.5:80</span><br><span class="line">Session Affinity:  None</span><br><span class="line">Events:            &lt;none&gt;</span><br><span class="line">$ kubectl get pods --show-labels </span><br><span class="line">NAME                           READY   STATUS    RESTARTS   AGE   LABELS</span><br><span class="line">nginx-deploy-86bf78c77-mb82b   1/1     Running   0          56s   pod-template-hash=86bf78c77,run=nginx-deploy</span><br></pre></td></tr></table></figure>
-<h6 id="service信息可以动态反映到CoreDNS内"><a href="#service信息可以动态反映到CoreDNS内" class="headerlink" title="service信息可以动态反映到CoreDNS内"></a>service信息可以动态反映到CoreDNS内</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl delete svc nginx</span><br><span class="line">service &quot;nginx&quot; deleted</span><br><span class="line">$ kubectl expose deployment nginx-deploy --name=nginx --port=80 --target-port=80 --protocol=TCP</span><br><span class="line">service/nginx exposed</span><br><span class="line">/ # wget -O - -q http://nginx:80</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br></pre></td></tr></table></figure>
-<h6 id="service负载均衡，手动扩缩容Pod数量"><a href="#service负载均衡，手动扩缩容Pod数量" class="headerlink" title="service负载均衡，手动扩缩容Pod数量"></a>service负载均衡，手动扩缩容Pod数量</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run myapp --image=ikubernetes/myapp:v1 --replicas=2</span><br><span class="line">/ # wget -O - -q 10.244.1.6/hostname.html</span><br><span class="line">myapp-6946649ccd-6d495</span><br><span class="line">/ # wget -O - -q 10.244.2.3/hostname.html</span><br><span class="line">myapp-6946649ccd-tsnjf</span><br><span class="line">$ kubectl expose deployment myapp --name=myapp --port=80</span><br><span class="line">service/myapp exposed</span><br><span class="line">/ # wget -O - -q myapp/hostname.html</span><br><span class="line">myapp-6946649ccd-tsnjf</span><br><span class="line">/ # while true; do wget -O - -q myapp/hostname.html; sleep 1; done</span><br><span class="line">myapp-6946649ccd-6d495</span><br><span class="line">myapp-6946649ccd-tsnjf</span><br><span class="line">myapp-6946649ccd-tsnjf</span><br><span class="line">myapp-6946649ccd-6d495</span><br><span class="line">myapp-6946649ccd-tsnjf</span><br><span class="line">myapp-6946649ccd-tsnjf</span><br><span class="line">myapp-6946649ccd-tsnjf</span><br><span class="line">$ kubectl scale --replicas=5 deployment myapp</span><br><span class="line">deployment.extensions/myapp scaled</span><br><span class="line">/ # while true; do wget -O - -q myapp/hostname.html; sleep 1; done</span><br><span class="line">myapp-6946649ccd-6d495</span><br><span class="line">myapp-6946649ccd-4mtsv</span><br><span class="line">myapp-6946649ccd-j2t28</span><br><span class="line">myapp-6946649ccd-6d495</span><br><span class="line">myapp-6946649ccd-j2t28</span><br><span class="line">myapp-6946649ccd-j2t28</span><br><span class="line">myapp-6946649ccd-6d495</span><br><span class="line">myapp-6946649ccd-tsnjf</span><br><span class="line">myapp-6946649ccd-6d495</span><br><span class="line">$ kubectl scale --replicas=3 deployment myapp</span><br><span class="line">deployment.extensions/myapp scaled</span><br></pre></td></tr></table></figure>
-<h6 id="灰度发布，更新与回滚"><a href="#灰度发布，更新与回滚" class="headerlink" title="灰度发布，更新与回滚"></a>灰度发布，更新与回滚</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl set image deployment myapp myapp=ikubernetes/myapp:v2</span><br><span class="line">deployment.extensions/myapp image updated</span><br><span class="line">$ kubectl rollout status deployment myapp</span><br><span class="line">Waiting for deployment &quot;myapp&quot; rollout to finish: 1 out of 3 new replicas have been updated...</span><br><span class="line">Waiting for deployment &quot;myapp&quot; rollout to finish: 1 out of 3 new replicas have been updated...</span><br><span class="line">Waiting for deployment &quot;myapp&quot; rollout to finish: 1 out of 3 new replicas have been updated...</span><br><span class="line">Waiting for deployment &quot;myapp&quot; rollout to finish: 2 out of 3 new replicas have been updated...</span><br><span class="line">Waiting for deployment &quot;myapp&quot; rollout to finish: 2 out of 3 new replicas have been updated...</span><br><span class="line">Waiting for deployment &quot;myapp&quot; rollout to finish: 2 old replicas are pending termination...</span><br><span class="line">Waiting for deployment &quot;myapp&quot; rollout to finish: 1 old replicas are pending termination...</span><br><span class="line">Waiting for deployment &quot;myapp&quot; rollout to finish: 1 old replicas are pending termination...</span><br><span class="line">deployment &quot;myapp&quot; successfully rolled out</span><br><span class="line">/ # while true; do wget -O - -q myapp; sleep 1; done</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v1 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">Hello MyApp | Version: v2 | &lt;a href=&quot;hostname.html&quot;&gt;Pod Name&lt;/a&gt;</span><br><span class="line">$ kubectl rollout undo deployment myapp</span><br><span class="line">deployment.extensions/myapp</span><br></pre></td></tr></table></figure>
-<h6 id="节点上相应iptables规则"><a href="#节点上相应iptables规则" class="headerlink" title="节点上相应iptables规则"></a>节点上相应iptables规则</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># iptables -vnL -t nat</span><br></pre></td></tr></table></figure>
-<h6 id="使集群外部可以访问myapp"><a href="#使集群外部可以访问myapp" class="headerlink" title="使集群外部可以访问myapp"></a>使集群外部可以访问myapp</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl edit svc myapp</span><br><span class="line">type: ClusterIP --&gt; type: NodePort</span><br><span class="line">$ kubectl get svc</span><br><span class="line">NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE</span><br><span class="line">myapp        NodePort    10.102.196.200   &lt;none&gt;        80:32074/TCP   14m</span><br></pre></td></tr></table></figure>
-<p><img src="/images/pasted-0.png" alt="upload successful"></p>
-<p>PS: 如果节点宕机，还可以通过其它节点访问。外部做负载均衡器，例如keepalived，指向到每一个节点。Nginx或者haproxy，拥有后端realserver的健康度检查，并且需要配置HA高可用。</p>
+        <h6 id="Docker镜像层"><a href="#Docker镜像层" class="headerlink" title="Docker镜像层"></a>Docker镜像层</h6><p>镜像为什么是有层的？镜像分层是为了解决什么？</p>
+<p>虽然镜像解决了打包，但是实际应用中我们的应用都是基于同一个rootfs来打包和迭代的，难道每个rootfs都会多份吗？</p>
+<p>为此docker利用了存储驱动AUFS，devicemapper，overlay，overlay2的存储技术实现了分层。初期是AUFS，到现在的overlay2驱动（不推荐devicemapper坑很多）。例如一个nginx:alpine和python:alpine镜像可以从分层角度这样去理解。</p>
+<p><img src="/images/pasted-3.png" alt="upload successful"></p>
+<p>实际上只有不同的层才占据存储空间，相同的层则是引用关系。抽象地看镜像是一个实体，实际上是/var/lib/docker目录里的分层文件外加一些json和db文件把层联系起来组成了镜像。存储路径是/var/lib/docker/存储驱动类型/。</p>
+<p><img src="/images/pasted-4.png" alt="upload successful"></p>
 
       
     </div>
@@ -643,8 +634,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/10/k8s配置secret拉取私有仓库镜像/" rel="next" title="k8s配置secret拉取私有仓库镜像">
-                <i class="fa fa-chevron-left"></i> k8s配置secret拉取私有仓库镜像
+              <a href="/2019/04/18/proxmox中cloud-init使用方法/" rel="next" title="proxmox中cloud-init使用方法">
+                <i class="fa fa-chevron-left"></i> proxmox中cloud-init使用方法
               </a>
             
           </div>
@@ -652,10 +643,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/18/proxmox中cloud-init使用方法/" rel="prev" title="proxmox中cloud-init使用方法">
-                proxmox中cloud-init使用方法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -747,7 +734,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -867,7 +856,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#查看集群信息"><span class="nav-number">1.</span> <span class="nav-text">查看集群信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#查看节点的详细信息"><span class="nav-number">2.</span> <span class="nav-text">查看节点的详细信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#查看客户端和服务器侧的版本信息"><span class="nav-number">3.</span> <span class="nav-text">查看客户端和服务器侧的版本信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#命令行启动Pod控制器"><span class="nav-number">4.</span> <span class="nav-text">命令行启动Pod控制器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#因为Pod控制器，删除的Pod又会重新被创建"><span class="nav-number">5.</span> <span class="nav-text">因为Pod控制器，删除的Pod又会重新被创建</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#service根据pod的标签进行绑定"><span class="nav-number">6.</span> <span class="nav-text">service根据pod的标签进行绑定</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#service信息可以动态反映到CoreDNS内"><span class="nav-number">7.</span> <span class="nav-text">service信息可以动态反映到CoreDNS内</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#service负载均衡，手动扩缩容Pod数量"><span class="nav-number">8.</span> <span class="nav-text">service负载均衡，手动扩缩容Pod数量</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#灰度发布，更新与回滚"><span class="nav-number">9.</span> <span class="nav-text">灰度发布，更新与回滚</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#节点上相应iptables规则"><span class="nav-number">10.</span> <span class="nav-text">节点上相应iptables规则</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#使集群外部可以访问myapp"><span class="nav-number">11.</span> <span class="nav-text">使集群外部可以访问myapp</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#Docker镜像层"><span class="nav-number">1.</span> <span class="nav-text">Docker镜像层</span></a></li></ol></div>
             
 
           </div>
@@ -917,7 +906,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共2.9k字</span>
+  <span class="post-count">博客全站共1.4k字</span>
 </div>
 
         
