@@ -138,18 +138,17 @@
 
 
 
-  <meta name="description" content="https://kubernetes.io/docs 样例1234567891011# cat ~/.docker/config.json &amp;#123;	&quot;auths&quot;: &amp;#123;		&quot;harbor.station.com&quot;: &amp;#123;			&quot;auth&quot;: &quot;YWRtaW46SGFyYm9yMTIzNDU=&quot;		&amp;#125;	&amp;#125;,	&quot;HttpHeaders&quot;: &amp;#123;		&quot;">
-<meta name="keywords" content="Harbor">
+  <meta name="description" content="FROM用法1FROM &amp;lt;baseimage&amp;gt; 或者 FROM &amp;lt;baseimage&amp;gt;:&amp;lt;tag&amp;gt; 指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。 例如centos的Dockerfile是下面12345678910FROM scra">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s配置secret拉取私有仓库镜像">
-<meta property="og:url" content="http://yoursite.com/2019/04/10/k8s配置secret拉取私有仓库镜像/index.html">
+<meta property="og:title" content="Dockerfile FROM">
+<meta property="og:url" content="http://yoursite.com/2019/04/29/Dockerfile-FROM-1/index.html">
 <meta property="og:site_name" content="Mr.Cheng">
-<meta property="og:description" content="https://kubernetes.io/docs 样例1234567891011# cat ~/.docker/config.json &amp;#123;	&quot;auths&quot;: &amp;#123;		&quot;harbor.station.com&quot;: &amp;#123;			&quot;auth&quot;: &quot;YWRtaW46SGFyYm9yMTIzNDU=&quot;		&amp;#125;	&amp;#125;,	&quot;HttpHeaders&quot;: &amp;#123;		&quot;">
+<meta property="og:description" content="FROM用法1FROM &amp;lt;baseimage&amp;gt; 或者 FROM &amp;lt;baseimage&amp;gt;:&amp;lt;tag&amp;gt; 指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。 例如centos的Dockerfile是下面12345678910FROM scra">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-18T05:01:30.701Z">
+<meta property="og:updated_time" content="2019-04-29T06:25:01.801Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="k8s配置secret拉取私有仓库镜像">
-<meta name="twitter:description" content="https://kubernetes.io/docs 样例1234567891011# cat ~/.docker/config.json &amp;#123;	&quot;auths&quot;: &amp;#123;		&quot;harbor.station.com&quot;: &amp;#123;			&quot;auth&quot;: &quot;YWRtaW46SGFyYm9yMTIzNDU=&quot;		&amp;#125;	&amp;#125;,	&quot;HttpHeaders&quot;: &amp;#123;		&quot;">
+<meta name="twitter:title" content="Dockerfile FROM">
+<meta name="twitter:description" content="FROM用法1FROM &amp;lt;baseimage&amp;gt; 或者 FROM &amp;lt;baseimage&amp;gt;:&amp;lt;tag&amp;gt; 指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。 例如centos的Dockerfile是下面12345678910FROM scra">
 
 
 
@@ -159,7 +158,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/04/10/k8s配置secret拉取私有仓库镜像/">
+  <link rel="canonical" href="http://yoursite.com/2019/04/29/Dockerfile-FROM-1/">
 
 
 
@@ -169,7 +168,7 @@
   };
 </script>
 
-  <title>k8s配置secret拉取私有仓库镜像 | Mr.Cheng</title>
+  <title>Dockerfile FROM | Mr.Cheng</title>
   
 
 
@@ -436,7 +435,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/10/k8s配置secret拉取私有仓库镜像/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/29/Dockerfile-FROM-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Mr.Cheng">
@@ -453,7 +452,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">k8s配置secret拉取私有仓库镜像
+          <h1 class="post-title" itemprop="name headline">Dockerfile FROM
 
               
             
@@ -479,7 +478,7 @@
                 
               
 
-              <time title="创建时间：2019-04-10 17:11:00" itemprop="dateCreated datePublished" datetime="2019-04-10T17:11:00+08:00">2019-04-10 17:11:00</time>
+              <time title="创建时间：2019-04-29 13:37:00" itemprop="dateCreated datePublished" datetime="2019-04-29T13:37:00+08:00">2019-04-29 13:37:00</time>
             
 
             
@@ -497,7 +496,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a></span>
 
                 
                 
@@ -533,13 +532,13 @@
       
 
       
-        <p><a href="https://kubernetes.io/docs" target="_blank" rel="noopener">https://kubernetes.io/docs</a></p>
-<h6 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat ~/.docker/config.json </span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line">	<span class="string">"auths"</span><span class="string">:</span> <span class="string">&#123;</span></span><br><span class="line">		<span class="string">"harbor.station.com"</span><span class="string">:</span> <span class="string">&#123;</span></span><br><span class="line">			<span class="string">"auth"</span><span class="string">:</span> <span class="string">"YWRtaW46SGFyYm9yMTIzNDU="</span></span><br><span class="line">		<span class="string">&#125;</span></span><br><span class="line">	<span class="string">&#125;,</span></span><br><span class="line">	<span class="string">"HttpHeaders"</span><span class="string">:</span> <span class="string">&#123;</span></span><br><span class="line">		<span class="string">"User-Agent"</span><span class="string">:</span> <span class="string">"Docker-Client/18.06.1-ce (linux)"</span></span><br><span class="line">	<span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>这个时候我们虽然可以通过交互式登录，使用docker pull拉取镜像，但无法通过k8s创建Pod时拉取镜像。</p>
-<h6 id="生成密钥secret"><a href="#生成密钥secret" class="headerlink" title="生成密钥secret"></a>生成密钥secret</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl create secret docker-registry harbor --docker-server=x.x.x.x --docker-username=admin --docker-password=Harbor12345 --docker-email=xx@qq.com</span></span><br></pre></td></tr></table></figure>
-<p>1) harbor: 指定密钥的键名称，可自行定义 2）–docker-server：指定docker仓库地址 3）–docker-username：指定docker仓库帐号 4) –docker-password：指定docker仓库密码 5) –docker-email：指定邮件地址（选填）`</p>
-<h6 id="查看密钥"><a href="#查看密钥" class="headerlink" title="查看密钥"></a>查看密钥</h6><p>可以看到当前除了默认的密钥, 还有我们刚才生成的. 另外要注意的是, 该密钥只能在对应namespace使用, 也就是这里的default, 如果需要用到其他namespace, 比如说test, 就需要在生成的时候指定参数 -n test。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get secrets</span></span><br><span class="line">NAME                  TYPE                                  DATA   AGE</span><br><span class="line">default-token-mzmtj   kubernetes.io/service-account-token   3      22m</span><br><span class="line">harbor                kubernetes.io/dockerconfigjson        1      22m</span><br></pre></td></tr></table></figure></p>
-<h6 id="YAML例子"><a href="#YAML例子" class="headerlink" title="YAML例子"></a>YAML例子</h6><p>其中imagePullSecrets是声明拉取镜像时需要指定密钥, harbor必须和上面生成密钥的键名一致, 另外检查一下pod和密钥是否在同一个namespace, 之后k8s便可以拉取镜像。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx-deploy</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">harbor</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">web_server</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">harbor.station.com/library/nginx:latest</span></span><br><span class="line"><span class="attr">      imagePullSecrets:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">harbor</span></span><br></pre></td></tr></table></figure></p>
+        <h6 id="FROM"><a href="#FROM" class="headerlink" title="FROM"></a>FROM</h6><p>用法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM &lt;baseimage&gt; 或者 FROM &lt;baseimage&gt;:&lt;tag&gt;</span><br></pre></td></tr></table></figure></p>
+<p>指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。</p>
+<p>例如centos的Dockerfile是下面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">ADD centos-7-x86_64-docker.tar.xz /</span><br><span class="line"></span><br><span class="line">LABEL org.label-schema.schema-version=<span class="string">"1.0"</span> \</span><br><span class="line">    org.label-schema.name=<span class="string">"CentOS Base Image"</span> \</span><br><span class="line">    org.label-schema.vendor=<span class="string">"CentOS"</span> \</span><br><span class="line">    org.label-schema.license=<span class="string">"GPLv2"</span> \</span><br><span class="line">    org.label-schema.build-date=<span class="string">"20190305"</span></span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"/bin/bash"</span>]</span><br></pre></td></tr></table></figure></p>
+<p>而hello-world为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">COPY hello /</span><br><span class="line">CMD [<span class="string">"/hello"</span>]</span><br><span class="line"></span><br><span class="line">docker images | grep hello</span><br><span class="line">hello-world         latest              fce289e99eb9        3 months ago        1.84kB</span><br></pre></td></tr></table></figure></p>
+<p>nginx:alpine镜像的dockerfile 链接为<a href="https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。" target="_blank" rel="noopener">https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。</a></p>
+<p>nginx:alpine既满足运行的最小环境下大小又很小，主要归功于FROM alpine ，现在alpine这个系统和rootfs得益于docker发展非常快，也有很多应用镜像都有alpine版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.9</span><br><span class="line"></span><br><span class="line">LABEL maintainer=<span class="string">"NGINX Docker Maintainers &lt;docker-maint@nginx.com&gt;"</span></span><br><span class="line"></span><br><span class="line">ENV NGINX_VERSION 1.15.11</span><br><span class="line"></span><br><span class="line">RUN ...省略步骤，步骤是下载源码，安装编译需要的依赖，编译安装完删掉源码包和编译的依赖保留运编译出来的nginx二进制和需要的所有so文件</span><br><span class="line"></span><br><span class="line">COPY nginx.conf /etc/nginx/nginx.conf</span><br><span class="line">COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">STOPSIGNAL SIGTERM</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"nginx"</span>, <span class="string">"-g"</span>, <span class="string">"daemon off;"</span>]</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -571,12 +570,6 @@
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Harbor/" rel="tag"><i class="fa fa-tag"></i> Harbor</a>
-          
-        </div>
       
 
       
@@ -639,15 +632,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/04/29/Docker镜像03/" rel="next" title="Docker镜像03">
+                <i class="fa fa-chevron-left"></i> Docker镜像03
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/18/proxmox中cloud-init使用方法/" rel="prev" title="proxmox中cloud-init使用方法">
-                proxmox中cloud-init使用方法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -861,7 +854,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#样例"><span class="nav-number">1.</span> <span class="nav-text">样例</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#生成密钥secret"><span class="nav-number">2.</span> <span class="nav-text">生成密钥secret</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#查看密钥"><span class="nav-number">3.</span> <span class="nav-text">查看密钥</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#YAML例子"><span class="nav-number">4.</span> <span class="nav-text">YAML例子</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#FROM"><span class="nav-number">1.</span> <span class="nav-text">FROM</span></a></li></ol></div>
             
 
           </div>

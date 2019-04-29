@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Dockerfile FROM]]></title>
+    <url>%2F2019%2F04%2F29%2FDockerfile-FROM-1%2F</url>
+    <content type="text"><![CDATA[FROM用法1FROM &lt;baseimage&gt; 或者 FROM &lt;baseimage&gt;:&lt;tag&gt; 指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。 例如centos的Dockerfile是下面12345678910FROM scratchADD centos-7-x86_64-docker.tar.xz /LABEL org.label-schema.schema-version="1.0" \ org.label-schema.name="CentOS Base Image" \ org.label-schema.vendor="CentOS" \ org.label-schema.license="GPLv2" \ org.label-schema.build-date="20190305"CMD ["/bin/bash"] 而hello-world为123456FROM scratchCOPY hello /CMD ["/hello"]docker images | grep hellohello-world latest fce289e99eb9 3 months ago 1.84kB nginx:alpine镜像的dockerfile 链接为https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。 nginx:alpine既满足运行的最小环境下大小又很小，主要归功于FROM alpine ，现在alpine这个系统和rootfs得益于docker发展非常快，也有很多应用镜像都有alpine版本。 12345678910111213141516FROM alpine:3.9LABEL maintainer="NGINX Docker Maintainers &lt;docker-maint@nginx.com&gt;"ENV NGINX_VERSION 1.15.11RUN ...省略步骤，步骤是下载源码，安装编译需要的依赖，编译安装完删掉源码包和编译的依赖保留运编译出来的nginx二进制和需要的所有so文件COPY nginx.conf /etc/nginx/nginx.confCOPY nginx.vh.default.conf /etc/nginx/conf.d/default.confEXPOSE 80STOPSIGNAL SIGTERMCMD ["nginx", "-g", "daemon off;"]]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[Docker镜像03]]></title>
+    <url>%2F2019%2F04%2F29%2FDocker%E9%95%9C%E5%83%8F03%2F</url>
+    <content type="text"><![CDATA[构建镜像构建镜像只有两种方式，docker build 和 docker commit。实际上docker build是调用的docker commit。不推荐手动去docker commmit运行的容器成镜像。所以主要讲docker build和dockerfile。 使用docker build 指定Dockerfile来完成一个新镜像的构建。命令格式一般为：1docker build [option] [-t &lt;image&gt;:&lt;tag&gt;] &lt;path&gt; 其中path指向的文件称为context（上下文），context包含docker build镜像过程中需要的Dockerfile以及其他的资源文件。执行build命令后执行流程如下： Docker client端 解析命令行参数，完成对相关信息的设置，Docker client向Docker server发送POST/build的HTTP请求，包含了所需的上下文文件。 Docker server端 创建一个临时目录，并将context指定的文件系统解压到该目录下 读取并解析Dockerfile 根据解析出的Dockerfile遍历其中的所有指令，并分发到不同的模块（parser）去执行 parser为Dockerfile的每一个指令创建一个对应的临时容器，在临时容器中执行当前指令，然后通过commit使用此镜像生成一个镜像层 Dockerfile中所有的指令对应的层的集合，就是此次build后的结果。如果指定了tag参数，便给镜像打上对应的tag。最后一次commit生成的镜像ID就会作为最终的镜像ID返回。]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[Docker镜像02]]></title>
+    <url>%2F2019%2F04%2F29%2FDocker%E9%95%9C%E5%83%8F02%2F</url>
+    <content type="text"><![CDATA[容器是单独的一层读写层一个镜像可以运行无数个容器，容器需要读取文件的场景和对应原理是如下。 在无挂载卷情况下，通过docker cp或exec产生的数据，文件会在读写层里，删除容器则文件也一并删除。 读取文件，从上层往下找到镜像层，找到即可返回，复制到容器层读入内存。 修改文件，从上层往下找到镜像层，找到即可返回，复制到容器层后修改。 删除文件，找到后在容器层记录下删除操作(类似盖层布，后续读取的时候会认为文件不存在) 容器与镜像关系为下图 通过docker ps 的-s选项可以看出容器的size和容器层总大小，这里我用docker命令演示下容器是单独一层读写层和容器被删除后数据消失。 创建一个容器，在容器里写入1g数据，宿主机的可用容量减少1G，docker的overlay2存储目录记录了下这个文件，但是删除后文件也被删除了。在抽象逻辑上一个容器就是单独一个读写层，而删除容器后这层在宿主机上的文件也会被删除。 计算实际占用大小时镜像的大小不会被重复计算，只需要计算一个大小+它起的所有容器大小。目前启动了5个nginx1234567# docker ps -sCONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES SIZEac5c0d1f8d6b nginx:alpine "nginx -g 'daemon of…" 7 seconds ago Up 5 seconds 80/tcp web5 2B (virtual 16.1MB)0dd2c0c36084 nginx:alpine "nginx -g 'daemon of…" 11 seconds ago Up 9 seconds 80/tcp web4 2B (virtual 16.1MB)413d9270c702 nginx:alpine "nginx -g 'daemon of…" 15 seconds ago Up 13 seconds 80/tcp web3 2B (virtual 16.1MB)43f8e010f7bb nginx:alpine "nginx -g 'daemon of…" 19 seconds ago Up 17 seconds 80/tcp web2 2B (virtual 16.1MB)610abcfab29d nginx:alpine "nginx -g 'daemon of…" 25 seconds ago Up 23 seconds 80/tcp web1 2B (virtual 16.1MB) 使用exec往容器里写数据123456789101112docker exec web1 sh -c 'dd if=/dev/zero of=/test.log bs=1000000 count=10'docker exec web2 sh -c 'dd if=/dev/zero of=/test.log bs=1000000 count=20'docker exec web3 sh -c 'dd if=/dev/zero of=/test.log bs=1000000 count=30'docker exec web4 sh -c 'dd if=/dev/zero of=/test.log bs=1000000 count=40'docker exec web5 sh -c 'dd if=/dev/zero of=/test.log bs=1000000 count=50']# docker ps -asCONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES SIZEac5c0d1f8d6b nginx:alpine "nginx -g 'daemon of…" 56 seconds ago Up 54 seconds 80/tcp web5 50MB (virtual 66.1MB)0dd2c0c36084 nginx:alpine "nginx -g 'daemon of…" About a minute ago Up 58 seconds 80/tcp web4 40MB (virtual 56.1MB)413d9270c702 nginx:alpine "nginx -g 'daemon of…" About a minute ago Up About a minute 80/tcp web3 30MB (virtual 46.1MB)43f8e010f7bb nginx:alpine "nginx -g 'daemon of…" About a minute ago Up About a minute 80/tcp web2 20MB (virtual 36.1MB)610abcfab29d nginx:alpine "nginx -g 'daemon of…" About a minute ago Up About a minute 80/tcp web1 10MB (virtual 26.1MB) 实际占用量计算123456781 x 16.1MB 只读镜像层1 x 10MB1 x 20MB1 x 30MB1 x 40MB1 x 50MB===========================161.1MB 这样我们可以推导出docker镜像是分层和容器是单独一层只读镜像的。也有部分人不懂这些知识，每次是进容器里安装东西然后commit，导致最后容器越来越大，甚至看到过16g的镜像。]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[Docker镜像01]]></title>
     <url>%2F2019%2F04%2F29%2FDocker%E9%95%9C%E5%83%8F01%2F</url>
     <content type="text"><![CDATA[Docker镜像层镜像为什么是有层的？镜像分层是为了解决什么？ 虽然镜像解决了打包，但是实际应用中我们的应用都是基于同一个rootfs来打包和迭代的，难道每个rootfs都会多份吗？ 为此docker利用了存储驱动AUFS，devicemapper，overlay，overlay2的存储技术实现了分层。初期是AUFS，到现在的overlay2驱动（不推荐devicemapper坑很多）。例如一个nginx:alpine和python:alpine镜像可以从分层角度这样去理解。 实际上只有不同的层才占据存储空间，相同的层则是引用关系。抽象地看镜像是一个实体，实际上是/var/lib/docker目录里的分层文件外加一些json和db文件把层联系起来组成了镜像。存储路径是/var/lib/docker/存储驱动类型/。]]></content>

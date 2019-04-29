@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-04-29T02:20:31.125Z</updated>
+  <updated>2019-04-29T06:25:01.801Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,75 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Dockerfile FROM</title>
+    <link href="http://yoursite.com/2019/04/29/Dockerfile-FROM-1/"/>
+    <id>http://yoursite.com/2019/04/29/Dockerfile-FROM-1/</id>
+    <published>2019-04-29T05:37:00.000Z</published>
+    <updated>2019-04-29T06:25:01.801Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="FROM"><a href="#FROM" class="headerlink" title="FROM"></a>FROM</h6><p>用法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM &lt;baseimage&gt; 或者 FROM &lt;baseimage&gt;:&lt;tag&gt;</span><br></pre></td></tr></table></figure></p><p>指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。</p><p>例如centos的Dockerfile是下面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">ADD centos-7-x86_64-docker.tar.xz /</span><br><span class="line"></span><br><span class="line">LABEL org.label-schema.schema-version=<span class="string">"1.0"</span> \</span><br><span class="line">    org.label-schema.name=<span class="string">"CentOS Base Image"</span> \</span><br><span class="line">    org.label-schema.vendor=<span class="string">"CentOS"</span> \</span><br><span class="line">    org.label-schema.license=<span class="string">"GPLv2"</span> \</span><br><span class="line">    org.label-schema.build-date=<span class="string">"20190305"</span></span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"/bin/bash"</span>]</span><br></pre></td></tr></table></figure></p><p>而hello-world为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">COPY hello /</span><br><span class="line">CMD [<span class="string">"/hello"</span>]</span><br><span class="line"></span><br><span class="line">docker images | grep hello</span><br><span class="line">hello-world         latest              fce289e99eb9        3 months ago        1.84kB</span><br></pre></td></tr></table></figure></p><p>nginx:alpine镜像的dockerfile 链接为<a href="https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。" target="_blank" rel="noopener">https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。</a></p><p>nginx:alpine既满足运行的最小环境下大小又很小，主要归功于FROM alpine ，现在alpine这个系统和rootfs得益于docker发展非常快，也有很多应用镜像都有alpine版本。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.9</span><br><span class="line"></span><br><span class="line">LABEL maintainer=<span class="string">"NGINX Docker Maintainers &lt;docker-maint@nginx.com&gt;"</span></span><br><span class="line"></span><br><span class="line">ENV NGINX_VERSION 1.15.11</span><br><span class="line"></span><br><span class="line">RUN ...省略步骤，步骤是下载源码，安装编译需要的依赖，编译安装完删掉源码包和编译的依赖保留运编译出来的nginx二进制和需要的所有so文件</span><br><span class="line"></span><br><span class="line">COPY nginx.conf /etc/nginx/nginx.conf</span><br><span class="line">COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">STOPSIGNAL SIGTERM</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"nginx"</span>, <span class="string">"-g"</span>, <span class="string">"daemon off;"</span>]</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;FROM&quot;&gt;&lt;a href=&quot;#FROM&quot; class=&quot;headerlink&quot; title=&quot;FROM&quot;&gt;&lt;/a&gt;FROM&lt;/h6&gt;&lt;p&gt;用法&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gut
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Docker镜像03</title>
+    <link href="http://yoursite.com/2019/04/29/Docker%E9%95%9C%E5%83%8F03/"/>
+    <id>http://yoursite.com/2019/04/29/Docker镜像03/</id>
+    <published>2019-04-29T04:51:00.000Z</published>
+    <updated>2019-04-29T05:36:01.255Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h6><p>构建镜像只有两种方式，docker build 和 docker commit。实际上docker build是调用的docker commit。不推荐手动去docker commmit运行的容器成镜像。所以主要讲docker build和dockerfile。</p><p>使用docker build 指定Dockerfile来完成一个新镜像的构建。命令格式一般为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build [option] [-t &lt;image&gt;:&lt;tag&gt;]  &lt;path&gt;</span><br></pre></td></tr></table></figure></p><p>其中path指向的文件称为context（上下文），context包含docker build镜像过程中需要的Dockerfile以及其他的资源文件。执行build命令后执行流程如下：</p><ul><li>Docker client端<ul><li>解析命令行参数，完成对相关信息的设置，Docker client向Docker server发送POST/build的HTTP请求，包含了所需的上下文文件。</li></ul></li><li>Docker server端<ul><li>创建一个临时目录，并将context指定的文件系统解压到该目录下</li><li>读取并解析Dockerfile</li><li>根据解析出的Dockerfile遍历其中的所有指令，并分发到不同的模块（parser）去执行</li><li>parser为Dockerfile的每一个指令创建一个对应的临时容器，在临时容器中执行当前指令，然后通过commit使用此镜像生成一个镜像层</li><li>Dockerfile中所有的指令对应的层的集合，就是此次build后的结果。如果指定了tag参数，便给镜像打上对应的tag。最后一次commit生成的镜像ID就会作为最终的镜像ID返回。</li></ul></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;构建镜像&quot;&gt;&lt;a href=&quot;#构建镜像&quot; class=&quot;headerlink&quot; title=&quot;构建镜像&quot;&gt;&lt;/a&gt;构建镜像&lt;/h6&gt;&lt;p&gt;构建镜像只有两种方式，docker build 和 docker commit。实际上docker build是调用的doc
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Docker镜像02</title>
+    <link href="http://yoursite.com/2019/04/29/Docker%E9%95%9C%E5%83%8F02/"/>
+    <id>http://yoursite.com/2019/04/29/Docker镜像02/</id>
+    <published>2019-04-29T02:22:00.000Z</published>
+    <updated>2019-04-29T04:43:23.063Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="容器是单独的一层读写层"><a href="#容器是单独的一层读写层" class="headerlink" title="容器是单独的一层读写层"></a>容器是单独的一层读写层</h6><p>一个镜像可以运行无数个容器，容器需要读取文件的场景和对应原理是如下。</p><ul><li>在无挂载卷情况下，通过docker cp或exec产生的数据，文件会在读写层里，删除容器则文件也一并删除。</li><li>读取文件，从上层往下找到镜像层，找到即可返回，复制到容器层读入内存。</li><li>修改文件，从上层往下找到镜像层，找到即可返回，复制到容器层后修改。</li><li>删除文件，找到后在容器层记录下删除操作(类似盖层布，后续读取的时候会认为文件不存在)</li></ul><p>容器与镜像关系为下图<br><img src="/images/pasted-5.png" alt="upload successful"></p><p>通过docker ps 的-s选项可以看出容器的size和容器层总大小，这里我用docker命令演示下容器是单独一层读写层和容器被删除后数据消失。</p><p><img src="/images/pasted-6.png" alt="upload successful"><br><img src="/images/pasted-7.png" alt="upload successful"></p><p>创建一个容器，在容器里写入1g数据，宿主机的可用容量减少1G，docker的overlay2存储目录记录了下这个文件，但是删除后文件也被删除了。在抽象逻辑上一个容器就是单独一个读写层，而删除容器后这层在宿主机上的文件也会被删除。</p><p>计算实际占用大小时镜像的大小不会被重复计算，只需要计算一个大小+它起的所有容器大小。<br>目前启动了5个nginx<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker ps -s</span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES               SIZE</span><br><span class="line">ac5c0d1f8d6b        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   7 seconds ago       Up 5 seconds        80/tcp              web5                2B (virtual 16.1MB)</span><br><span class="line">0dd2c0c36084        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   11 seconds ago      Up 9 seconds        80/tcp              web4                2B (virtual 16.1MB)</span><br><span class="line">413d9270c702        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   15 seconds ago      Up 13 seconds       80/tcp              web3                2B (virtual 16.1MB)</span><br><span class="line">43f8e010f7bb        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   19 seconds ago      Up 17 seconds       80/tcp              web2                2B (virtual 16.1MB)</span><br><span class="line">610abcfab29d        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   25 seconds ago      Up 23 seconds       80/tcp              web1                2B (virtual 16.1MB)</span><br></pre></td></tr></table></figure></p><p>使用exec往容器里写数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> web1 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=10'</span></span><br><span class="line">docker <span class="built_in">exec</span> web2 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=20'</span></span><br><span class="line">docker <span class="built_in">exec</span> web3 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=30'</span></span><br><span class="line">docker <span class="built_in">exec</span> web4 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=40'</span></span><br><span class="line">docker <span class="built_in">exec</span> web5 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=50'</span></span><br><span class="line">]<span class="comment"># docker ps -as</span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS               NAMES               SIZE</span><br><span class="line">ac5c0d1f8d6b        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   56 seconds ago       Up 54 seconds       80/tcp              web5                50MB (virtual 66.1MB)</span><br><span class="line">0dd2c0c36084        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   About a minute ago   Up 58 seconds       80/tcp              web4                40MB (virtual 56.1MB)</span><br><span class="line">413d9270c702        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   About a minute ago   Up About a minute   80/tcp              web3                30MB (virtual 46.1MB)</span><br><span class="line">43f8e010f7bb        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   About a minute ago   Up About a minute   80/tcp              web2                20MB (virtual 36.1MB)</span><br><span class="line">610abcfab29d        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   About a minute ago   Up About a minute   80/tcp              web1                10MB (virtual 26.1MB)</span><br></pre></td></tr></table></figure></p><p>实际占用量计算<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1 x 16.1MB 只读镜像层</span><br><span class="line">1 x 10MB</span><br><span class="line">1 x 20MB</span><br><span class="line">1 x 30MB</span><br><span class="line">1 x 40MB</span><br><span class="line">1 x 50MB</span><br><span class="line">===========================</span><br><span class="line">161.1MB</span><br></pre></td></tr></table></figure></p><p>这样我们可以推导出docker镜像是分层和容器是单独一层只读镜像的。也有部分人不懂这些知识，每次是进容器里安装东西然后commit，导致最后容器越来越大，甚至看到过16g的镜像。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;容器是单独的一层读写层&quot;&gt;&lt;a href=&quot;#容器是单独的一层读写层&quot; class=&quot;headerlink&quot; title=&quot;容器是单独的一层读写层&quot;&gt;&lt;/a&gt;容器是单独的一层读写层&lt;/h6&gt;&lt;p&gt;一个镜像可以运行无数个容器，容器需要读取文件的场景和对应原理是如下。
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Docker镜像01</title>
