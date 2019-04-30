@@ -2,9 +2,86 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-CMD/</loc>
+    
+    <lastmod>2019-04-30T07:39:35.589Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-EXPOSE/</loc>
+    
+    <lastmod>2019-04-30T06:35:38.651Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-ONBUILD/</loc>
+    
+    <lastmod>2019-04-30T06:29:26.101Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-USER/</loc>
+    
+    <lastmod>2019-04-30T06:27:54.607Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-ENV/</loc>
+    
+    <lastmod>2019-04-30T06:15:36.391Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Do/</loc>
+    
+    <lastmod>2019-04-30T06:12:29.352Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-ADD/</loc>
+    
+    <lastmod>2019-04-30T06:12:12.831Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-COPY/</loc>
+    
+    <lastmod>2019-04-30T06:12:02.622Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-RUN/</loc>
+    
+    <lastmod>2019-04-30T06:11:56.631Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-ARG/</loc>
+    
+    <lastmod>2019-04-30T06:11:49.693Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/04/30/Dockerfile-MAINTAINER/</loc>
+    
+    <lastmod>2019-04-30T06:11:40.396Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2019/04/29/Dockerfile-FROM-1/</loc>
     
-    <lastmod>2019-04-29T06:25:01.801Z</lastmod>
+    <lastmod>2019-04-30T06:04:56.585Z</lastmod>
     
   </url>
   

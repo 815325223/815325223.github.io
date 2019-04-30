@@ -1,12 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Dockerfile CMD]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-CMD%2F</url>
+    <content type="text"><![CDATA[CMD 与进程前后台和容器存活的关系设置镜像运行出来的容器的缺省命令 有两种写法，写多个和FROM一个已经有CMD的镜像的话，以最后一个为准12CMD ["executable", "param1", "param2"] CMD command param1 param2 前者是exec格式也是推荐格式，后者是/bin/sh格式，exec和CMD还有ENTRYPOINT这三者之间联系非常紧密，后面单独将相关的知识点。这里先用一个例子讲/bin/sh格式啥意思 我们发现pid为1的是一个/bin/sh的进程，而我们的进程在容器里在后面。容器是单独一个pid namespaces的。这里懒得去做个图了，借用下别人的图 默认下所有进程在一个顶级的pid namespaces里，pid namespaces像一个树一样。从根到最后可以多级串。容器的pid namespaces实际上是在宿主机上能看到的，也就是下面，我们可以看到容器在宿主机上的进程，由于子namespaces无法看到父级的namespaces，所以容器里第一个进程(也就是cmd)认为自己是pid为1，容器里其余进程都是它的子进程 在Linux中，只能给init已经安装信号处理函数的信号，其它信号都会被忽略，这可以防止init进程被误杀掉，即使是superuser。所以，kill -9 init不会kill掉init进程。但是容器的进程是在容器的ns里是init级别，我们可以在宿主机上杀掉它，之前线上的低版本docker 命令无法使用，同事无法停止错误容器，我便询问了进程名在宿主机找到后kill掉的。 接下来说说为啥推荐exec格式，exec格式的话第一个进程是我们的sleep进程，大家可以自己去构建镜像试试。推荐用exec格式是因为pid 为1的进程承担着pid namespaces的存活周期，听不懂的话我举个例子]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile EXPOSE]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-EXPOSE%2F</url>
+    <content type="text"><![CDATA[EXPOSE用法1EXPOSE &lt;port&gt; [&lt;port&gt;/&lt;protocol&gt;...] 例子123EXPOSE 80/tcpEXPOSE 80/udpEXPOSE 80 443 声明需要暴露的端口（缺省tcp），仅仅是声明并没有说写了它才能映射端口，对容器网络不熟悉的话后面会讲容器网络的。我们可以看到nginx官方镜像的Dockerfile里有写80。1EXPOSE 80 我们假设简单的run起来让外部访问的话可以这样1docker run -d -p 80:80 nginx:alpine 这条命令是使用nginx:alpine镜像运行一个容器，把宿主机的80映射到容器的80端口上，我们可以访问宿主机ip:80就可以看到默认nginx的index页面，如果说是云主机80可能需要备案，可以改成81:80。可以自己把nginx官方dockerfile的EXPOSE删掉发现还可以映射的。 EXPOSE作用是告诉使用者应该把容器的哪个端口暴漏出去。另一个作用给docker run -P用的。1docker run -P nginx:alpine 会映射宿主机上随机没被bind的端口到EXPOSE的端口，例如 random_port:80]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile ONBUILD]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-ONBUILD%2F</url>
+    <content type="text"><![CDATA[ONBUILD用法1ONBUILD [INSTRUCTION] 构建的时候并不会执行，只有在构建出来的镜像被FROM的时候才执行，例如12FROM xxxxONBUILD RUN cd /root/ &amp;&amp; wget xxxx 然后构建出镜像B里root目录并没有下载东西，只有FROM B构建的镜像才会执行这个RUN，这个用得很少，记住即可]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile USER]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-USER%2F</url>
+    <content type="text"><![CDATA[USER两种写法12USER &lt;user&gt;[:&lt;group&gt;] orUSER &lt;UID&gt;[:&lt;GID&gt;] USER 指令和 WORKDIR 相似，都是改变环境状态并影响以后的层。WORKDIR 是改变工作目录，USER 则是改变之后层的执行 RUN, CMD 以及 ENTRYPOINT 这类命令的身份。 当然，和 WORKDIR 一样，USER 只是帮助你切换到指定用户而已，这个用户必须是事先建立好的，否则无法切换。可用可不用。 不用的情况建议给容器的最终进程指定用户去运行，例如nginx官方添加了一个不登陆的nginx用户，配置文件里指定使用这个用户运行nginx。]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile WORKDIR]]></title>
+    <url>%2F2019%2F04%2F30%2FDo%2F</url>
+    <content type="text"><![CDATA[WORKDIR声明后续指令的工作目录，目录不存在则创建，可以理解为mkdir -p dir &amp;&amp; cd dir 1WORKDIR /path/to/workdir 可以在a中多次使用Dockerfile。如果提供了相对路径，则它将相对于前一条WORKDIR指令的路径 。例如：1234WORKDIR /aWORKDIR bWORKDIR cRUN pwd 最终pwd命令的输出Dockerfile将是 /a/b/c]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile ADD]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-ADD%2F</url>
+    <content type="text"><![CDATA[ADD和COPY一样，但是源可以是一个url会自动下载，另外源是压缩包的话会自动解压，但是实际中不会使用它，因为前面讲RUN的时候说的层概念。例如下面是一个ADD用的多的举例1234ADD https://xxxxx/name.tar.gz /home/test/RUN cd /home/test &amp;&amp; \ 编译安装... \ rm -rf /home/test ADD下载源码包，然后RUN里编译安装完删除源码包。实际上后面的层起来的容器虽说读取不到源码包了，但是还是在镜像里，参照我之前的RUN里那个test.html的例子。 一般避免多余的层和容量都是RUN里去下载源码包，处理完后删掉源码包，参照nginx的dockerfile的第一个RUN。 https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile#L7]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile COPY]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-COPY%2F</url>
+    <content type="text"><![CDATA[COPY用法123COPY &lt;src&gt; &lt;dest&gt; COPY ["&lt;src&gt;",... "&lt;dest&gt;"] COPY home* /home 复制本地的文件到容器中的目录，目录不存在则会自动创建，源可以是多个。在低版本的docker里如果源是绝对路径例如/root/data/nginx的话会把整个系统的根上传到docker daemon，会发现上传的内容等同于根的已用容量，例如下面12345$ cat DockerfileFROM alpineCOPY /root/data/nginx.tar.gz /root/home$ docker build -t test .Sending build context to Docker daemon 7.8GB 主要是因为上下文的概念，认为上下文的根是client的/，所以会把客户端的/上传到docker daemon，现在新版本是强制相对路径了，如果是绝对路径会报错。相对路径相对于build最后的.这个上下文路径为相对路径。 另外COPY还能指定uid:gid，如果容器的rootfs里没有文件/etc/passwd和/etc/group文件只能使用数字不能使用组名。1234COPY --chown=55:mygroup files* /somedir/COPY --chown=bin files* /somedir/COPY --chown=1 files* /somedir/COPY --chown=10:11 files* /somedir/ COPY接受一个标志–from=&lt;name|index&gt;，该标志可用于将源位置设置为FROM .. AS 主要用于多阶段构建，后面会举个例子来讲解多阶段构建，多阶段构建是17.05之后才出现的功能。]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile RUN]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-RUN%2F</url>
+    <content type="text"><![CDATA[RUN有两种形式 RUN command ( 该命令在shell中运行，默认情况下在Linux上是/bin/sh -c或windows的cmd /S /C) RUN [“executable”, “param1”, “param2”] (exec 形式) exec形式不会调用shell先展开变量，也就是不会解析ENV或者ARG的变量，所以一般来讲用得比较多的就是第一种形式，多行的话可以利用\换行。12345RUN .....\ &amp;&amp; addgroup -S nginx \ &amp;&amp; adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \ &amp;&amp; apk add --no-cache --virtual .build-deps \ ..... 这里要注意的是一个RUN是一层，dockerfile的一些涉及到文件的指令和RUN都会是新的一层，主要是构建过程实际上还是容器去commit，目的相同的RUN尽量合并在同一个RUN里减少大小。下面我做个例子来说明原因123FROM alpineRUN apk add wget &amp;&amp; wget https://www.baidu.com -O test.htmlRUN echo 123 &gt; test.html 构建并运行123456789101112131415161718192021222324252627282930# docker build -t test .Sending build context to Docker daemon 2.048kBStep 1/3 : FROM alpine ---&gt; cdf98d1859c1Step 2/3 : RUN apk add wget &amp;&amp; wget https://www.baidu.com -O test.html ---&gt; Running in 07bd55d265b8fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86_64/APKINDEX.tar.gzfetch http://dl-cdn.alpinelinux.org/alpine/v3.9/community/x86_64/APKINDEX.tar.gz(1/1) Installing wget (1.20.3-r0)Executing busybox-1.29.3-r10.triggerOK: 6 MiB in 15 packages--2019-04-30 05:38:10-- https://www.baidu.com/Resolving www.baidu.com... 58.217.200.39, 58.217.200.37Connecting to www.baidu.com|58.217.200.39|:443... connected.HTTP request sent, awaiting response... 200 OKLength: 2443 (2.4K) [text/html]Saving to: 'test.html' 0K .. 100% 21.8M=0s2019-04-30 05:38:10 (21.8 MB/s) - 'test.html' saved [2443/2443]Removing intermediate container 07bd55d265b8 ---&gt; 9420c50ef6f7Step 3/3 : RUN echo 123 &gt; test.html ---&gt; Running in 8724c012ff49Removing intermediate container 8724c012ff49 ---&gt; b924abffdb62Successfully built b924abffdb62Successfully tagged test:latest 运行然后查看docker的存储目录查找123456789[root@docker ~]# docker run --rm test cat test.html123[root@docker ~]# find /var/lib/docker/overlay2/ -type f -name test.html/var/lib/docker/overlay2/3c4530c7cd077e1d6ec74135679fe7234eddc88fe72ada21f632cebfd26de4f5/diff/test.html/var/lib/docker/overlay2/802018b95e4f9b16e9946e2e827db5c3b0cd8631ac0759c31dffea212ff06d4f/diff/test.html[root@docker ~]# cat /var/lib/docker/overlay2/3c4530c7cd077e1d6ec74135679fe7234eddc88fe72ada21f632cebfd26de4f5/diff/test.html123[root@docker ~]# cat /var/lib/docker/overlay2/802018b95e4f9b16e9946e2e827db5c3b0cd8631ac0759c31dffea212ff06d4f/diff/test.html&lt;!DOCTYPE html&gt; 发现两个文件都存在，前面说到了容器在读取文件的时候从上层往下查找，查找到了就返回，但是我的这个Dockerfile里第一个RUN下载了index页面，第二个改了文件内容。 可以证明一个RUN是一层，也证明了之前容器读取文件的逻辑。同时假设我们的目的是最终的123，我们可以俩个RUN合并了，这样就不会有多余的第一个RUN产生的test.html文件。]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile ARG]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-ARG%2F</url>
+    <content type="text"><![CDATA[ARG格式有两种123456ARG key----------------ARK key=valueARG key=value \ key2=value2 \ key3=value3 一般来讲第二种用得多，表明build的时候不传入变量设置默认值，无值就是第一种下用户在docker build的时候必须传入值，否则就报错。例如我们可以把nginx官方dockerfile的第一个ENV改成ARG，我们想构建哪个版本直接build的时候传入变量就行了。 当然ARG是唯一一个可以用于FROM前面的指令，例如下面这样我们可以通过命令行传递参数来改变FROM的base镜像。12ARG jdk=1.8xxxxFROM openjdk:$jdk Docker其实也预定了一些ARG方便我们构建的时候使用代理 HTTP_PROXY HTTPS_PROXY FTP_PROXY NO_PROXY]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile ENV]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-ENV%2F</url>
+    <content type="text"><![CDATA[ENV写法有两种，后者支持写多个，一般多个的话也是使用后者居多1234567ENV key value-------ENV key=value key2=value2ENV key=value \ key2=value2 \ key3=value3 \ key4=value4 设置一个环境变量，可以被dockerfile里后续的指令使用，也在容器运行过程中保持，支持的指令为:1ADD COPY ENV EXPOSE FROM LABEL STOPSIGNAL USER VOLUME WORKDIR ONBUILD 可以在dockerhub上发现各种官方镜像的Dockerfile的步骤都是固定的，新版本发布直接改下ENV后构建下即可1234567ENV NGINX_VERSION 1.15.11RUN .... \ &amp;&amp; curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \ ... &amp;&amp; cd /usr/src/nginx-$NGINX_VERSION \ &amp;&amp; ./configure $CONFIG --with-debug \ ... 很多应用镜像启动都是先启动一个脚本，拼接一堆参数最终传递给应用的主进程当作参数，最常见的就是tomcat，或者说很多的应用基于tomcat。下面是之前我修改一个镜像Dockerfile摸索出的启动脚本的运行过程1234567891011+ '[' -r /opt/atlassian/jira/bin/setenv.sh ']'+ . /opt/atlassian/jira/bin/setenv.sh$ cat /opt/atlassian/jira/bin/setenv.sh...JAVA_OPTS="-Xms$&#123;JVM_MINIMUM_MEMORY&#125; -Xmx$&#123;JVM_MAXIMUM_MEMORY&#125; $&#123;JVM_CODE_CACHE_ARGS&#125; $&#123;JAVA_OPTS&#125; $&#123;JVM_REQUIRED_ARGS&#125; $&#123;DISABLE_NOTIFICATIONS&#125; $&#123;JVM_SUPPORT_RECOMMENDED_ARGS&#125; $&#123;JVM_EXTRA_ARGS&#125; $&#123;JIRA_HOME_MINUSD&#125; $&#123;START_JIRA_JAVA_OPTS&#125;"...export JAVA_OPTS...exec java $JAVA_OPTS 其中有一行：1JAVA_OPTS="... $&#123;JAVA_OPTS&#125; ..." 他拼接了自己，如果想给java在最终参数后添加一些固定参数时，可以在构建镜像声明JAVA_OPTS，例如添加时区我们应该在Dockerfile里设置1ENV JAVA_OPTS='-Duser.timezone=GMT+08' docker run可以指定env，ENV指令不一样是给Dockerfile用的，有时候是给容器启动时候用的，我们可以在docker run的时候指定env或者覆盖env达到不需要修改镜像，例如常见的后端需要连接一个mysql，可以在后端代码os.getEnv(“mysql_address”)，我们启动的时候指定mysql_address变量为真实的mysql地址即可。]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile MAINTAINER]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-MAINTAINER%2F</url>
+    <content type="text"><![CDATA[MAINTAINER已经弃用，推荐使用LABEL，例如nginx dockerfile里的 LABEL maintainer=”NGINX Docker Maintainers &#100;&#x6f;&#x63;&#107;&#101;&#114;&#x2d;&#x6d;&#97;&#x69;&#x6e;&#x74;&#64;&#110;&#x67;&#x69;&#110;&#120;&#x2e;&#99;&#111;&#109;“]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Dockerfile FROM]]></title>
     <url>%2F2019%2F04%2F29%2FDockerfile-FROM-1%2F</url>
     <content type="text"><![CDATA[FROM用法1FROM &lt;baseimage&gt; 或者 FROM &lt;baseimage&gt;:&lt;tag&gt; 指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。 例如centos的Dockerfile是下面12345678910FROM scratchADD centos-7-x86_64-docker.tar.xz /LABEL org.label-schema.schema-version="1.0" \ org.label-schema.name="CentOS Base Image" \ org.label-schema.vendor="CentOS" \ org.label-schema.license="GPLv2" \ org.label-schema.build-date="20190305"CMD ["/bin/bash"] 而hello-world为123456FROM scratchCOPY hello /CMD ["/hello"]docker images | grep hellohello-world latest fce289e99eb9 3 months ago 1.84kB nginx:alpine镜像的dockerfile 链接为https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。 nginx:alpine既满足运行的最小环境下大小又很小，主要归功于FROM alpine ，现在alpine这个系统和rootfs得益于docker发展非常快，也有很多应用镜像都有alpine版本。 12345678910111213141516FROM alpine:3.9LABEL maintainer="NGINX Docker Maintainers &lt;docker-maint@nginx.com&gt;"ENV NGINX_VERSION 1.15.11RUN ...省略步骤，步骤是下载源码，安装编译需要的依赖，编译安装完删掉源码包和编译的依赖保留运编译出来的nginx二进制和需要的所有so文件COPY nginx.conf /etc/nginx/nginx.confCOPY nginx.vh.default.conf /etc/nginx/conf.d/default.confEXPOSE 80STOPSIGNAL SIGTERMCMD ["nginx", "-g", "daemon off;"]]]></content>
       <categories>
         <category>Docker</category>
       </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[Docker镜像03]]></title>

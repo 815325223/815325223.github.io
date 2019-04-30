@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-04-29T06:25:01.801Z</updated>
+  <updated>2019-04-30T07:39:35.589Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,13 +17,290 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Dockerfile CMD</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-CMD/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-CMD/</id>
+    <published>2019-04-30T06:39:00.000Z</published>
+    <updated>2019-04-30T07:39:35.589Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="CMD-与进程前后台和容器存活的关系"><a href="#CMD-与进程前后台和容器存活的关系" class="headerlink" title="CMD 与进程前后台和容器存活的关系"></a>CMD 与进程前后台和容器存活的关系</h6><p>设置镜像运行出来的容器的缺省命令</p><p>有两种写法，写多个和FROM一个已经有CMD的镜像的话，以最后一个为准<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMD [<span class="string">"executable"</span>, <span class="string">"param1"</span>, <span class="string">"param2"</span>] </span><br><span class="line">CMD <span class="built_in">command</span> param1 param2</span><br></pre></td></tr></table></figure></p><p>前者是exec格式也是推荐格式，后者是/bin/sh格式，exec和CMD还有ENTRYPOINT这三者之间联系非常紧密，后面单独将相关的知识点。这里先用一个例子讲/bin/sh格式啥意思</p><p><img src="/images/pasted-8.png" alt="upload successful"></p><p>我们发现pid为1的是一个/bin/sh的进程，而我们的进程在容器里在后面。容器是单独一个pid namespaces的。这里懒得去做个图了，借用下别人的图</p><p><img src="/images/pasted-9.png" alt="upload successful"></p><p>默认下所有进程在一个顶级的pid namespaces里，pid namespaces像一个树一样。从根到最后可以多级串。容器的pid namespaces实际上是在宿主机上能看到的，也就是下面，我们可以看到容器在宿主机上的进程，由于子namespaces无法看到父级的namespaces，所以容器里第一个进程(也就是cmd)认为自己是pid为1，容器里其余进程都是它的子进程</p><p><img src="/images/pasted-10.png" alt="upload successful"></p><p>在Linux中，只能给init已经安装信号处理函数的信号，其它信号都会被忽略，这可以防止init进程被误杀掉，即使是superuser。所以，kill -9 init不会kill掉init进程。但是容器的进程是在容器的ns里是init级别，我们可以在宿主机上杀掉它，之前线上的低版本docker 命令无法使用，同事无法停止错误容器，我便询问了进程名在宿主机找到后kill掉的。</p><p><img src="/images/pasted-11.png" alt="upload successful"></p><p>接下来说说为啥推荐exec格式，exec格式的话第一个进程是我们的sleep进程，大家可以自己去构建镜像试试。推荐用exec格式是因为pid 为1的进程承担着pid namespaces的存活周期，听不懂的话我举个例子</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;CMD-与进程前后台和容器存活的关系&quot;&gt;&lt;a href=&quot;#CMD-与进程前后台和容器存活的关系&quot; class=&quot;headerlink&quot; title=&quot;CMD 与进程前后台和容器存活的关系&quot;&gt;&lt;/a&gt;CMD 与进程前后台和容器存活的关系&lt;/h6&gt;&lt;p&gt;设置镜像运行
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile EXPOSE</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-EXPOSE/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-EXPOSE/</id>
+    <published>2019-04-30T06:33:00.000Z</published>
+    <updated>2019-04-30T06:35:38.651Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="EXPOSE"><a href="#EXPOSE" class="headerlink" title="EXPOSE"></a>EXPOSE</h6><p>用法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPOSE &lt;port&gt; [&lt;port&gt;/&lt;protocol&gt;...]</span><br></pre></td></tr></table></figure></p><p>例子<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EXPOSE 80/tcp</span><br><span class="line">EXPOSE 80/udp</span><br><span class="line">EXPOSE 80 443</span><br></pre></td></tr></table></figure></p><p>声明需要暴露的端口（缺省tcp），仅仅是声明并没有说写了它才能映射端口，对容器网络不熟悉的话后面会讲容器网络的。我们可以看到nginx官方镜像的Dockerfile里有写80。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPOSE 80</span><br></pre></td></tr></table></figure></p><p>我们假设简单的run起来让外部访问的话可以这样<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 nginx:alpine</span><br></pre></td></tr></table></figure></p><p>这条命令是使用nginx:alpine镜像运行一个容器，把宿主机的80映射到容器的80端口上，我们可以访问宿主机ip:80就可以看到默认nginx的index页面，如果说是云主机80可能需要备案，可以改成81:80。可以自己把nginx官方dockerfile的EXPOSE删掉发现还可以映射的。</p><p>EXPOSE作用是告诉使用者应该把容器的哪个端口暴漏出去。另一个作用给docker run -P用的。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -P nginx:alpine</span><br></pre></td></tr></table></figure></p><p>会映射宿主机上随机没被bind的端口到EXPOSE的端口，例如 random_port:80</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;EXPOSE&quot;&gt;&lt;a href=&quot;#EXPOSE&quot; class=&quot;headerlink&quot; title=&quot;EXPOSE&quot;&gt;&lt;/a&gt;EXPOSE&lt;/h6&gt;&lt;p&gt;用法&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td cl
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile ONBUILD</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-ONBUILD/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-ONBUILD/</id>
+    <published>2019-04-30T06:28:00.000Z</published>
+    <updated>2019-04-30T06:29:26.101Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="ONBUILD"><a href="#ONBUILD" class="headerlink" title="ONBUILD"></a>ONBUILD</h6><p>用法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ONBUILD [INSTRUCTION]</span><br></pre></td></tr></table></figure></p><p>构建的时候并不会执行，只有在构建出来的镜像被FROM的时候才执行，例如<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM xxxx</span><br><span class="line">ONBUILD RUN <span class="built_in">cd</span> /root/ &amp;&amp; wget xxxx</span><br></pre></td></tr></table></figure></p><p>然后构建出镜像B里root目录并没有下载东西，只有FROM B构建的镜像才会执行这个RUN，这个用得很少，记住即可</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;ONBUILD&quot;&gt;&lt;a href=&quot;#ONBUILD&quot; class=&quot;headerlink&quot; title=&quot;ONBUILD&quot;&gt;&lt;/a&gt;ONBUILD&lt;/h6&gt;&lt;p&gt;用法&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;t
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile USER</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-USER/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-USER/</id>
+    <published>2019-04-30T06:27:00.000Z</published>
+    <updated>2019-04-30T06:27:54.607Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="USER"><a href="#USER" class="headerlink" title="USER"></a>USER</h6><p>两种写法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">USER &lt;user&gt;[:&lt;group&gt;] or</span><br><span class="line">USER &lt;UID&gt;[:&lt;GID&gt;]</span><br></pre></td></tr></table></figure></p><p>USER 指令和 WORKDIR 相似，都是改变环境状态并影响以后的层。WORKDIR 是改变工作目录，USER 则是改变之后层的执行 RUN, CMD 以及 ENTRYPOINT 这类命令的身份。</p><p>当然，和 WORKDIR 一样，USER 只是帮助你切换到指定用户而已，这个用户必须是事先建立好的，否则无法切换。可用可不用。</p><p>不用的情况建议给容器的最终进程指定用户去运行，例如nginx官方添加了一个不登陆的nginx用户，配置文件里指定使用这个用户运行nginx。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;USER&quot;&gt;&lt;a href=&quot;#USER&quot; class=&quot;headerlink&quot; title=&quot;USER&quot;&gt;&lt;/a&gt;USER&lt;/h6&gt;&lt;p&gt;两种写法&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;g
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile WORKDIR</title>
+    <link href="http://yoursite.com/2019/04/30/Do/"/>
+    <id>http://yoursite.com/2019/04/30/Do/</id>
+    <published>2019-04-30T05:59:00.000Z</published>
+    <updated>2019-04-30T06:12:29.352Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="WORKDIR"><a href="#WORKDIR" class="headerlink" title="WORKDIR"></a>WORKDIR</h6><p>声明后续指令的工作目录，目录不存在则创建，可以理解为mkdir -p dir &amp;&amp; cd dir</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WORKDIR /path/to/workdir</span><br></pre></td></tr></table></figure><p>可以在a中多次使用Dockerfile。如果提供了相对路径，则它将相对于前一条WORKDIR指令的路径 。例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WORKDIR /a</span><br><span class="line">WORKDIR b</span><br><span class="line">WORKDIR c</span><br><span class="line">RUN <span class="built_in">pwd</span></span><br></pre></td></tr></table></figure></p><p>最终pwd命令的输出Dockerfile将是 /a/b/c</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;WORKDIR&quot;&gt;&lt;a href=&quot;#WORKDIR&quot; class=&quot;headerlink&quot; title=&quot;WORKDIR&quot;&gt;&lt;/a&gt;WORKDIR&lt;/h6&gt;&lt;p&gt;声明后续指令的工作目录，目录不存在则创建，可以理解为mkdir -p dir &amp;amp;&amp;amp; 
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile ADD</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-ADD/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-ADD/</id>
+    <published>2019-04-30T05:56:00.000Z</published>
+    <updated>2019-04-30T06:12:12.831Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h6><p>和COPY一样，但是源可以是一个url会自动下载，另外源是压缩包的话会自动解压，但是实际中不会使用它，因为前面讲RUN的时候说的层概念。例如下面是一个ADD用的多的举例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ADD https://xxxxx/name.tar.gz /home/<span class="built_in">test</span>/</span><br><span class="line">RUN <span class="built_in">cd</span> /home/<span class="built_in">test</span> &amp;&amp; \</span><br><span class="line">    编译安装... \</span><br><span class="line">    rm -rf /home/<span class="built_in">test</span></span><br></pre></td></tr></table></figure></p><p>ADD下载源码包，然后RUN里编译安装完删除源码包。实际上后面的层起来的容器虽说读取不到源码包了，但是还是在镜像里，参照我之前的RUN里那个test.html的例子。</p><p>一般避免多余的层和容量都是RUN里去下载源码包，处理完后删掉源码包，参照nginx的dockerfile的第一个RUN。 </p><p><a href="https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile#L7" target="_blank" rel="noopener">https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile#L7</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;ADD&quot;&gt;&lt;a href=&quot;#ADD&quot; class=&quot;headerlink&quot; title=&quot;ADD&quot;&gt;&lt;/a&gt;ADD&lt;/h6&gt;&lt;p&gt;和COPY一样，但是源可以是一个url会自动下载，另外源是压缩包的话会自动解压，但是实际中不会使用它，因为前面讲RUN的时候说的层概
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile COPY</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-COPY/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-COPY/</id>
+    <published>2019-04-30T05:42:00.000Z</published>
+    <updated>2019-04-30T06:12:02.622Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="COPY"><a href="#COPY" class="headerlink" title="COPY"></a>COPY</h6><p>用法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">COPY &lt;src&gt;  &lt;dest&gt;  </span><br><span class="line">COPY [<span class="string">"&lt;src&gt;"</span>,... <span class="string">"&lt;dest&gt;"</span>]  </span><br><span class="line">COPY home* /home</span><br></pre></td></tr></table></figure></p><p>复制本地的文件到容器中的目录，目录不存在则会自动创建，源可以是多个。在低版本的docker里如果源是绝对路径例如/root/data/nginx的话会把整个系统的根上传到docker daemon，会发现上传的内容等同于根的已用容量，例如下面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat Dockerfile</span><br><span class="line">FROM alpine</span><br><span class="line">COPY /root/data/nginx.tar.gz /root/home</span><br><span class="line">$ docker build -t <span class="built_in">test</span> .</span><br><span class="line">Sending build context to Docker daemon  7.8GB</span><br></pre></td></tr></table></figure></p><p>主要是因为上下文的概念，认为上下文的根是client的/，所以会把客户端的/上传到docker daemon，现在新版本是强制相对路径了，如果是绝对路径会报错。相对路径相对于build最后的.这个上下文路径为相对路径。</p><p>另外COPY还能指定uid:gid，如果容器的rootfs里没有文件/etc/passwd和/etc/group文件只能使用数字不能使用组名。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">COPY --chown=55:mygroup files* /somedir/</span><br><span class="line">COPY --chown=bin files* /somedir/</span><br><span class="line">COPY --chown=1 files* /somedir/</span><br><span class="line">COPY --chown=10:11 files* /somedir/</span><br></pre></td></tr></table></figure></p><p>COPY接受一个标志–from=&lt;name|index&gt;，该标志可用于将源位置设置为FROM .. AS <name> 主要用于多阶段构建，后面会举个例子来讲解多阶段构建，多阶段构建是17.05之后才出现的功能。</name></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;COPY&quot;&gt;&lt;a href=&quot;#COPY&quot; class=&quot;headerlink&quot; title=&quot;COPY&quot;&gt;&lt;/a&gt;COPY&lt;/h6&gt;&lt;p&gt;用法&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gut
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile RUN</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-RUN/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-RUN/</id>
+    <published>2019-04-30T05:05:00.000Z</published>
+    <updated>2019-04-30T06:11:56.631Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h6><p>有两种形式</p><ul><li>RUN command ( 该命令在shell中运行，默认情况下在Linux上是/bin/sh -c或windows的cmd /S /C)</li><li>RUN [“executable”, “param1”, “param2”] (exec 形式)</li></ul><p>exec形式不会调用shell先展开变量，也就是不会解析ENV或者ARG的变量，所以一般来讲用得比较多的就是第一种形式，多行的话可以利用\换行。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RUN  .....\</span><br><span class="line">    &amp;&amp; addgroup -S nginx \</span><br><span class="line">&amp;&amp; adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \</span><br><span class="line">&amp;&amp; apk add --no-cache --virtual .build-deps \</span><br><span class="line">.....</span><br></pre></td></tr></table></figure></p><p>这里要注意的是一个RUN是一层，dockerfile的一些涉及到文件的指令和RUN都会是新的一层，主要是构建过程实际上还是容器去commit，目的相同的RUN尽量合并在同一个RUN里减少大小。下面我做个例子来说明原因<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine</span><br><span class="line">RUN apk add wget  &amp;&amp; wget https://www.baidu.com -O test.html</span><br><span class="line">RUN <span class="built_in">echo</span> 123 &gt; test.html</span><br></pre></td></tr></table></figure></p><p>构建并运行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker build -t test .</span></span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/3 : FROM alpine</span><br><span class="line"> ---&gt; cdf98d1859c1</span><br><span class="line">Step 2/3 : RUN apk add wget  &amp;&amp; wget https://www.baidu.com -O test.html</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 07bd55d265b8</span><br><span class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86_64/APKINDEX.tar.gz</span><br><span class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/community/x86_64/APKINDEX.tar.gz</span><br><span class="line">(1/1) Installing wget (1.20.3-r0)</span><br><span class="line">Executing busybox-1.29.3-r10.trigger</span><br><span class="line">OK: 6 MiB <span class="keyword">in</span> 15 packages</span><br><span class="line">--2019-04-30 05:38:10--  https://www.baidu.com/</span><br><span class="line">Resolving www.baidu.com... 58.217.200.39, 58.217.200.37</span><br><span class="line">Connecting to www.baidu.com|58.217.200.39|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 2443 (2.4K) [text/html]</span><br><span class="line">Saving to: <span class="string">'test.html'</span></span><br><span class="line"></span><br><span class="line">     0K ..                                                    100% 21.8M=0s</span><br><span class="line"></span><br><span class="line">2019-04-30 05:38:10 (21.8 MB/s) - <span class="string">'test.html'</span> saved [2443/2443]</span><br><span class="line"></span><br><span class="line">Removing intermediate container 07bd55d265b8</span><br><span class="line"> ---&gt; 9420c50ef6f7</span><br><span class="line">Step 3/3 : RUN <span class="built_in">echo</span> 123 &gt; test.html</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 8724c012ff49</span><br><span class="line">Removing intermediate container 8724c012ff49</span><br><span class="line"> ---&gt; b924abffdb62</span><br><span class="line">Successfully built b924abffdb62</span><br><span class="line">Successfully tagged <span class="built_in">test</span>:latest</span><br></pre></td></tr></table></figure></p><p>运行然后查看docker的存储目录查找<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@docker ~]<span class="comment"># docker run --rm test cat test.html</span></span><br><span class="line">123</span><br><span class="line">[root@docker ~]<span class="comment"># find /var/lib/docker/overlay2/ -type f -name test.html</span></span><br><span class="line">/var/lib/docker/overlay2/3c4530c7cd077e1d6ec74135679fe7234eddc88fe72ada21f632cebfd26de4f5/diff/test.html</span><br><span class="line">/var/lib/docker/overlay2/802018b95e4f9b16e9946e2e827db5c3b0cd8631ac0759c31dffea212ff06d4f/diff/test.html</span><br><span class="line">[root@docker ~]<span class="comment"># cat /var/lib/docker/overlay2/3c4530c7cd077e1d6ec74135679fe7234eddc88fe72ada21f632cebfd26de4f5/diff/test.html</span></span><br><span class="line">123</span><br><span class="line">[root@docker ~]<span class="comment"># cat /var/lib/docker/overlay2/802018b95e4f9b16e9946e2e827db5c3b0cd8631ac0759c31dffea212ff06d4f/diff/test.html</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br></pre></td></tr></table></figure></p><p>发现两个文件都存在，前面说到了容器在读取文件的时候从上层往下查找，查找到了就返回，但是我的这个Dockerfile里第一个RUN下载了index页面，第二个改了文件内容。</p><p>可以证明一个RUN是一层，也证明了之前容器读取文件的逻辑。同时假设我们的目的是最终的123，我们可以俩个RUN合并了，这样就不会有多余的第一个RUN产生的test.html文件。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;RUN&quot;&gt;&lt;a href=&quot;#RUN&quot; class=&quot;headerlink&quot; title=&quot;RUN&quot;&gt;&lt;/a&gt;RUN&lt;/h6&gt;&lt;p&gt;有两种形式&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RUN command ( 该命令在shell中运行，默认情况下在Linux上是/bin/sh
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile ARG</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-ARG/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-ARG/</id>
+    <published>2019-04-30T03:29:00.000Z</published>
+    <updated>2019-04-30T06:11:49.693Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="ARG"><a href="#ARG" class="headerlink" title="ARG"></a>ARG</h6><p>格式有两种<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ARG key</span><br><span class="line">----------------</span><br><span class="line">ARK key=value</span><br><span class="line">ARG key=value \</span><br><span class="line">    key2=value2 \</span><br><span class="line">    key3=value3</span><br></pre></td></tr></table></figure></p><p>一般来讲第二种用得多，表明build的时候不传入变量设置默认值，无值就是第一种下用户在docker build的时候必须传入值，否则就报错。例如我们可以把nginx官方dockerfile的第一个ENV改成ARG，我们想构建哪个版本直接build的时候传入变量就行了。</p><p>当然ARG是唯一一个可以用于FROM前面的指令，例如下面这样我们可以通过命令行传递参数来改变FROM的base镜像。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ARG jdk=1.8xxxx</span><br><span class="line">FROM openjdk:<span class="variable">$jdk</span></span><br></pre></td></tr></table></figure></p><p>Docker其实也预定了一些ARG方便我们构建的时候使用代理</p><ul><li>HTTP_PROXY</li><li>HTTPS_PROXY</li><li>FTP_PROXY</li><li>NO_PROXY</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;ARG&quot;&gt;&lt;a href=&quot;#ARG&quot; class=&quot;headerlink&quot; title=&quot;ARG&quot;&gt;&lt;/a&gt;ARG&lt;/h6&gt;&lt;p&gt;格式有两种&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile ENV</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-ENV/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-ENV/</id>
+    <published>2019-04-30T03:09:00.000Z</published>
+    <updated>2019-04-30T06:15:36.391Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="ENV"><a href="#ENV" class="headerlink" title="ENV"></a>ENV</h6><p>写法有两种，后者支持写多个，一般多个的话也是使用后者居多<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ENV key value</span><br><span class="line">-------</span><br><span class="line">ENV key=value key2=value2</span><br><span class="line">ENV key=value \</span><br><span class="line">    key2=value2  \</span><br><span class="line">    key3=value3   \</span><br><span class="line">    key4=value4</span><br></pre></td></tr></table></figure></p><p>设置一个环境变量，可以被dockerfile里后续的指令使用，也在容器运行过程中保持，支持的指令为:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ADD COPY ENV EXPOSE FROM LABEL STOPSIGNAL USER VOLUME WORKDIR ONBUILD</span><br></pre></td></tr></table></figure></p><p>可以在dockerhub上发现各种官方镜像的Dockerfile的步骤都是固定的，新版本发布直接改下ENV后构建下即可<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ENV NGINX_VERSION 1.15.11</span><br><span class="line">RUN .... \</span><br><span class="line">    &amp;&amp; curl -fSL https://nginx.org/download/nginx-<span class="variable">$NGINX_VERSION</span>.tar.gz -o nginx.tar.gz \</span><br><span class="line">    ...</span><br><span class="line">    &amp;&amp; <span class="built_in">cd</span> /usr/src/nginx-<span class="variable">$NGINX_VERSION</span> \</span><br><span class="line">&amp;&amp; ./configure <span class="variable">$CONFIG</span> --with-debug \</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p><p>很多应用镜像启动都是先启动一个脚本，拼接一堆参数最终传递给应用的主进程当作参数，最常见的就是tomcat，或者说很多的应用基于tomcat。下面是之前我修改一个镜像Dockerfile摸索出的启动脚本的运行过程<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+ <span class="string">'['</span> -r /opt/atlassian/jira/bin/setenv.sh <span class="string">']'</span></span><br><span class="line">+ . /opt/atlassian/jira/bin/setenv.sh</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ cat /opt/atlassian/jira/bin/setenv.sh</span><br><span class="line">...</span><br><span class="line">JAVA_OPTS=<span class="string">"-Xms<span class="variable">$&#123;JVM_MINIMUM_MEMORY&#125;</span> -Xmx<span class="variable">$&#123;JVM_MAXIMUM_MEMORY&#125;</span> <span class="variable">$&#123;JVM_CODE_CACHE_ARGS&#125;</span> <span class="variable">$&#123;JAVA_OPTS&#125;</span> <span class="variable">$&#123;JVM_REQUIRED_ARGS&#125;</span> <span class="variable">$&#123;DISABLE_NOTIFICATIONS&#125;</span> <span class="variable">$&#123;JVM_SUPPORT_RECOMMENDED_ARGS&#125;</span> <span class="variable">$&#123;JVM_EXTRA_ARGS&#125;</span> <span class="variable">$&#123;JIRA_HOME_MINUSD&#125;</span> <span class="variable">$&#123;START_JIRA_JAVA_OPTS&#125;</span>"</span></span><br><span class="line">...</span><br><span class="line"><span class="built_in">export</span> JAVA_OPTS</span><br><span class="line">...</span><br><span class="line"><span class="built_in">exec</span> java <span class="variable">$JAVA_OPTS</span></span><br></pre></td></tr></table></figure></p><p>其中有一行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTS=<span class="string">"... <span class="variable">$&#123;JAVA_OPTS&#125;</span> ..."</span></span><br></pre></td></tr></table></figure></p><p>他拼接了自己，如果想给java在最终参数后添加一些固定参数时，可以在构建镜像声明JAVA_OPTS，例如添加时区我们应该在Dockerfile里设置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENV  JAVA_OPTS=<span class="string">'-Duser.timezone=GMT+08'</span></span><br></pre></td></tr></table></figure></p><p>docker run可以指定env，ENV指令不一样是给Dockerfile用的，有时候是给容器启动时候用的，我们可以在docker run的时候指定env或者覆盖env达到不需要修改镜像，例如常见的后端需要连接一个mysql，可以在后端代码os.getEnv(“mysql_address”)，我们启动的时候指定mysql_address变量为真实的mysql地址即可。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;ENV&quot;&gt;&lt;a href=&quot;#ENV&quot; class=&quot;headerlink&quot; title=&quot;ENV&quot;&gt;&lt;/a&gt;ENV&lt;/h6&gt;&lt;p&gt;写法有两种，后者支持写多个，一般多个的话也是使用后者居多&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;ta
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile MAINTAINER</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-MAINTAINER/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-MAINTAINER/</id>
+    <published>2019-04-30T03:09:00.000Z</published>
+    <updated>2019-04-30T06:11:40.396Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="MAINTAINER"><a href="#MAINTAINER" class="headerlink" title="MAINTAINER"></a>MAINTAINER</h6><p>已经弃用，推荐使用LABEL，例如nginx dockerfile里的</p><p>LABEL maintainer=”NGINX Docker Maintainers <a href="mailto:&#100;&#x6f;&#x63;&#107;&#101;&#114;&#x2d;&#x6d;&#97;&#x69;&#x6e;&#x74;&#64;&#110;&#x67;&#x69;&#110;&#120;&#x2e;&#99;&#111;&#109;" target="_blank" rel="noopener">&#100;&#x6f;&#x63;&#107;&#101;&#114;&#x2d;&#x6d;&#97;&#x69;&#x6e;&#x74;&#64;&#110;&#x67;&#x69;&#110;&#120;&#x2e;&#99;&#111;&#109;</a>“</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;MAINTAINER&quot;&gt;&lt;a href=&quot;#MAINTAINER&quot; class=&quot;headerlink&quot; title=&quot;MAINTAINER&quot;&gt;&lt;/a&gt;MAINTAINER&lt;/h6&gt;&lt;p&gt;已经弃用，推荐使用LABEL，例如nginx dockerfile里的&lt;/p
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Dockerfile FROM</title>
     <link href="http://yoursite.com/2019/04/29/Dockerfile-FROM-1/"/>
     <id>http://yoursite.com/2019/04/29/Dockerfile-FROM-1/</id>
     <published>2019-04-29T05:37:00.000Z</published>
-    <updated>2019-04-29T06:25:01.801Z</updated>
+    <updated>2019-04-30T06:04:56.585Z</updated>
     
-    <content type="html"><![CDATA[<h6 id="FROM"><a href="#FROM" class="headerlink" title="FROM"></a>FROM</h6><p>用法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM &lt;baseimage&gt; 或者 FROM &lt;baseimage&gt;:&lt;tag&gt;</span><br></pre></td></tr></table></figure></p><p>指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。</p><p>例如centos的Dockerfile是下面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">ADD centos-7-x86_64-docker.tar.xz /</span><br><span class="line"></span><br><span class="line">LABEL org.label-schema.schema-version=<span class="string">"1.0"</span> \</span><br><span class="line">    org.label-schema.name=<span class="string">"CentOS Base Image"</span> \</span><br><span class="line">    org.label-schema.vendor=<span class="string">"CentOS"</span> \</span><br><span class="line">    org.label-schema.license=<span class="string">"GPLv2"</span> \</span><br><span class="line">    org.label-schema.build-date=<span class="string">"20190305"</span></span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"/bin/bash"</span>]</span><br></pre></td></tr></table></figure></p><p>而hello-world为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">COPY hello /</span><br><span class="line">CMD [<span class="string">"/hello"</span>]</span><br><span class="line"></span><br><span class="line">docker images | grep hello</span><br><span class="line">hello-world         latest              fce289e99eb9        3 months ago        1.84kB</span><br></pre></td></tr></table></figure></p><p>nginx:alpine镜像的dockerfile 链接为<a href="https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。" target="_blank" rel="noopener">https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。</a></p><p>nginx:alpine既满足运行的最小环境下大小又很小，主要归功于FROM alpine ，现在alpine这个系统和rootfs得益于docker发展非常快，也有很多应用镜像都有alpine版本。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.9</span><br><span class="line"></span><br><span class="line">LABEL maintainer=<span class="string">"NGINX Docker Maintainers &lt;docker-maint@nginx.com&gt;"</span></span><br><span class="line"></span><br><span class="line">ENV NGINX_VERSION 1.15.11</span><br><span class="line"></span><br><span class="line">RUN ...省略步骤，步骤是下载源码，安装编译需要的依赖，编译安装完删掉源码包和编译的依赖保留运编译出来的nginx二进制和需要的所有so文件</span><br><span class="line"></span><br><span class="line">COPY nginx.conf /etc/nginx/nginx.conf</span><br><span class="line">COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">STOPSIGNAL SIGTERM</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"nginx"</span>, <span class="string">"-g"</span>, <span class="string">"daemon off;"</span>]</span><br></pre></td></tr></table></figure>]]></content>
+    <content type="html"><![CDATA[<h6 id="FROM"><a href="#FROM" class="headerlink" title="FROM"></a>FROM</h6><p>用法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM &lt;baseimage&gt; 或者 FROM &lt;baseimage&gt;:&lt;tag&gt;</span><br></pre></td></tr></table></figure></p><p>指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。</p><p>例如centos的Dockerfile是下面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">ADD centos-7-x86_64-docker.tar.xz /</span><br><span class="line"></span><br><span class="line">LABEL org.label-schema.schema-version=<span class="string">"1.0"</span> \</span><br><span class="line">    org.label-schema.name=<span class="string">"CentOS Base Image"</span> \</span><br><span class="line">    org.label-schema.vendor=<span class="string">"CentOS"</span> \</span><br><span class="line">    org.label-schema.license=<span class="string">"GPLv2"</span> \</span><br><span class="line">    org.label-schema.build-date=<span class="string">"20190305"</span></span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"/bin/bash"</span>]</span><br></pre></td></tr></table></figure></p><p>而hello-world为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">COPY hello /</span><br><span class="line">CMD [<span class="string">"/hello"</span>]</span><br><span class="line"></span><br><span class="line">docker images | grep hello</span><br><span class="line">hello-world         latest              fce289e99eb9        3 months ago        1.84kB</span><br></pre></td></tr></table></figure></p><p>nginx:alpine镜像的dockerfile 链接为<br><a href="https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。" target="_blank" rel="noopener">https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。</a></p><p>nginx:alpine既满足运行的最小环境下大小又很小，主要归功于FROM alpine ，现在alpine这个系统和rootfs得益于docker发展非常快，也有很多应用镜像都有alpine版本。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.9</span><br><span class="line"></span><br><span class="line">LABEL maintainer=<span class="string">"NGINX Docker Maintainers &lt;docker-maint@nginx.com&gt;"</span></span><br><span class="line"></span><br><span class="line">ENV NGINX_VERSION 1.15.11</span><br><span class="line"></span><br><span class="line">RUN ...省略步骤，步骤是下载源码，安装编译需要的依赖，编译安装完删掉源码包和编译的依赖保留运编译出来的nginx二进制和需要的所有so文件</span><br><span class="line"></span><br><span class="line">COPY nginx.conf /etc/nginx/nginx.conf</span><br><span class="line">COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">STOPSIGNAL SIGTERM</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"nginx"</span>, <span class="string">"-g"</span>, <span class="string">"daemon off;"</span>]</span><br></pre></td></tr></table></figure>]]></content>
     
     <summary type="html">
     
@@ -36,6 +313,8 @@
     
       <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
     
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
     
   </entry>
   

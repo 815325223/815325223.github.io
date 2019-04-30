@@ -139,13 +139,14 @@
 
 
   <meta name="description" content="FROM用法1FROM &amp;lt;baseimage&amp;gt; 或者 FROM &amp;lt;baseimage&amp;gt;:&amp;lt;tag&amp;gt; 指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。 例如centos的Dockerfile是下面12345678910FROM scra">
+<meta name="keywords" content="Dockerfile">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Dockerfile FROM">
 <meta property="og:url" content="http://yoursite.com/2019/04/29/Dockerfile-FROM-1/index.html">
 <meta property="og:site_name" content="Mr.Cheng">
 <meta property="og:description" content="FROM用法1FROM &amp;lt;baseimage&amp;gt; 或者 FROM &amp;lt;baseimage&amp;gt;:&amp;lt;tag&amp;gt; 指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。 例如centos的Dockerfile是下面12345678910FROM scra">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-29T06:25:01.801Z">
+<meta property="og:updated_time" content="2019-04-30T06:04:56.585Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dockerfile FROM">
 <meta name="twitter:description" content="FROM用法1FROM &amp;lt;baseimage&amp;gt; 或者 FROM &amp;lt;baseimage&amp;gt;:&amp;lt;tag&amp;gt; 指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。 例如centos的Dockerfile是下面12345678910FROM scra">
@@ -536,10 +537,9 @@
 <p>指定从哪个镜像为基础迭代，如果本地没有镜像则会从仓库拉取，通常是第一行，而scratch是空镜像，是所有rootfs和一些单独可执行文件做镜像的根源，关于scratch后续会说。</p>
 <p>例如centos的Dockerfile是下面<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">ADD centos-7-x86_64-docker.tar.xz /</span><br><span class="line"></span><br><span class="line">LABEL org.label-schema.schema-version=<span class="string">"1.0"</span> \</span><br><span class="line">    org.label-schema.name=<span class="string">"CentOS Base Image"</span> \</span><br><span class="line">    org.label-schema.vendor=<span class="string">"CentOS"</span> \</span><br><span class="line">    org.label-schema.license=<span class="string">"GPLv2"</span> \</span><br><span class="line">    org.label-schema.build-date=<span class="string">"20190305"</span></span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"/bin/bash"</span>]</span><br></pre></td></tr></table></figure></p>
 <p>而hello-world为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM scratch</span><br><span class="line">COPY hello /</span><br><span class="line">CMD [<span class="string">"/hello"</span>]</span><br><span class="line"></span><br><span class="line">docker images | grep hello</span><br><span class="line">hello-world         latest              fce289e99eb9        3 months ago        1.84kB</span><br></pre></td></tr></table></figure></p>
-<p>nginx:alpine镜像的dockerfile 链接为<a href="https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。" target="_blank" rel="noopener">https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。</a></p>
+<p>nginx:alpine镜像的dockerfile 链接为<br><a href="https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。" target="_blank" rel="noopener">https://github.com/nginxinc/docker-nginx/blob/7d7c67f2eaa6b2b32c718ba9d93f152870513c7c/mainline/alpine/Dockerfile，大家可以仿照这个经典案例写出自己的Dockerfile。</a></p>
 <p>nginx:alpine既满足运行的最小环境下大小又很小，主要归功于FROM alpine ，现在alpine这个系统和rootfs得益于docker发展非常快，也有很多应用镜像都有alpine版本。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.9</span><br><span class="line"></span><br><span class="line">LABEL maintainer=<span class="string">"NGINX Docker Maintainers &lt;docker-maint@nginx.com&gt;"</span></span><br><span class="line"></span><br><span class="line">ENV NGINX_VERSION 1.15.11</span><br><span class="line"></span><br><span class="line">RUN ...省略步骤，步骤是下载源码，安装编译需要的依赖，编译安装完删掉源码包和编译的依赖保留运编译出来的nginx二进制和需要的所有so文件</span><br><span class="line"></span><br><span class="line">COPY nginx.conf /etc/nginx/nginx.conf</span><br><span class="line">COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">STOPSIGNAL SIGTERM</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"nginx"</span>, <span class="string">"-g"</span>, <span class="string">"daemon off;"</span>]</span><br></pre></td></tr></table></figure>
-
       
     </div>
 
@@ -570,6 +570,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Dockerfile/" rel="tag"><i class="fa fa-tag"></i> Dockerfile</a>
+          
+        </div>
       
 
       
@@ -642,6 +648,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/04/30/Dockerfile-MAINTAINER/" rel="prev" title="Dockerfile MAINTAINER">
+                Dockerfile MAINTAINER <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -711,7 +721,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">17</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -755,7 +765,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -904,7 +916,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共2.8k字</span>
+  <span class="post-count">博客全站共5.8k字</span>
 </div>
 
         
