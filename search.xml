@@ -1,6 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[构建标准且人性化镜像]]></title>
+    <url>%2F2019%2F05%2F02%2F%E6%9E%84%E5%BB%BA%E6%A0%87%E5%87%86%E4%B8%94%E4%BA%BA%E6%80%A7%E5%8C%96%E9%95%9C%E5%83%8F%2F</url>
+    <content type="text"><![CDATA[正确的FROM合适的镜像很多新手一上来就是FROM centos然后RUN 一堆yum install的，这样还停留在虚拟机的角度。可以FROM alpine或者干脆拿官方的改，alpine初期的时候问题蛮多的，很多人建议使用alpine做基础镜像最好是测试好再上线，现在alpine的快速发展，这种现象很少了。 不要用imageID或者latest标签id的话不便于长期发展，而latest标签无法回滚。 不要重复造轮子现在dockerhub上有很多的镜像了，很多人还是喜欢造轮子，造出来的镜像层又多，无用的文件又停留在层理，主进程还不是业务进程，还不支持传入环境变量来让用户选择场景和传入配置信息启动。 如果你的是一个java应用，那么你应该使用java作为基础应用，如果你是tomcat应用，你应该使用tomcat作为基础应用，而不是按照虚拟机的思维，把Java装好，然后装应用；tomcat也一样，装java，装tomcat，装应用。 镜像大小之前我举例的ADD添加源码包和RUN rm -f删掉ADD的源码包，虽说最终起来的容器看不到源码包。实际上文件还停留在镜像的层里，所以尽量合并和减少层防止层保持住文件。 最后一些零散的建议和常见错误 编写entrypoint脚本让启动更人性化 同时如果是初期上docker到生产，考虑到排错啥的，可以在官方dockerfile里添加一些常见的排错命 尽量使用ENV和ARG让人不改或者少改Dockerfile即可做构建对应版本的镜像 容器时间不对的话可以安装包tzdate，声明变量TZ即可声明时区，或者构建的时候带上/etc/localtime或者运行的时候挂载宿主机的/etc/localtime。 如果是编译型语言，妥善利用多阶段构建（后面容器无法运行排错的时候会讲解多阶构建） 代码里应该要注意优雅退出。收到信号的时候释放东西啥的。 代码，war，jar，go编译的二进制到底应不应该放在镜像里？其实现在的java和php，还有go啥的依赖的运行环境基本不会变，变更发布新版本也就只有代码，war，jar和go编译的二进制，为此可以两种做法: 全部打包到镜像里 不变的层做个镜像，启动利用entrypoint脚本接受传入的git分支或者war包啥的内网下载直链下载到容器里或者启动直接挂载nfs里的war包或者代码啥的启动 很多人都是传统的第一种思维，看到第二种的时候直接张口说这样不行。如果后续接触到了k8s会发现k8s有个initContainers，谷歌也说了可以利用initContainers去初始化或者克隆git代码。 其实两种均可，例如第一种，在没有gc原生docker下，每一次发布都会老版本镜像存在，虽说层共享，但是最后的代码层的容量还是占据了宿主机容量的。 第二种每次启动都需要下载，需要网速，如果是内网可以尝试，代码或者war包啥的都是在容器层，不会吃宿主机多大容量。实在接受不了可以运维给研发做个这种通用镜像给他们用。 最后是推荐一个漠然大佬的示例，漠然大佬的github上很多镜像下载量很多，可以去他github看，这里我放下他的java的应用示例 https://github.com/Gozap/dockerfile]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[exec与entrypoint使用脚本]]></title>
+    <url>%2F2019%2F05%2F02%2Fexec%E4%B8%8Eentrypoint%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%2F</url>
+    <content type="text"><![CDATA[现在很多有状态的官方镜像的ENTRYPOINT都是使用了一个脚本。例如redis12345COPY docker-entrypoint.sh /usr/local/bin/ENTRYPOINT ["docker-entrypoint.sh"]EXPOSE 6379CMD ["redis-server"] 12345678910111213141516#!/bin/shset -e# first arg is `-f` or `--some-option`# or first arg is `something.conf`if [ "$&#123;1#-&#125;" != "$1" ] || [ "$&#123;1%.conf&#125;" != "$1" ]; then set -- redis-server "$@"fi# allow the container to be started with `--user`if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then find . \! -user redis -exec chown redis '&#123;&#125;' + exec gosu redis "$0" "$@"fiexec "$@" 最终运行的是docker-entrypoint.sh redis-server 第一个if的逻辑是如果docker run 选项 redis -x 或者–xx或者xxx.conf，就把脚本收到的$@改编成redis-server $@,例如我们可同docker run -d redis –port 7379修改启动的容器里的redis端口。如果我们传入的command不是-开头的也不是.conf结尾的字符，例如是date，则会跑到最后的逻辑执行我们的date命令不会启动redis-server 第二个if这里，如果满足第一个if或者直接默认的cmd下而且容器里用户uid是0，则把属主不是redis的文件改成redis用户，然后切成redis用户去启动redis-server。 我们可以看到entrypoint能在业务进程启动前做很多事情。而且优秀的镜像都离不开entrypoint脚本，能够根据用户传入的变量和command来切换启动的场景和配置。 前面说了，主进程一定要是业务进程，这里怎么是个脚本呢，那业务进程不就不是pid为1了吗？ 这里用了exec来退位让贤，最终redis-server还是pid为1的。可以简单几个命令讲解下exec的作用。 写个test.sh脚本，在脚本里用pstree -p，运行脚本bash test.sh查看进程层次 发现pstree是在我们脚本bash(1998)的子进程 然后在脚本最后面加一行exec pstree -p看看输出 我们发现bash进程运行的时候pid是2022，然后第二个pstree上升到了2022这一层次了，假设pid为a的命令或者二进制exec执行了命令b，那b就接替了a的pid。如果说我们entrypoint或者cmd使用脚本，那么我们一定要在脚本最后启动业务进程的时候前面加个exec让脚本退位让贤。 最后环境变量写配置文件涉及到修改，还有一些判断是否初次启动的有下面一些工具或者套路。 xmlstarlet 处理xml pip安装shyaml 处理yaml jq读取json nodejs的npm安装json可以修改json文件 处理excel或者csv使用in2csv，csvkit 提供了 in2csv，csvcut，csvjoin，csvgrep touch -d “@0”写在构建的最后一个RUN里把时间戳设置为1970-1-1，然后用stat命令判断 if [ “$(stat -c “%Y” “${CONF_INSTALL}/conf/server.xml”)” -eq “0” ]; then 另外entrypoint脚本COPY进去的时候注意可执行权限，如果Windows上传到Linux构建会因为entrpoint脚本没带权限无法运行]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile STOPSIGNAL]]></title>
+    <url>%2F2019%2F05%2F02%2FDockerfile-STOPSIGNAL%2F</url>
+    <content type="text"><![CDATA[格式，缺省信号为SIGTERM1234STOPSIGNAL signal------STOPSIGNAL SIGTERMSTOPSIGNAL 9 可以是kill -l的信号名字也可以信号数字:1234567891011121314kill -l 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL 10) SIGUSR111) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM16) SIGSTKFLT 17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP21) SIGTTIN 22) SIGTTOU 23) SIGURG 24) SIGXCPU 25) SIGXFSZ26) SIGVTALRM 27) SIGPROF 28) SIGWINCH 29) SIGIO 30) SIGPWR31) SIGSYS 34) SIGRTMIN 35) SIGRTMIN+1 36) SIGRTMIN+2 37) SIGRTMIN+338) SIGRTMIN+4 39) SIGRTMIN+5 40) SIGRTMIN+6 41) SIGRTMIN+7 42) SIGRTMIN+843) SIGRTMIN+9 44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+1348) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-1253) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9 56) SIGRTMAX-8 57) SIGRTMAX-758) SIGRTMAX-6 59) SIGRTMAX-5 60) SIGRTMAX-4 61) SIGRTMAX-3 62) SIGRTMAX-263) SIGRTMAX-1 64) SIGRTMAX docker run的选项可以覆盖镜像定义的STOPSIGNAL信号1--stop-signal string Signal to stop a container (default "SIGTERM") 在docker stop停止运行容器的时候指定发送给容器里pid为1角色的信号。默认超时10秒，超时则发送kill强杀进程。一般业务进程都是pid为1，所有官方的进程都会处理收到的SIGTERM信号进行优雅收尾退出。 前面说过了如果CMD是/bin/sh格式的话，主进程是一个sh -c的进程，shell不用trap处理的话是无法转发信号的。下面我举个例子 例子是是网上找的，两种CMD方式启动的redis123456789FROM ubuntu:14.04RUN apt-get update &amp;&amp; apt-get -y install redis-server &amp;&amp; rm -rf /var/lib/apt/lists/*EXPOSE 6379CMD /usr/bin/redis-server----------------------------FROM ubuntu:14.04RUN apt-get update &amp;&amp; apt-get -y install redis-server &amp;&amp; rm -rf /var/lib/apt/lists/*EXPOSE 6379CMD ["/usr/bin/redis-server"] 构建两种镜像，然后docker run -d img_name，然后docker stop这俩镜像启动的容器会发现exec的redis能在docker stop的时候收到信号优雅退出Received SIGTERM, scheduling shutdown123456[1] 11 Feb 08:13:01.633 * The server is now ready to accept connections on port 6379[1 | signal handler] (1455179074) Received SIGTERM, scheduling shutdown...[1] 11 Feb 08:24:34.259 # User requested shutdown...[1] 11 Feb 08:24:34.259 * Saving the final RDB snapshot before exiting.[1] 11 Feb 08:24:34.262 * DB saved on disk[1] 11 Feb 08:24:34.262 # Redis is now ready to exit, bye bye... 而/bin/sh的形式的redis在docker stop后去docker logs看日志会发现根本没有优雅退出，类似于强制杀掉一样。1[5] 11 Feb 08:12:40.109 * The server is now ready to accept connections on port 6379 这是因为/bin/sh形式启动的redis主进程是一个sh，shell不会转发信号，所以最后sh被超时的docker stop发送了kill信号杀掉，整个容器生存周期结束，redis没有触发signal handler。]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile VOLUME]]></title>
+    <url>%2F2019%2F05%2F02%2FDockerfile-VOLUME%2F</url>
+    <content type="text"><![CDATA[VOLUME两种写法，无区别12VOLUME ["/data","/mysql"]VOLUME /var/log /var/db 之前我们说过，容器运行时应该尽量保持容器存储层不发生写操作，对于数据库类需要保存动态数据的应用，其数据库文件应该保存于卷(volume)中。 为了防止运行时用户忘记将动态文件所保存目录挂载为卷，在 Dockerfile 中，我们可以事先指定某些目录挂载为匿名卷，这样在运行时如果用户不指定挂载，其应用也可以正常运行，不会向容器存储层写入大量数据。]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Dockerfile ENTRYPOINT]]></title>
+    <url>%2F2019%2F05%2F02%2FDockerfile-ENTRYPOINT%2F</url>
+    <content type="text"><![CDATA[ENTRYPOINT和CMD用法也一样两种格式，唯一要注意的就是区别，CMD和ENTRYPOINT只有一个或者两者都有都可以，容器最终运行的命令为：1&lt;ENTRYPOINT&gt; &lt;CMD&gt; alpine的root目录是没有文件的，所以ls /root没有输出，我们用选项去覆盖住entrypoint可以看到输出了date。注意一点是覆盖entrypoint的时候镜像的CMD会被忽略，我们真要调试的时候需要加command的话，可以在docker run的镜像后面加command和arg。 上面例子可以很形象的证明了是这个关系，最终运行的是 ，同时不光在docker run的时候覆盖掉CMD，也可以覆盖掉默认的entrypoint。很多时候我们可以主进程bash或者sh进去手动启动看看。老版本接触不多，不确定老版本有没有–entrypoint的选项。 最后如果是/bin/sh的entrypoint会忽略掉CMD和docker run的command参数]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Dockerfile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[创建私有YUM源]]></title>
+    <url>%2F2019%2F05%2F01%2F%E5%88%9B%E5%BB%BA%E7%A7%81%E6%9C%89YUM%E6%BA%90%2F</url>
+    <content type="text"><![CDATA[安装httpd1yum -y install httpd 安装所需软件1yum -y install rsync createrepo 创建相关目录1mkdir -p /var/www/repos/centos/7/&#123;os,updates,extras&#125;/x86_64 赋予读写权限1chmod -R 755 /var/www/repos 从清华源同步1234567891011rsync -avz --delete --exclude='repodata' \rsync://mirrors.tuna.tsinghua.edu.cn/centos/7/os/x86_64/ \/var/www/repos/centos/7/os/x86_64/ rsync -avz --delete --exclude='repodata' \rsync://mirrors.tuna.tsinghua.edu.cn/centos/7/updates/x86_64/ \/var/www/repos/centos/7/updates/x86_64/ rsync -avz --delete --exclude='repodata' \rsync://mirrors.tuna.tsinghua.edu.cn/centos/7/extras/x86_64/ \/var/www/repos/centos/7/extras/x86_64/ 创建 metadata repositories123createrepo /var/www/repos/centos/7/os/x86_64/ createrepo /var/www/repos/centos/7/updates/x86_64/ createrepo /var/www/repos/centos/7/extras/x86_64/ 设置定时任务，每天同步1234567891011# vi /etc/cron.daily/update-repo#!/bin/bashVER='7'ARCH='x86_64'REPOS=(os updates extras)for REPO in $&#123;REPOS[@]&#125;do rsync -avz --delete --exclude='repodata' \ rsync://mirrors.tuna.tsinghua.edu.cn/centos/$&#123;VER&#125;/$&#123;REPO&#125;/$&#123;ARCH&#125;/ /var/www/repos/centos/$&#123;VER&#125;/$&#123;REPO&#125;/$&#123;ARCH&#125;/ createrepo /var/www/repos/centos/$&#123;VER&#125;/$&#123;REPO&#125;/$&#123;ARCH&#125;/done 赋予权限1chmod 755 /etc/cron.daily/update-repo 配置httpd主机使其他客户端访问123456# vim /etc/httpd/conf.d/repos.confAlias /repos /var/www/repos&lt;directory /var/www/repos&gt; Options +Indexes Require all granted&lt;/directory&gt; 启动httpd服务12systemctl start httpdsystemctl enable httpd 客户端的配置文件，其中10.105.26.110是源服务器地址12345678910111213141516171819# vi /etc/yum.repos.d/CentOS-Base.repo[base]name=CentOS-$releasever - Base#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=os&amp;infra=$infrabaseurl=http://10.105.26.110/repos/centos/$releasever/os/$basearch/gpgcheck=1gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7[updates]name=CentOS-$releasever - Updates#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=updates&amp;infra=$infrabaseurl=http://10.105.26.110/repos/centos/$releasever/updates/$basearch/gpgcheck=1gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7[extras]name=CentOS-$releasever - Extras#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=extras&amp;infra=$infrabaseurl=http://10.105.26.110/repos/centos/$releasever/extras/$basearch/gpgcheck=1gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[Centos7修改网卡名称]]></title>
+    <url>%2F2019%2F05%2F01%2FCentos7%E4%BF%AE%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E7%A7%B0%2F</url>
+    <content type="text"><![CDATA[修改设备名称1sed -i "s/ens33/eth0/g" /etc/sysconfig/network-scripts/ifcfg-ens33 重命名网卡配置文件1mv /etc/sysconfig/network-scripts/ifcfg-ens33 /etc/sysconfig/network-scripts/ifcfg-eth0 修改grub文件1sed -i "s/root/root net.ifnames=0 biosdevname=0/g" /etc/default/grub 重新生成GRUB配置并更新内核参数，稍后重启12grub2-mkconfig -o /boot/grub2/grub.cfgreboot]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[Dockerfile CMD]]></title>
     <url>%2F2019%2F04%2F30%2FDockerfile-CMD%2F</url>
     <content type="text"><![CDATA[CMD 与进程前后台和容器存活的关系设置镜像运行出来的容器的缺省命令 有两种写法，写多个和FROM一个已经有CMD的镜像的话，以最后一个为准12CMD ["executable", "param1", "param2"] CMD command param1 param2 前者是exec格式也是推荐格式，后者是/bin/sh格式，exec和CMD还有ENTRYPOINT这三者之间联系非常紧密，后面单独将相关的知识点。这里先用一个例子讲/bin/sh格式啥意思 我们发现pid为1的是一个/bin/sh的进程，而我们的进程在容器里在后面。容器是单独一个pid namespaces的。这里懒得去做个图了，借用下别人的图 默认下所有进程在一个顶级的pid namespaces里，pid namespaces像一个树一样。从根到最后可以多级串。容器的pid namespaces实际上是在宿主机上能看到的，也就是下面，我们可以看到容器在宿主机上的进程，由于子namespaces无法看到父级的namespaces，所以容器里第一个进程(也就是cmd)认为自己是pid为1，容器里其余进程都是它的子进程 在Linux中，只能给init已经安装信号处理函数的信号，其它信号都会被忽略，这可以防止init进程被误杀掉，即使是superuser。所以，kill -9 init不会kill掉init进程。但是容器的进程是在容器的ns里是init级别，我们可以在宿主机上杀掉它，之前线上的低版本docker 命令无法使用，同事无法停止错误容器，我便询问了进程名在宿主机找到后kill掉的。 接下来说说为啥推荐exec格式，exec格式的话第一个进程是我们的sleep进程，大家可以自己去构建镜像试试。推荐用exec格式是因为pid 为1的进程承担着pid namespaces的存活周期，听不懂的话我举个例子12345678[root@docker ~]# docker run -d alpine lsb2eedc510e718d2820ce79fcf630aa9521fc3525b9138a51f1f8bef496e2607a[root@docker ~]# docker run -d alpine sleep 10bee830e62508b52796f588d6defe5419e35acb6c944f0151e0cb4b40a260ef81[root@docker ~]# docker ps -aCONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMESbee830e62508 alpine "sleep 10" 19 seconds ago Exited (0) 7 seconds ago sad_lamarrb2eedc510e71 alpine "ls" 28 seconds ago Exited (0) 26 seconds ago reverent_stallman 先看下docker run命令格式123# docker run --helpUsage: docker run [OPTIONS] IMAGE [COMMAND] [ARG...] docker run 后面镜像后面的command和arg会覆盖掉镜像的CMD。上面我那个例子覆盖掉centos镜像默认的CMD bash。我们可以看到ls的容器直接退出了，但是sleep 10的容器运行了10秒后就退出了。以上也说明了容器不是虚拟机，容器是个隔离的进程。 这说明了容器的存活是容器里pid为1的进程运行时长决定的。所以nginx的官方镜像里就是用的exec格式让nginx充当pid为1的角色。1CMD ["nginx", "-g", "daemon off;"] 这里nginx启动带了选项是什么意思呢，我举个初学者自己造轮子做nginx镜像来举例，也顺带按照初学者重复造轮子碰到错误的时候应该怎样去排查？上面我是按照初学者虚拟机的思维去做一个nginx镜像，结果构建错误，我们发现有个失败的容器就是RUN那层创建出来的，前面我说的实际上docker build就是运行容器执行步骤然后最后底层调用commit的原因。 现在我们来手动排下错，哪步报错可以把那步到后面的全部注释掉后构建个镜像，然后我们run起来的时候带上-ti选项分配一个能输入的伪终端，最后的command用sh或者bash，这样容器的主进程就是bash或者sh了，我们在里面执行报错的RUN(这里我例子简单，所以我直接run -ti centos bash)。实际上会发现nginx是在epel-release的源里，接下来改下Dockerfile再构建试试.123456# cat DockerfileFROM centosRUN yum install -y epel-release \ &amp;&amp; yum install -y nginxCMD ["nginx"]$ docker build -t test . 然后又是一个新手自己做镜像遇到的问题了，这个镜像运行了根本跑不起来，我们手动bash或者sh进去排查。12345$ docker run -d -p 80:80 testf13e98d4dc13b6fa13e375ca35cc58a23a340a07b677f0df245fc1ef3b7199c6$ docker ps -aCONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMESf13e98d4dc13 test "nginx" 3 seconds ago Exited (0) 1 second ago determined_elgamal 似乎是卡主了？我们可以访问宿主机的ip:80看看会发现实际能访问到的，也就是说这样也是在运行，当然我们把CMD改成和官方一样直接docker run -d -p 80:80 test的话容器是不会退出的。 至于说为啥？答案就是前台的概念！ 我们有没有发现我们手动执行nginx带关闭daemon选项发现类似于hang住一样，实际上它就是前台跑。 单独的nginx回车，实际上是它拉起来了nginx，然后它退出了，但是！！！，别忘记了你这个nginx是pid为1的角色，你退出了你下面子进程全部完蛋，容器也会显示退出。所以既然你最终要跑nginx，你nginx得是前台跑。 但是这里肯定也有人说如果我主进程跑一个不退出的进程，然后进去启动nginx不也跑起来了吗？这样是可以的，但是存在信号转发机制和要考虑优雅退出，这块知识我在后面指令STOPSIGNAL讲。 判断一个命令(或者说带上选项)是不是前台跑的最简单一个验证就是(主进程sh或者bash进去后)执行它看它有没有回到终端。例如ls和yes命令，我们会发现yes命令一直刷y没有回到终端。 其实发展到现在，很多以前只有daemon后台跑的进程都慢慢的在docker火热下开始有前台运行的选项或者配置了，例如 redis的配置文件不写日志文件路径它就默认前台跑 uwsgi也是一样，命令行参数或者配置文件指定了日志文件路径就后台跑，否则前台跑 node本身是前台跑，但是一些信号可能不好处理，于是有了pm2 zabbix 的日志路径写console的话就是前台跑 其实我们用上前台选项的话也无法用docker logs看容器的log，是因为docker logs查看的是容器里的标准输出信息，我们可以看到官方nginx镜像Dockerfile是这样做的。123# forward request and error logs to docker log collector &amp;&amp; ln -sf /dev/stdout /var/log/nginx/access.log \ &amp;&amp; ln -sf /dev/stderr /var/log/nginx/error.log]]></content>
@@ -100,9 +171,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Dockerfile ENV]]></title>
-    <url>%2F2019%2F04%2F30%2FDockerfile-ENV%2F</url>
-    <content type="text"><![CDATA[ENV写法有两种，后者支持写多个，一般多个的话也是使用后者居多1234567ENV key value-------ENV key=value key2=value2ENV key=value \ key2=value2 \ key3=value3 \ key4=value4 设置一个环境变量，可以被dockerfile里后续的指令使用，也在容器运行过程中保持，支持的指令为:1ADD COPY ENV EXPOSE FROM LABEL STOPSIGNAL USER VOLUME WORKDIR ONBUILD 可以在dockerhub上发现各种官方镜像的Dockerfile的步骤都是固定的，新版本发布直接改下ENV后构建下即可1234567ENV NGINX_VERSION 1.15.11RUN .... \ &amp;&amp; curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \ ... &amp;&amp; cd /usr/src/nginx-$NGINX_VERSION \ &amp;&amp; ./configure $CONFIG --with-debug \ ... 很多应用镜像启动都是先启动一个脚本，拼接一堆参数最终传递给应用的主进程当作参数，最常见的就是tomcat，或者说很多的应用基于tomcat。下面是之前我修改一个镜像Dockerfile摸索出的启动脚本的运行过程1234567891011+ '[' -r /opt/atlassian/jira/bin/setenv.sh ']'+ . /opt/atlassian/jira/bin/setenv.sh$ cat /opt/atlassian/jira/bin/setenv.sh...JAVA_OPTS="-Xms$&#123;JVM_MINIMUM_MEMORY&#125; -Xmx$&#123;JVM_MAXIMUM_MEMORY&#125; $&#123;JVM_CODE_CACHE_ARGS&#125; $&#123;JAVA_OPTS&#125; $&#123;JVM_REQUIRED_ARGS&#125; $&#123;DISABLE_NOTIFICATIONS&#125; $&#123;JVM_SUPPORT_RECOMMENDED_ARGS&#125; $&#123;JVM_EXTRA_ARGS&#125; $&#123;JIRA_HOME_MINUSD&#125; $&#123;START_JIRA_JAVA_OPTS&#125;"...export JAVA_OPTS...exec java $JAVA_OPTS 其中有一行：1JAVA_OPTS="... $&#123;JAVA_OPTS&#125; ..." 他拼接了自己，如果想给java在最终参数后添加一些固定参数时，可以在构建镜像声明JAVA_OPTS，例如添加时区我们应该在Dockerfile里设置1ENV JAVA_OPTS='-Duser.timezone=GMT+08' docker run可以指定env，ENV指令不一样是给Dockerfile用的，有时候是给容器启动时候用的，我们可以在docker run的时候指定env或者覆盖env达到不需要修改镜像，例如常见的后端需要连接一个mysql，可以在后端代码os.getEnv(“mysql_address”)，我们启动的时候指定mysql_address变量为真实的mysql地址即可。]]></content>
+    <title><![CDATA[Dockerfile MAINTAINER]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-MAINTAINER%2F</url>
+    <content type="text"><![CDATA[MAINTAINER已经弃用，推荐使用LABEL，例如nginx dockerfile里的 LABEL maintainer=”NGINX Docker Maintainers &#x64;&#x6f;&#x63;&#107;&#101;&#114;&#45;&#109;&#97;&#105;&#110;&#116;&#64;&#x6e;&#x67;&#x69;&#110;&#120;&#x2e;&#x63;&#x6f;&#x6d;“]]></content>
       <categories>
         <category>Docker</category>
       </categories>
@@ -111,9 +182,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Dockerfile MAINTAINER]]></title>
-    <url>%2F2019%2F04%2F30%2FDockerfile-MAINTAINER%2F</url>
-    <content type="text"><![CDATA[MAINTAINER已经弃用，推荐使用LABEL，例如nginx dockerfile里的 LABEL maintainer=”NGINX Docker Maintainers &#x64;&#x6f;&#99;&#107;&#x65;&#114;&#45;&#109;&#x61;&#x69;&#110;&#116;&#64;&#110;&#x67;&#105;&#110;&#120;&#46;&#99;&#x6f;&#109;“]]></content>
+    <title><![CDATA[Dockerfile ENV]]></title>
+    <url>%2F2019%2F04%2F30%2FDockerfile-ENV%2F</url>
+    <content type="text"><![CDATA[ENV写法有两种，后者支持写多个，一般多个的话也是使用后者居多1234567ENV key value-------ENV key=value key2=value2ENV key=value \ key2=value2 \ key3=value3 \ key4=value4 设置一个环境变量，可以被dockerfile里后续的指令使用，也在容器运行过程中保持，支持的指令为:1ADD COPY ENV EXPOSE FROM LABEL STOPSIGNAL USER VOLUME WORKDIR ONBUILD 可以在dockerhub上发现各种官方镜像的Dockerfile的步骤都是固定的，新版本发布直接改下ENV后构建下即可1234567ENV NGINX_VERSION 1.15.11RUN .... \ &amp;&amp; curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \ ... &amp;&amp; cd /usr/src/nginx-$NGINX_VERSION \ &amp;&amp; ./configure $CONFIG --with-debug \ ... 很多应用镜像启动都是先启动一个脚本，拼接一堆参数最终传递给应用的主进程当作参数，最常见的就是tomcat，或者说很多的应用基于tomcat。下面是之前我修改一个镜像Dockerfile摸索出的启动脚本的运行过程1234567891011+ '[' -r /opt/atlassian/jira/bin/setenv.sh ']'+ . /opt/atlassian/jira/bin/setenv.sh$ cat /opt/atlassian/jira/bin/setenv.sh...JAVA_OPTS="-Xms$&#123;JVM_MINIMUM_MEMORY&#125; -Xmx$&#123;JVM_MAXIMUM_MEMORY&#125; $&#123;JVM_CODE_CACHE_ARGS&#125; $&#123;JAVA_OPTS&#125; $&#123;JVM_REQUIRED_ARGS&#125; $&#123;DISABLE_NOTIFICATIONS&#125; $&#123;JVM_SUPPORT_RECOMMENDED_ARGS&#125; $&#123;JVM_EXTRA_ARGS&#125; $&#123;JIRA_HOME_MINUSD&#125; $&#123;START_JIRA_JAVA_OPTS&#125;"...export JAVA_OPTS...exec java $JAVA_OPTS 其中有一行：1JAVA_OPTS="... $&#123;JAVA_OPTS&#125; ..." 他拼接了自己，如果想给java在最终参数后添加一些固定参数时，可以在构建镜像声明JAVA_OPTS，例如添加时区我们应该在Dockerfile里设置1ENV JAVA_OPTS='-Duser.timezone=GMT+08' docker run可以指定env，ENV指令不一样是给Dockerfile用的，有时候是给容器启动时候用的，我们可以在docker run的时候指定env或者覆盖env达到不需要修改镜像，例如常见的后端需要连接一个mysql，可以在后端代码os.getEnv(“mysql_address”)，我们启动的时候指定mysql_address变量为真实的mysql地址即可。]]></content>
       <categories>
         <category>Docker</category>
       </categories>

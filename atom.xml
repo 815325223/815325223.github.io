@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-04-30T09:25:57.567Z</updated>
+  <updated>2019-05-02T13:53:13.946Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,177 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>构建标准且人性化镜像</title>
+    <link href="http://yoursite.com/2019/05/02/%E6%9E%84%E5%BB%BA%E6%A0%87%E5%87%86%E4%B8%94%E4%BA%BA%E6%80%A7%E5%8C%96%E9%95%9C%E5%83%8F/"/>
+    <id>http://yoursite.com/2019/05/02/构建标准且人性化镜像/</id>
+    <published>2019-05-02T13:48:00.000Z</published>
+    <updated>2019-05-02T13:53:13.946Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="正确的FROM合适的镜像"><a href="#正确的FROM合适的镜像" class="headerlink" title="正确的FROM合适的镜像"></a>正确的FROM合适的镜像</h6><p>很多新手一上来就是FROM centos然后RUN 一堆yum install的，这样还停留在虚拟机的角度。可以FROM alpine或者干脆拿官方的改，alpine初期的时候问题蛮多的，很多人建议使用alpine做基础镜像最好是测试好再上线，现在alpine的快速发展，这种现象很少了。</p><h6 id="不要用imageID或者latest标签"><a href="#不要用imageID或者latest标签" class="headerlink" title="不要用imageID或者latest标签"></a>不要用imageID或者latest标签</h6><p>id的话不便于长期发展，而latest标签无法回滚。</p><h6 id="不要重复造轮子"><a href="#不要重复造轮子" class="headerlink" title="不要重复造轮子"></a>不要重复造轮子</h6><p>现在dockerhub上有很多的镜像了，很多人还是喜欢造轮子，造出来的镜像层又多，无用的文件又停留在层理，主进程还不是业务进程，还不支持传入环境变量来让用户选择场景和传入配置信息启动。</p><p>如果你的是一个java应用，那么你应该使用java作为基础应用，如果你是tomcat应用，你应该使用tomcat作为基础应用，而不是按照虚拟机的思维，把Java装好，然后装应用；tomcat也一样，装java，装tomcat，装应用。</p><h6 id="镜像大小"><a href="#镜像大小" class="headerlink" title="镜像大小"></a>镜像大小</h6><p>之前我举例的ADD添加源码包和RUN rm -f删掉ADD的源码包，虽说最终起来的容器看不到源码包。实际上文件还停留在镜像的层里，所以尽量合并和减少层防止层保持住文件。</p><p>最后一些零散的建议和常见错误</p><ul><li>编写entrypoint脚本让启动更人性化</li><li>同时如果是初期上docker到生产，考虑到排错啥的，可以在官方dockerfile里添加一些常见的排错命</li><li>尽量使用ENV和ARG让人不改或者少改Dockerfile即可做构建对应版本的镜像</li><li>容器时间不对的话可以安装包tzdate，声明变量TZ即可声明时区，或者构建的时候带上/etc/localtime或者运行的时候挂载宿主机的/etc/localtime。</li><li>如果是编译型语言，妥善利用多阶段构建（后面容器无法运行排错的时候会讲解多阶构建）</li><li>代码里应该要注意优雅退出。收到信号的时候释放东西啥的。</li></ul><h6 id="代码，war，jar，go编译的二进制到底应不应该放在镜像里？"><a href="#代码，war，jar，go编译的二进制到底应不应该放在镜像里？" class="headerlink" title="代码，war，jar，go编译的二进制到底应不应该放在镜像里？"></a>代码，war，jar，go编译的二进制到底应不应该放在镜像里？</h6><p>其实现在的java和php，还有go啥的依赖的运行环境基本不会变，变更发布新版本也就只有代码，war，jar和go编译的二进制，为此可以两种做法:</p><ul><li>全部打包到镜像里</li><li>不变的层做个镜像，启动利用entrypoint脚本接受传入的git分支或者war包啥的内网下载直链下载到容器里或者启动直接挂载nfs里的war包或者代码啥的启动</li></ul><p>很多人都是传统的第一种思维，看到第二种的时候直接张口说这样不行。如果后续接触到了k8s会发现k8s有个initContainers，谷歌也说了可以利用initContainers去初始化或者克隆git代码。</p><p>其实两种均可，例如第一种，在没有gc原生docker下，每一次发布都会老版本镜像存在，虽说层共享，但是最后的代码层的容量还是占据了宿主机容量的。</p><p>第二种每次启动都需要下载，需要网速，如果是内网可以尝试，代码或者war包啥的都是在容器层，不会吃宿主机多大容量。实在接受不了可以运维给研发做个这种通用镜像给他们用。</p><p>最后是推荐一个漠然大佬的示例，漠然大佬的github上很多镜像下载量很多，可以去他github看，这里我放下他的java的应用示例 <a href="https://github.com/Gozap/dockerfile" target="_blank" rel="noopener">https://github.com/Gozap/dockerfile</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;正确的FROM合适的镜像&quot;&gt;&lt;a href=&quot;#正确的FROM合适的镜像&quot; class=&quot;headerlink&quot; title=&quot;正确的FROM合适的镜像&quot;&gt;&lt;/a&gt;正确的FROM合适的镜像&lt;/h6&gt;&lt;p&gt;很多新手一上来就是FROM centos然后RUN 一堆yu
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>exec与entrypoint使用脚本</title>
+    <link href="http://yoursite.com/2019/05/02/exec%E4%B8%8Eentrypoint%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC/"/>
+    <id>http://yoursite.com/2019/05/02/exec与entrypoint使用脚本/</id>
+    <published>2019-05-02T13:31:00.000Z</published>
+    <updated>2019-05-02T13:48:10.245Z</updated>
+    
+    <content type="html"><![CDATA[<p>现在很多有状态的官方镜像的ENTRYPOINT都是使用了一个脚本。例如redis<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">COPY docker-entrypoint.sh /usr/<span class="built_in">local</span>/bin/</span><br><span class="line">ENTRYPOINT [<span class="string">"docker-entrypoint.sh"</span>]</span><br><span class="line"></span><br><span class="line">EXPOSE 6379</span><br><span class="line">CMD [<span class="string">"redis-server"</span>]</span><br></pre></td></tr></table></figure></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="comment"># first arg is `-f` or `--some-option`</span></span><br><span class="line"><span class="comment"># or first arg is `something.conf`</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$&#123;1#-&#125;</span>"</span> != <span class="string">"<span class="variable">$1</span>"</span> ] || [ <span class="string">"<span class="variable">$&#123;1%.conf&#125;</span>"</span> != <span class="string">"<span class="variable">$1</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line"><span class="built_in">set</span> -- redis-server <span class="string">"<span class="variable">$@</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># allow the container to be started with `--user`</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$1</span>"</span> = <span class="string">'redis-server'</span> -a <span class="string">"<span class="variable">$(id -u)</span>"</span> = <span class="string">'0'</span> ]; <span class="keyword">then</span></span><br><span class="line">find . \! -user redis -<span class="built_in">exec</span> chown redis <span class="string">'&#123;&#125;'</span> +</span><br><span class="line"><span class="built_in">exec</span> gosu redis <span class="string">"<span class="variable">$0</span>"</span> <span class="string">"<span class="variable">$@</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> <span class="string">"<span class="variable">$@</span>"</span></span><br></pre></td></tr></table></figure><p>最终运行的是docker-entrypoint.sh redis-server</p><p>第一个if的逻辑是如果docker run 选项 redis -x 或者–xx或者xxx.conf，就把脚本收到的$@改编成redis-server $@,例如我们可同docker run -d redis –port 7379修改启动的容器里的redis端口。如果我们传入的command不是-开头的也不是.conf结尾的字符，例如是date，则会跑到最后的逻辑执行我们的date命令不会启动redis-server</p><p>第二个if这里，如果满足第一个if或者直接默认的cmd下而且容器里用户uid是0，则把属主不是redis的文件改成redis用户，然后切成redis用户去启动redis-server。</p><p>我们可以看到entrypoint能在业务进程启动前做很多事情。而且优秀的镜像都离不开entrypoint脚本，能够根据用户传入的变量和command来切换启动的场景和配置。</p><p>前面说了，主进程一定要是业务进程，这里怎么是个脚本呢，那业务进程不就不是pid为1了吗？ 这里用了exec来退位让贤，最终redis-server还是pid为1的。可以简单几个命令讲解下exec的作用。</p><p>写个test.sh脚本，在脚本里用pstree -p，运行脚本bash test.sh查看进程层次</p><p><img src="/images/pasted-13.png" alt="upload successful"></p><p>发现pstree是在我们脚本bash(1998)的子进程</p><p>然后在脚本最后面加一行exec pstree -p看看输出</p><p><img src="/images/pasted-14.png" alt="upload successful"></p><p>我们发现bash进程运行的时候pid是2022，然后第二个pstree上升到了2022这一层次了，假设pid为a的命令或者二进制exec执行了命令b，那b就接替了a的pid。如果说我们entrypoint或者cmd使用脚本，那么我们一定要在脚本最后启动业务进程的时候前面加个exec让脚本退位让贤。</p><p>最后环境变量写配置文件涉及到修改，还有一些判断是否初次启动的有下面一些工具或者套路。</p><ul><li>xmlstarlet 处理xml</li><li>pip安装shyaml 处理yaml</li><li>jq读取json</li><li>nodejs的npm安装json可以修改json文件</li><li>处理excel或者csv使用in2csv，csvkit 提供了 in2csv，csvcut，csvjoin，csvgrep</li><li>touch -d “@0”写在构建的最后一个RUN里把时间戳设置为1970-1-1，然后用stat命令判断</li><li>if [ “$(stat -c “%Y” “${CONF_INSTALL}/conf/server.xml”)” -eq “0” ]; then</li><li>另外entrypoint脚本COPY进去的时候注意可执行权限，如果Windows上传到Linux构建会因为entrpoint脚本没带权限无法运行</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;现在很多有状态的官方镜像的ENTRYPOINT都是使用了一个脚本。例如redis&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile STOPSIGNAL</title>
+    <link href="http://yoursite.com/2019/05/02/Dockerfile-STOPSIGNAL/"/>
+    <id>http://yoursite.com/2019/05/02/Dockerfile-STOPSIGNAL/</id>
+    <published>2019-05-02T13:20:00.000Z</published>
+    <updated>2019-05-02T13:23:31.182Z</updated>
+    
+    <content type="html"><![CDATA[<p>格式，缺省信号为SIGTERM<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">STOPSIGNAL signal</span><br><span class="line">------</span><br><span class="line">STOPSIGNAL SIGTERM</span><br><span class="line">STOPSIGNAL 9</span><br></pre></td></tr></table></figure></p><p>可以是kill -l的信号名字也可以信号数字:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -l</span><br><span class="line"> 1) SIGHUP 2) SIGINT 3) SIGQUIT 4) SIGILL 5) SIGTRAP</span><br><span class="line"> 6) SIGABRT 7) SIGBUS 8) SIGFPE 9) SIGKILL10) SIGUSR1</span><br><span class="line">11) SIGSEGV12) SIGUSR213) SIGPIPE14) SIGALRM15) SIGTERM</span><br><span class="line">16) SIGSTKFLT17) SIGCHLD18) SIGCONT19) SIGSTOP20) SIGTSTP</span><br><span class="line">21) SIGTTIN22) SIGTTOU23) SIGURG24) SIGXCPU25) SIGXFSZ</span><br><span class="line">26) SIGVTALRM27) SIGPROF28) SIGWINCH29) SIGIO30) SIGPWR</span><br><span class="line">31) SIGSYS34) SIGRTMIN35) SIGRTMIN+136) SIGRTMIN+237) SIGRTMIN+3</span><br><span class="line">38) SIGRTMIN+439) SIGRTMIN+540) SIGRTMIN+641) SIGRTMIN+742) SIGRTMIN+8</span><br><span class="line">43) SIGRTMIN+944) SIGRTMIN+1045) SIGRTMIN+1146) SIGRTMIN+1247) SIGRTMIN+13</span><br><span class="line">48) SIGRTMIN+1449) SIGRTMIN+1550) SIGRTMAX-1451) SIGRTMAX-1352) SIGRTMAX-12</span><br><span class="line">53) SIGRTMAX-1154) SIGRTMAX-1055) SIGRTMAX-956) SIGRTMAX-857) SIGRTMAX-7</span><br><span class="line">58) SIGRTMAX-659) SIGRTMAX-560) SIGRTMAX-461) SIGRTMAX-362) SIGRTMAX-2</span><br><span class="line">63) SIGRTMAX-164) SIGRTMAX</span><br></pre></td></tr></table></figure></p><p>docker run的选项可以覆盖镜像定义的STOPSIGNAL信号<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--stop-signal string           Signal to stop a container (default <span class="string">"SIGTERM"</span>)</span><br></pre></td></tr></table></figure></p><p>在docker stop停止运行容器的时候指定发送给容器里pid为1角色的信号。默认超时10秒，超时则发送kill强杀进程。一般业务进程都是pid为1，所有官方的进程都会处理收到的SIGTERM信号进行优雅收尾退出。</p><p>前面说过了如果CMD是/bin/sh格式的话，主进程是一个sh -c的进程，shell不用trap处理的话是无法转发信号的。下面我举个例子</p><p>例子是是网上找的，两种CMD方式启动的redis<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04</span><br><span class="line">RUN apt-get update &amp;&amp; apt-get -y install redis-server &amp;&amp; rm -rf /var/lib/apt/lists/*</span><br><span class="line">EXPOSE 6379</span><br><span class="line">CMD /usr/bin/redis-server</span><br><span class="line">----------------------------</span><br><span class="line">FROM ubuntu:14.04</span><br><span class="line">RUN apt-get update &amp;&amp; apt-get -y install redis-server &amp;&amp; rm -rf /var/lib/apt/lists/*</span><br><span class="line">EXPOSE 6379</span><br><span class="line">CMD [<span class="string">"/usr/bin/redis-server"</span>]</span><br></pre></td></tr></table></figure></p><p>构建两种镜像，然后docker run -d img_name，然后docker stop这俩镜像启动的容器会发现exec的redis能在docker stop的时候收到信号优雅退出Received SIGTERM, scheduling shutdown<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[1] 11 Feb 08:13:01.633 * The server is now ready to accept connections on port 6379</span><br><span class="line">[1 | signal handler] (1455179074) Received SIGTERM, scheduling shutdown...</span><br><span class="line">[1] 11 Feb 08:24:34.259 <span class="comment"># User requested shutdown...</span></span><br><span class="line">[1] 11 Feb 08:24:34.259 * Saving the final RDB snapshot before exiting.</span><br><span class="line">[1] 11 Feb 08:24:34.262 * DB saved on disk</span><br><span class="line">[1] 11 Feb 08:24:34.262 <span class="comment"># Redis is now ready to exit, bye bye...</span></span><br></pre></td></tr></table></figure></p><p>而/bin/sh的形式的redis在docker stop后去docker logs看日志会发现根本没有优雅退出，类似于强制杀掉一样。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[5] 11 Feb 08:12:40.109 * The server is now ready to accept connections on port 6379</span><br></pre></td></tr></table></figure></p><p>这是因为/bin/sh形式启动的redis主进程是一个sh，shell不会转发信号，所以最后sh被超时的docker stop发送了kill信号杀掉，整个容器生存周期结束，redis没有触发signal handler。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;格式，缺省信号为SIGTERM&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile VOLUME</title>
+    <link href="http://yoursite.com/2019/05/02/Dockerfile-VOLUME/"/>
+    <id>http://yoursite.com/2019/05/02/Dockerfile-VOLUME/</id>
+    <published>2019-05-02T13:13:00.000Z</published>
+    <updated>2019-05-02T13:14:48.141Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="VOLUME"><a href="#VOLUME" class="headerlink" title="VOLUME"></a>VOLUME</h6><p>两种写法，无区别<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VOLUME [<span class="string">"/data"</span>,<span class="string">"/mysql"</span>]</span><br><span class="line">VOLUME /var/<span class="built_in">log</span> /var/db</span><br></pre></td></tr></table></figure></p><p>之前我们说过，容器运行时应该尽量保持容器存储层不发生写操作，对于数据库类需要保存动态数据的应用，其数据库文件应该保存于卷(volume)中。</p><p>为了防止运行时用户忘记将动态文件所保存目录挂载为卷，在 Dockerfile 中，我们可以事先指定某些目录挂载为匿名卷，这样在运行时如果用户不指定挂载，其应用也可以正常运行，不会向容器存储层写入大量数据。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;VOLUME&quot;&gt;&lt;a href=&quot;#VOLUME&quot; class=&quot;headerlink&quot; title=&quot;VOLUME&quot;&gt;&lt;/a&gt;VOLUME&lt;/h6&gt;&lt;p&gt;两种写法，无区别&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dockerfile ENTRYPOINT</title>
+    <link href="http://yoursite.com/2019/05/02/Dockerfile-ENTRYPOINT/"/>
+    <id>http://yoursite.com/2019/05/02/Dockerfile-ENTRYPOINT/</id>
+    <published>2019-05-02T13:01:00.000Z</published>
+    <updated>2019-05-02T13:12:57.146Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="ENTRYPOINT"><a href="#ENTRYPOINT" class="headerlink" title="ENTRYPOINT"></a>ENTRYPOINT</h6><p>和CMD用法也一样两种格式，唯一要注意的就是区别，CMD和ENTRYPOINT只有一个或者两者都有都可以，容器最终运行的命令为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;ENTRYPOINT&gt; &lt;CMD&gt;</span><br></pre></td></tr></table></figure></p><p><img src="/images/pasted-12.png" alt="upload successful"></p><p>alpine的root目录是没有文件的，所以ls /root没有输出，我们用选项去覆盖住entrypoint可以看到输出了date。注意一点是覆盖entrypoint的时候镜像的CMD会被忽略，我们真要调试的时候需要加command的话，可以在docker run的镜像后面加command和arg。</p><p>上面例子可以很形象的证明了是这个关系，最终运行的是<strong><entrypoint> <cmd></cmd></entrypoint></strong>，同时不光在docker run的时候覆盖掉CMD，也可以覆盖掉默认的entrypoint。很多时候我们可以主进程bash或者sh进去手动启动看看。老版本接触不多，不确定老版本有没有–entrypoint的选项。</p><p>最后如果是/bin/sh的entrypoint会忽略掉CMD和docker run的command参数</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;ENTRYPOINT&quot;&gt;&lt;a href=&quot;#ENTRYPOINT&quot; class=&quot;headerlink&quot; title=&quot;ENTRYPOINT&quot;&gt;&lt;/a&gt;ENTRYPOINT&lt;/h6&gt;&lt;p&gt;和CMD用法也一样两种格式，唯一要注意的就是区别，CMD和ENTRYPOIN
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>创建私有YUM源</title>
+    <link href="http://yoursite.com/2019/05/01/%E5%88%9B%E5%BB%BA%E7%A7%81%E6%9C%89YUM%E6%BA%90/"/>
+    <id>http://yoursite.com/2019/05/01/创建私有YUM源/</id>
+    <published>2019-04-30T17:25:00.000Z</published>
+    <updated>2019-04-30T17:28:51.101Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="安装httpd"><a href="#安装httpd" class="headerlink" title="安装httpd"></a>安装httpd</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install httpd</span><br></pre></td></tr></table></figure><h6 id="安装所需软件"><a href="#安装所需软件" class="headerlink" title="安装所需软件"></a>安装所需软件</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install rsync createrepo</span><br></pre></td></tr></table></figure><h6 id="创建相关目录"><a href="#创建相关目录" class="headerlink" title="创建相关目录"></a>创建相关目录</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /var/www/repos/centos/7/&#123;os,updates,extras&#125;/x86_64</span><br></pre></td></tr></table></figure><h6 id="赋予读写权限"><a href="#赋予读写权限" class="headerlink" title="赋予读写权限"></a>赋予读写权限</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod -R 755 /var/www/repos</span><br></pre></td></tr></table></figure><h6 id="从清华源同步"><a href="#从清华源同步" class="headerlink" title="从清华源同步"></a>从清华源同步</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">rsync -avz --delete --exclude=<span class="string">'repodata'</span> \</span><br><span class="line">rsync://mirrors.tuna.tsinghua.edu.cn/centos/7/os/x86_64/ \</span><br><span class="line">/var/www/repos/centos/7/os/x86_64/</span><br><span class="line"> </span><br><span class="line">rsync -avz --delete --exclude=<span class="string">'repodata'</span> \</span><br><span class="line">rsync://mirrors.tuna.tsinghua.edu.cn/centos/7/updates/x86_64/ \</span><br><span class="line">/var/www/repos/centos/7/updates/x86_64/</span><br><span class="line"> </span><br><span class="line">rsync -avz --delete --exclude=<span class="string">'repodata'</span> \</span><br><span class="line">rsync://mirrors.tuna.tsinghua.edu.cn/centos/7/extras/x86_64/ \</span><br><span class="line">/var/www/repos/centos/7/extras/x86_64/</span><br></pre></td></tr></table></figure><h6 id="创建-metadata-repositories"><a href="#创建-metadata-repositories" class="headerlink" title="创建 metadata repositories"></a>创建 metadata repositories</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">createrepo /var/www/repos/centos/7/os/x86_64/ </span><br><span class="line">createrepo /var/www/repos/centos/7/updates/x86_64/ </span><br><span class="line">createrepo /var/www/repos/centos/7/extras/x86_64/</span><br></pre></td></tr></table></figure><h6 id="设置定时任务，每天同步"><a href="#设置定时任务，每天同步" class="headerlink" title="设置定时任务，每天同步"></a>设置定时任务，每天同步</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/cron.daily/update-repo</span></span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">VER=<span class="string">'7'</span></span><br><span class="line">ARCH=<span class="string">'x86_64'</span></span><br><span class="line">REPOS=(os updates extras)</span><br><span class="line"><span class="keyword">for</span> REPO <span class="keyword">in</span> <span class="variable">$&#123;REPOS[@]&#125;</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    rsync -avz --delete --exclude=<span class="string">'repodata'</span> \</span><br><span class="line">    rsync://mirrors.tuna.tsinghua.edu.cn/centos/<span class="variable">$&#123;VER&#125;</span>/<span class="variable">$&#123;REPO&#125;</span>/<span class="variable">$&#123;ARCH&#125;</span>/ /var/www/repos/centos/<span class="variable">$&#123;VER&#125;</span>/<span class="variable">$&#123;REPO&#125;</span>/<span class="variable">$&#123;ARCH&#125;</span>/</span><br><span class="line">    createrepo /var/www/repos/centos/<span class="variable">$&#123;VER&#125;</span>/<span class="variable">$&#123;REPO&#125;</span>/<span class="variable">$&#123;ARCH&#125;</span>/</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure><h6 id="赋予权限"><a href="#赋予权限" class="headerlink" title="赋予权限"></a>赋予权限</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 755 /etc/cron.daily/update-repo</span><br></pre></td></tr></table></figure><h6 id="配置httpd主机使其他客户端访问"><a href="#配置httpd主机使其他客户端访问" class="headerlink" title="配置httpd主机使其他客户端访问"></a>配置httpd主机使其他客户端访问</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vim /etc/httpd/conf.d/repos.conf</span></span><br><span class="line">Alias /repos /var/www/repos</span><br><span class="line">&lt;directory /var/www/repos&gt;</span><br><span class="line">    Options +Indexes</span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/directory&gt;</span><br></pre></td></tr></table></figure><h6 id="启动httpd服务"><a href="#启动httpd服务" class="headerlink" title="启动httpd服务"></a>启动httpd服务</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start httpd</span><br><span class="line">systemctl <span class="built_in">enable</span> httpd</span><br></pre></td></tr></table></figure><h6 id="客户端的配置文件，其中10-105-26-110是源服务器地址"><a href="#客户端的配置文件，其中10-105-26-110是源服务器地址" class="headerlink" title="客户端的配置文件，其中10.105.26.110是源服务器地址"></a>客户端的配置文件，其中10.105.26.110是源服务器地址</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/yum.repos.d/CentOS-Base.repo</span></span><br><span class="line">[base]</span><br><span class="line">name=CentOS-<span class="variable">$releasever</span> - Base</span><br><span class="line"><span class="comment">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=os&amp;infra=$infra</span></span><br><span class="line">baseurl=http://10.105.26.110/repos/centos/<span class="variable">$releasever</span>/os/<span class="variable">$basearch</span>/</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7</span><br><span class="line">[updates]</span><br><span class="line">name=CentOS-<span class="variable">$releasever</span> - Updates</span><br><span class="line"><span class="comment">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=updates&amp;infra=$infra</span></span><br><span class="line">baseurl=http://10.105.26.110/repos/centos/<span class="variable">$releasever</span>/updates/<span class="variable">$basearch</span>/</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7</span><br><span class="line">[extras]</span><br><span class="line">name=CentOS-<span class="variable">$releasever</span> - Extras</span><br><span class="line"><span class="comment">#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&amp;arch=$basearch&amp;repo=extras&amp;infra=$infra</span></span><br><span class="line">baseurl=http://10.105.26.110/repos/centos/<span class="variable">$releasever</span>/extras/<span class="variable">$basearch</span>/</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;安装httpd&quot;&gt;&lt;a href=&quot;#安装httpd&quot; class=&quot;headerlink&quot; title=&quot;安装httpd&quot;&gt;&lt;/a&gt;安装httpd&lt;/h6&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;
+      
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://yoursite.com/categories/Linux/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Centos7修改网卡名称</title>
+    <link href="http://yoursite.com/2019/05/01/Centos7%E4%BF%AE%E6%94%B9%E7%BD%91%E5%8D%A1%E5%90%8D%E7%A7%B0/"/>
+    <id>http://yoursite.com/2019/05/01/Centos7修改网卡名称/</id>
+    <published>2019-04-30T17:17:00.000Z</published>
+    <updated>2019-04-30T17:20:35.355Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="修改设备名称"><a href="#修改设备名称" class="headerlink" title="修改设备名称"></a>修改设备名称</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">"s/ens33/eth0/g"</span> /etc/sysconfig/network-scripts/ifcfg-ens33</span><br></pre></td></tr></table></figure><h6 id="重命名网卡配置文件"><a href="#重命名网卡配置文件" class="headerlink" title="重命名网卡配置文件"></a>重命名网卡配置文件</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/sysconfig/network-scripts/ifcfg-ens33 /etc/sysconfig/network-scripts/ifcfg-eth0</span><br></pre></td></tr></table></figure><h6 id="修改grub文件"><a href="#修改grub文件" class="headerlink" title="修改grub文件"></a>修改grub文件</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">"s/root/root net.ifnames=0 biosdevname=0/g"</span> /etc/default/grub</span><br></pre></td></tr></table></figure><h6 id="重新生成GRUB配置并更新内核参数，稍后重启"><a href="#重新生成GRUB配置并更新内核参数，稍后重启" class="headerlink" title="重新生成GRUB配置并更新内核参数，稍后重启"></a>重新生成GRUB配置并更新内核参数，稍后重启</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grub2-mkconfig -o /boot/grub2/grub.cfg</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;修改设备名称&quot;&gt;&lt;a href=&quot;#修改设备名称&quot; class=&quot;headerlink&quot; title=&quot;修改设备名称&quot;&gt;&lt;/a&gt;修改设备名称&lt;/h6&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt
+      
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://yoursite.com/categories/Linux/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Dockerfile CMD</title>
@@ -244,6 +415,31 @@
   </entry>
   
   <entry>
+    <title>Dockerfile MAINTAINER</title>
+    <link href="http://yoursite.com/2019/04/30/Dockerfile-MAINTAINER/"/>
+    <id>http://yoursite.com/2019/04/30/Dockerfile-MAINTAINER/</id>
+    <published>2019-04-30T03:09:00.000Z</published>
+    <updated>2019-04-30T06:11:40.396Z</updated>
+    
+    <content type="html"><![CDATA[<h6 id="MAINTAINER"><a href="#MAINTAINER" class="headerlink" title="MAINTAINER"></a>MAINTAINER</h6><p>已经弃用，推荐使用LABEL，例如nginx dockerfile里的</p><p>LABEL maintainer=”NGINX Docker Maintainers <a href="mailto:&#x64;&#x6f;&#x63;&#107;&#101;&#114;&#45;&#109;&#97;&#105;&#110;&#116;&#64;&#x6e;&#x67;&#x69;&#110;&#120;&#x2e;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#x64;&#x6f;&#x63;&#107;&#101;&#114;&#45;&#109;&#97;&#105;&#110;&#116;&#64;&#x6e;&#x67;&#x69;&#110;&#120;&#x2e;&#x63;&#x6f;&#x6d;</a>“</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h6 id=&quot;MAINTAINER&quot;&gt;&lt;a href=&quot;#MAINTAINER&quot; class=&quot;headerlink&quot; title=&quot;MAINTAINER&quot;&gt;&lt;/a&gt;MAINTAINER&lt;/h6&gt;&lt;p&gt;已经弃用，推荐使用LABEL，例如nginx dockerfile里的&lt;/p
+      
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Dockerfile ENV</title>
     <link href="http://yoursite.com/2019/04/30/Dockerfile-ENV/"/>
     <id>http://yoursite.com/2019/04/30/Dockerfile-ENV/</id>
@@ -257,31 +453,6 @@
       
       
         &lt;h6 id=&quot;ENV&quot;&gt;&lt;a href=&quot;#ENV&quot; class=&quot;headerlink&quot; title=&quot;ENV&quot;&gt;&lt;/a&gt;ENV&lt;/h6&gt;&lt;p&gt;写法有两种，后者支持写多个，一般多个的话也是使用后者居多&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;ta
-      
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
-    
-    
-      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Dockerfile MAINTAINER</title>
-    <link href="http://yoursite.com/2019/04/30/Dockerfile-MAINTAINER/"/>
-    <id>http://yoursite.com/2019/04/30/Dockerfile-MAINTAINER/</id>
-    <published>2019-04-30T03:09:00.000Z</published>
-    <updated>2019-04-30T06:11:40.396Z</updated>
-    
-    <content type="html"><![CDATA[<h6 id="MAINTAINER"><a href="#MAINTAINER" class="headerlink" title="MAINTAINER"></a>MAINTAINER</h6><p>已经弃用，推荐使用LABEL，例如nginx dockerfile里的</p><p>LABEL maintainer=”NGINX Docker Maintainers <a href="mailto:&#x64;&#x6f;&#99;&#107;&#x65;&#114;&#45;&#109;&#x61;&#x69;&#110;&#116;&#64;&#110;&#x67;&#105;&#110;&#120;&#46;&#99;&#x6f;&#109;" target="_blank" rel="noopener">&#x64;&#x6f;&#99;&#107;&#x65;&#114;&#45;&#109;&#x61;&#x69;&#110;&#116;&#64;&#110;&#x67;&#105;&#110;&#120;&#46;&#99;&#x6f;&#109;</a>“</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h6 id=&quot;MAINTAINER&quot;&gt;&lt;a href=&quot;#MAINTAINER&quot; class=&quot;headerlink&quot; title=&quot;MAINTAINER&quot;&gt;&lt;/a&gt;MAINTAINER&lt;/h6&gt;&lt;p&gt;已经弃用，推荐使用LABEL，例如nginx dockerfile里的&lt;/p
       
     
     </summary>
@@ -338,104 +509,6 @@
     
       <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
     
-    
-  </entry>
-  
-  <entry>
-    <title>Docker镜像02</title>
-    <link href="http://yoursite.com/2019/04/29/Docker%E9%95%9C%E5%83%8F02/"/>
-    <id>http://yoursite.com/2019/04/29/Docker镜像02/</id>
-    <published>2019-04-29T02:22:00.000Z</published>
-    <updated>2019-04-29T04:43:23.063Z</updated>
-    
-    <content type="html"><![CDATA[<h6 id="容器是单独的一层读写层"><a href="#容器是单独的一层读写层" class="headerlink" title="容器是单独的一层读写层"></a>容器是单独的一层读写层</h6><p>一个镜像可以运行无数个容器，容器需要读取文件的场景和对应原理是如下。</p><ul><li>在无挂载卷情况下，通过docker cp或exec产生的数据，文件会在读写层里，删除容器则文件也一并删除。</li><li>读取文件，从上层往下找到镜像层，找到即可返回，复制到容器层读入内存。</li><li>修改文件，从上层往下找到镜像层，找到即可返回，复制到容器层后修改。</li><li>删除文件，找到后在容器层记录下删除操作(类似盖层布，后续读取的时候会认为文件不存在)</li></ul><p>容器与镜像关系为下图<br><img src="/images/pasted-5.png" alt="upload successful"></p><p>通过docker ps 的-s选项可以看出容器的size和容器层总大小，这里我用docker命令演示下容器是单独一层读写层和容器被删除后数据消失。</p><p><img src="/images/pasted-6.png" alt="upload successful"><br><img src="/images/pasted-7.png" alt="upload successful"></p><p>创建一个容器，在容器里写入1g数据，宿主机的可用容量减少1G，docker的overlay2存储目录记录了下这个文件，但是删除后文件也被删除了。在抽象逻辑上一个容器就是单独一个读写层，而删除容器后这层在宿主机上的文件也会被删除。</p><p>计算实际占用大小时镜像的大小不会被重复计算，只需要计算一个大小+它起的所有容器大小。<br>目前启动了5个nginx<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker ps -s</span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES               SIZE</span><br><span class="line">ac5c0d1f8d6b        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   7 seconds ago       Up 5 seconds        80/tcp              web5                2B (virtual 16.1MB)</span><br><span class="line">0dd2c0c36084        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   11 seconds ago      Up 9 seconds        80/tcp              web4                2B (virtual 16.1MB)</span><br><span class="line">413d9270c702        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   15 seconds ago      Up 13 seconds       80/tcp              web3                2B (virtual 16.1MB)</span><br><span class="line">43f8e010f7bb        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   19 seconds ago      Up 17 seconds       80/tcp              web2                2B (virtual 16.1MB)</span><br><span class="line">610abcfab29d        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   25 seconds ago      Up 23 seconds       80/tcp              web1                2B (virtual 16.1MB)</span><br></pre></td></tr></table></figure></p><p>使用exec往容器里写数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> web1 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=10'</span></span><br><span class="line">docker <span class="built_in">exec</span> web2 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=20'</span></span><br><span class="line">docker <span class="built_in">exec</span> web3 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=30'</span></span><br><span class="line">docker <span class="built_in">exec</span> web4 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=40'</span></span><br><span class="line">docker <span class="built_in">exec</span> web5 sh -c <span class="string">'dd if=/dev/zero of=/test.log bs=1000000 count=50'</span></span><br><span class="line">]<span class="comment"># docker ps -as</span></span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS               NAMES               SIZE</span><br><span class="line">ac5c0d1f8d6b        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   56 seconds ago       Up 54 seconds       80/tcp              web5                50MB (virtual 66.1MB)</span><br><span class="line">0dd2c0c36084        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   About a minute ago   Up 58 seconds       80/tcp              web4                40MB (virtual 56.1MB)</span><br><span class="line">413d9270c702        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   About a minute ago   Up About a minute   80/tcp              web3                30MB (virtual 46.1MB)</span><br><span class="line">43f8e010f7bb        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   About a minute ago   Up About a minute   80/tcp              web2                20MB (virtual 36.1MB)</span><br><span class="line">610abcfab29d        nginx:alpine        <span class="string">"nginx -g 'daemon of…"</span>   About a minute ago   Up About a minute   80/tcp              web1                10MB (virtual 26.1MB)</span><br></pre></td></tr></table></figure></p><p>实际占用量计算<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1 x 16.1MB 只读镜像层</span><br><span class="line">1 x 10MB</span><br><span class="line">1 x 20MB</span><br><span class="line">1 x 30MB</span><br><span class="line">1 x 40MB</span><br><span class="line">1 x 50MB</span><br><span class="line">===========================</span><br><span class="line">161.1MB</span><br></pre></td></tr></table></figure></p><p>这样我们可以推导出docker镜像是分层和容器是单独一层只读镜像的。也有部分人不懂这些知识，每次是进容器里安装东西然后commit，导致最后容器越来越大，甚至看到过16g的镜像。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h6 id=&quot;容器是单独的一层读写层&quot;&gt;&lt;a href=&quot;#容器是单独的一层读写层&quot; class=&quot;headerlink&quot; title=&quot;容器是单独的一层读写层&quot;&gt;&lt;/a&gt;容器是单独的一层读写层&lt;/h6&gt;&lt;p&gt;一个镜像可以运行无数个容器，容器需要读取文件的场景和对应原理是如下。
-      
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Docker镜像01</title>
-    <link href="http://yoursite.com/2019/04/29/Docker%E9%95%9C%E5%83%8F01/"/>
-    <id>http://yoursite.com/2019/04/29/Docker镜像01/</id>
-    <published>2019-04-29T02:12:00.000Z</published>
-    <updated>2019-04-29T02:20:31.125Z</updated>
-    
-    <content type="html"><![CDATA[<h6 id="Docker镜像层"><a href="#Docker镜像层" class="headerlink" title="Docker镜像层"></a>Docker镜像层</h6><p>镜像为什么是有层的？镜像分层是为了解决什么？</p><p>虽然镜像解决了打包，但是实际应用中我们的应用都是基于同一个rootfs来打包和迭代的，难道每个rootfs都会多份吗？</p><p>为此docker利用了存储驱动AUFS，devicemapper，overlay，overlay2的存储技术实现了分层。初期是AUFS，到现在的overlay2驱动（不推荐devicemapper坑很多）。例如一个nginx:alpine和python:alpine镜像可以从分层角度这样去理解。</p><p><img src="/images/pasted-3.png" alt="upload successful"></p><p>实际上只有不同的层才占据存储空间，相同的层则是引用关系。抽象地看镜像是一个实体，实际上是/var/lib/docker目录里的分层文件外加一些json和db文件把层联系起来组成了镜像。存储路径是/var/lib/docker/存储驱动类型/。</p><p><img src="/images/pasted-4.png" alt="upload successful"></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h6 id=&quot;Docker镜像层&quot;&gt;&lt;a href=&quot;#Docker镜像层&quot; class=&quot;headerlink&quot; title=&quot;Docker镜像层&quot;&gt;&lt;/a&gt;Docker镜像层&lt;/h6&gt;&lt;p&gt;镜像为什么是有层的？镜像分层是为了解决什么？&lt;/p&gt;
-&lt;p&gt;虽然镜像解决了打包，但是
-      
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>proxmox中cloud-init使用方法</title>
-    <link href="http://yoursite.com/2019/04/18/proxmox%E4%B8%ADcloud-init%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
-    <id>http://yoursite.com/2019/04/18/proxmox中cloud-init使用方法/</id>
-    <published>2019-04-18T03:06:00.000Z</published>
-    <updated>2019-04-18T05:14:02.283Z</updated>
-    
-    <content type="html"><![CDATA[<h6 id="模版制作"><a href="#模版制作" class="headerlink" title="模版制作"></a>模版制作</h6><p>标准分区ext4，不添加swap分区，原因下文说。<br><img src="/images/pasted-1.png" alt="upload successful"></p><p>系统装完后，将网卡配置文件内的onboot打开，清除uuid。关闭selinux和firewalld以及碍事的NetworkManager。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> --now firewalld NetworkManager</span><br><span class="line">setenforce 0</span><br><span class="line">sed -ri <span class="string">'/^[^#]*SELINUX=/s#=.+$#=disabled#'</span> /etc/selinux/config</span><br></pre></td></tr></table></figure></p><p>为了让虚拟化层可以重启和关闭虚拟机，必须安装acpid服务；为了使根分区正确调整大小安装cloud-utils-growpart，cloud-init支持下发前设置信息写入。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install -y acpid cloud-init cloud-utils-growpart</span><br><span class="line">systemctl <span class="built_in">enable</span> acpid</span><br></pre></td></tr></table></figure></p><p>禁用默认zeroconf路线<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"NOZEROCONF=yes"</span> &gt;&gt; /etc/sysconfig/network</span><br></pre></td></tr></table></figure></p><p>防止ssh连接使用dns导致访问过慢<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -ri <span class="string">'/UseDNS/&#123;s@#@@;s@\s+.+@ no@&#125;'</span> /etc/ssh/sshd_config</span><br><span class="line">systemctl restart sshd</span><br></pre></td></tr></table></figure></p><p>cloud-init配置文件:1. ssh_pwauth 为 0 是禁止使用password登陆。2. disable_root：1 是禁止root登陆。3. package-update-upgrade-install会在第一次开机启动时自动yum update -y。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sed -ri <span class="string">'/disable_root/&#123;s#\S$#0#&#125;'</span> /etc/cloud/cloud.cfg</span><br><span class="line">sed -ri <span class="string">'/ssh_pwauth/&#123;s#\S$#1#&#125;'</span> /etc/cloud/cloud.cfg</span><br><span class="line">sed -ri <span class="string">'/package-update/s@^@#@'</span> /etc/cloud/cloud.cfg</span><br></pre></td></tr></table></figure></p><p>默认cloud-init会创建一个系统类型的用户,可以注释掉。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  default_user:</span></span><br><span class="line"><span class="comment">#    name: centos</span></span><br><span class="line"><span class="comment">#    lock_passwd: true</span></span><br><span class="line"><span class="comment">#    gecos: Cloud User</span></span><br><span class="line"><span class="comment">#    groups: [wheel, adm, systemd-journal]</span></span><br><span class="line"><span class="comment">#    sudo: ["ALL=(ALL) NOPASSWD:ALL"]</span></span><br><span class="line"><span class="comment">#    shell: /bin/bash</span></span><br></pre></td></tr></table></figure></p><p>安装些基础包和预设一些脚本的话就可以关机。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install vim git wget -y</span><br><span class="line">poweroff</span><br></pre></td></tr></table></figure></p><h6 id="转换模版"><a href="#转换模版" class="headerlink" title="转换模版"></a>转换模版</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~<span class="comment"># qm list</span></span><br><span class="line">      VMID NAME                 STATUS     MEM(MB)    BOOTDISK(GB) PID</span><br><span class="line">       100 cloud-init           stopped    2048              20.00 0</span><br><span class="line">       101 k8s-m1               running    2048              20.00 7438</span><br><span class="line">root@pve:~<span class="comment"># qm set 100 --ide2 local-lvm:cloudinit</span></span><br><span class="line">update VM 100: -ide2 <span class="built_in">local</span>-lvm:cloudinit</span><br><span class="line">  Using default stripesize 64.00 KiB.</span><br><span class="line">  Logical volume <span class="string">"vm-100-cloudinit"</span> created.</span><br></pre></td></tr></table></figure><p>在Dashboard上可以看到虚拟机的could-init部分已经可以更改属性了。</p><p><img src="/images/pasted-2.png" alt="upload successful"></p><p>在Dashboard上把它转换成模板,部署时完整克隆,开机之前双击需要设置的信息即可,否则例如密码不设置默认是模板的密码。也可以通过命令行初始化虚拟机信息。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qm <span class="built_in">set</span> &lt;vmid&gt; --ipconfig0 ip=10.105.26.x/23,gw=10.105.26.1</span><br></pre></td></tr></table></figure></p><h6 id="备份和恢复虚拟机"><a href="#备份和恢复虚拟机" class="headerlink" title="备份和恢复虚拟机"></a>备份和恢复虚拟机</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">root@pve:~<span class="comment"># vzdump 100</span></span><br><span class="line">INFO: starting new backup job: vzdump 100</span><br><span class="line">INFO: Starting Backup of VM 100 (qemu)</span><br><span class="line">INFO: status = stopped</span><br><span class="line">INFO: update VM 100: -lock backup</span><br><span class="line">INFO: backup mode: stop</span><br><span class="line">INFO: ionice priority: 7</span><br><span class="line">INFO: VM Name: cloud-init</span><br><span class="line">INFO: include disk <span class="string">'scsi0'</span> <span class="string">'local-lvm:vm-100-disk-0'</span> 20G</span><br><span class="line">INFO: creating archive <span class="string">'/var/lib/vz/dump/vzdump-qemu-100-2019_04_18-12_48_38.vma'</span></span><br><span class="line">INFO: starting kvm to execute backup task</span><br><span class="line">Total translation table size: 0</span><br><span class="line">Total rockridge attributes bytes: 417</span><br><span class="line">Total directory bytes: 0</span><br><span class="line">Path table size(bytes): 10</span><br><span class="line">Max brk space used 0</span><br><span class="line">178 extents written (0 MB)</span><br><span class="line">INFO: started backup task <span class="string">'d65a8f26-20fe-4232-abd3-ec0bcf4623cd'</span></span><br><span class="line">INFO: status: 3% (785645568/21474836480), sparse 1% (395206656), duration 3, <span class="built_in">read</span>/write 261/130 MB/s</span><br><span class="line">INFO: status: 21% (4593876992/21474836480), sparse 19% (4184059904), duration 6, <span class="built_in">read</span>/write 1269/6 MB/s</span><br><span class="line">INFO: status: 34% (7457996800/21474836480), sparse 32% (6929133568), duration 9, <span class="built_in">read</span>/write 954/39 MB/s</span><br><span class="line">INFO: status: 50% (10746396672/21474836480), sparse 46% (10083291136), duration 12, <span class="built_in">read</span>/write 1096/44 MB/s</span><br><span class="line">INFO: status: 61% (13169524736/21474836480), sparse 57% (12349382656), duration 15, <span class="built_in">read</span>/write 807/52 MB/s</span><br><span class="line">INFO: status: 70% (15039004672/21474836480), sparse 64% (13956280320), duration 18, <span class="built_in">read</span>/write 623/87 MB/s</span><br><span class="line">INFO: status: 80% (17196580864/21474836480), sparse 74% (15934279680), duration 21, <span class="built_in">read</span>/write 719/59 MB/s</span><br><span class="line">INFO: status: 89% (19120455680/21474836480), sparse 82% (17667883008), duration 24, <span class="built_in">read</span>/write 641/63 MB/s</span><br><span class="line">INFO: status: 95% (20594622464/21474836480), sparse 88% (18997477376), duration 27, <span class="built_in">read</span>/write 491/48 MB/s</span><br><span class="line">INFO: status: 100% (21474836480/21474836480), sparse 92% (19877691392), duration 28, <span class="built_in">read</span>/write 880/0 MB/s</span><br><span class="line">INFO: transferred 21474 MB <span class="keyword">in</span> 28 seconds (766 MB/s)</span><br><span class="line">INFO: stopping kvm after backup task</span><br><span class="line">INFO: archive file size: 1.49GB</span><br><span class="line">INFO: Finished Backup of VM 100 (00:00:32)</span><br><span class="line">INFO: Backup job finished</span><br></pre></td></tr></table></figure><p>输出路径在：/var/lib/vz/dump/，导入的话使用如下命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qmrestore vzdump-qemu-xx.vma &lt;vmid&gt;</span><br></pre></td></tr></table></figure></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h6 id=&quot;模版制作&quot;&gt;&lt;a href=&quot;#模版制作&quot; class=&quot;headerlink&quot; title=&quot;模版制作&quot;&gt;&lt;/a&gt;模版制作&lt;/h6&gt;&lt;p&gt;标准分区ext4，不添加swap分区，原因下文说。&lt;br&gt;&lt;img src=&quot;/images/pasted-1.png&quot; a
-      
-    
-    </summary>
-    
-      <category term="Proxmox" scheme="http://yoursite.com/categories/Proxmox/"/>
-    
-    
-      <category term="virtualization" scheme="http://yoursite.com/tags/virtualization/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>k8s配置secret拉取私有仓库镜像</title>
-    <link href="http://yoursite.com/2019/04/10/k8s%E9%85%8D%E7%BD%AEsecret%E6%8B%89%E5%8F%96%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93%E9%95%9C%E5%83%8F/"/>
-    <id>http://yoursite.com/2019/04/10/k8s配置secret拉取私有仓库镜像/</id>
-    <published>2019-04-10T09:11:00.000Z</published>
-    <updated>2019-04-18T05:01:30.701Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://kubernetes.io/docs" target="_blank" rel="noopener">https://kubernetes.io/docs</a></p><h6 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat ~/.docker/config.json </span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">"auths"</span><span class="string">:</span> <span class="string">&#123;</span></span><br><span class="line"><span class="string">"harbor.station.com"</span><span class="string">:</span> <span class="string">&#123;</span></span><br><span class="line"><span class="string">"auth"</span><span class="string">:</span> <span class="string">"YWRtaW46SGFyYm9yMTIzNDU="</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;,</span></span><br><span class="line"><span class="string">"HttpHeaders"</span><span class="string">:</span> <span class="string">&#123;</span></span><br><span class="line"><span class="string">"User-Agent"</span><span class="string">:</span> <span class="string">"Docker-Client/18.06.1-ce (linux)"</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure><p>这个时候我们虽然可以通过交互式登录，使用docker pull拉取镜像，但无法通过k8s创建Pod时拉取镜像。</p><h6 id="生成密钥secret"><a href="#生成密钥secret" class="headerlink" title="生成密钥secret"></a>生成密钥secret</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl create secret docker-registry harbor --docker-server=x.x.x.x --docker-username=admin --docker-password=Harbor12345 --docker-email=xx@qq.com</span></span><br></pre></td></tr></table></figure><p>1) harbor: 指定密钥的键名称，可自行定义 2）–docker-server：指定docker仓库地址 3）–docker-username：指定docker仓库帐号 4) –docker-password：指定docker仓库密码 5) –docker-email：指定邮件地址（选填）`</p><h6 id="查看密钥"><a href="#查看密钥" class="headerlink" title="查看密钥"></a>查看密钥</h6><p>可以看到当前除了默认的密钥, 还有我们刚才生成的. 另外要注意的是, 该密钥只能在对应namespace使用, 也就是这里的default, 如果需要用到其他namespace, 比如说test, 就需要在生成的时候指定参数 -n test。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl get secrets</span></span><br><span class="line">NAME                  TYPE                                  DATA   AGE</span><br><span class="line">default-token-mzmtj   kubernetes.io/service-account-token   3      22m</span><br><span class="line">harbor                kubernetes.io/dockerconfigjson        1      22m</span><br></pre></td></tr></table></figure></p><h6 id="YAML例子"><a href="#YAML例子" class="headerlink" title="YAML例子"></a>YAML例子</h6><p>其中imagePullSecrets是声明拉取镜像时需要指定密钥, harbor必须和上面生成密钥的键名一致, 另外检查一下pod和密钥是否在同一个namespace, 之后k8s便可以拉取镜像。<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx-deploy</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">harbor</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">web_server</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">harbor.station.com/library/nginx:latest</span></span><br><span class="line"><span class="attr">      imagePullSecrets:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">harbor</span></span><br></pre></td></tr></table></figure></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;a href=&quot;https://kubernetes.io/docs&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://kubernetes.io/docs&lt;/a&gt;&lt;/p&gt;
-&lt;h6 id=&quot;样例&quot;&gt;&lt;a href=&quot;#样例&quot; class=&quot;h
-      
-    
-    </summary>
-    
-      <category term="Kubernetes" scheme="http://yoursite.com/categories/Kubernetes/"/>
-    
-    
-      <category term="Harbor" scheme="http://yoursite.com/tags/Harbor/"/>
     
   </entry>
   
