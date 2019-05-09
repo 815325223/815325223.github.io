@@ -146,7 +146,7 @@
 <meta property="og:description" content="&amp;#9742; 软件安装版本预览             Kubernetes v1.13.5 (v1.13.4有kubectl cp的bug)CNI v0.7.5Etcd v3.2.24Flannel v0.11.0 or Calico v3.4Docker CE 18.06.03            在官方的支持版本里，1.13.5并未支持18.09，为此这里使用的是18.06.03。 网络">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/pasted-15.png">
-<meta property="og:updated_time" content="2019-05-09T01:52:23.485Z">
+<meta property="og:updated_time" content="2019-05-09T02:34:29.784Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes HA">
 <meta name="twitter:description" content="&amp;#9742; 软件安装版本预览             Kubernetes v1.13.5 (v1.13.4有kubectl cp的bug)CNI v0.7.5Etcd v3.2.24Flannel v0.11.0 or Calico v3.4Docker CE 18.06.03            在官方的支持版本里，1.13.5并未支持18.09，为此这里使用的是18.06.03。 网络">
@@ -1078,6 +1078,9 @@
 <p>验证是否正常启动<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system get po -l k8s-app=calico-node</span><br><span class="line">NAME                READY     STATUS    RESTARTS   AGE</span><br><span class="line">calico-node-bv7r9   2/2       Running   4          5m</span><br><span class="line">calico-node-cmh2w   2/2       Running   3          5m</span><br><span class="line">calico-node-klzrz   2/2       Running   4          5m</span><br><span class="line">calico-node-n4c9j   2/2       Running   4          5m</span><br></pre></td></tr></table></figure></p>
 <p>查找calicoctl的pod名字<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system get po -l k8s-app=calicoctl</span><br><span class="line">NAME                         READY     STATUS    RESTARTS   AGE</span><br><span class="line">calicoctl-6b5bf7cb74-d9gv8   1/1       Running   0          5m</span><br><span class="line">通过 kubectl <span class="built_in">exec</span> calicoctl pod 执行命令来检查功能是否正常</span><br></pre></td></tr></table></figure></p>
 <p>通过 kubectl exec calicoctl pod 执行命令来检查功能是否正常<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system <span class="built_in">exec</span> calicoctl-6b5bf7cb74-d9gv8 -- calicoctl get profiles -o wide</span><br><span class="line">NAME              LABELS   </span><br><span class="line">kns.default       map[]    </span><br><span class="line">kns.kube-public   map[]    </span><br><span class="line">kns.kube-system   map[]    </span><br><span class="line"></span><br><span class="line">$ kubectl -n kube-system <span class="built_in">exec</span> calicoctl-6b5bf7cb74-d9gv8 -- calicoctl get node -o wide</span><br><span class="line">NAME     ASN         IPV4                 IPV6   </span><br><span class="line">k8s-m1   (unknown)   192.168.88.111/24          </span><br><span class="line">k8s-m2   (unknown)   192.168.88.112/24          </span><br><span class="line">k8s-m3   (unknown)   192.168.88.113/24          </span><br><span class="line">k8s-n1   (unknown)   10.244.3.1/24</span><br></pre></td></tr></table></figure></p>
+<p><strong>CoreDNS</strong></p>
+<p>1.11后CoreDNS已完全取代Kube DNS作为集群服务发现组件，由于Kubernetes需要让Pod与Pod之间能夠互相通信，然而要能够通信需要知道彼此的IP才行，而这种做法通常是通过Kubernetes API来获取，但是 Pod IP会因为生命周期变化而改变，因此这种做法无法弹性使用，且还会增加API Server负担，基于此问题Kubernetes提供了DNS服务来作为查询，让Pod能夠以Service名称作为域名来查询IP地址，因此使用者就再不需要关心实际Pod IP，而DNS也会根据Pod变化更新资源记录(Record resources)。</p>
+<p>CoreDNS是由CNCF维护的开源DNS方案，该方案前身是SkyDNS，其采用了Caddy 的一部分来开发伺服器框架，使其能够建立一套快速灵活的DNS，而CoreDNS每个功能都可以被当作成一个插件的中介软体，如 Log、Cache、Kubernetes等功能，甚至能够将源记录存储在Redis、Etcd中。</p>
 
       
     </div>
@@ -1374,6 +1377,22 @@
                     <a href="https://istio.io/zh/docs/" title="https://istio.io/zh/docs/" rel="noopener" target="_blank">Istio Docs</a>
                   </li>
                 
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mritd.me/" title="https://mritd.me/" rel="noopener" target="_blank">漠然</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qingmu.io/" title="https://qingmu.io/" rel="noopener" target="_blank">青木</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://zhangguanzhang.github.io" title="https://zhangguanzhang.github.io" rel="noopener" target="_blank">馆长</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://kuops.com/" title="https://kuops.com/" rel="noopener" target="_blank">kuops</a>
+                  </li>
+                
               </ul>
             </div>
           
@@ -1447,7 +1466,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共18.4k字</span>
+  <span class="post-count">博客全站共18.7k字</span>
 </div>
 
         
