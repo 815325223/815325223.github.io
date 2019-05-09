@@ -146,7 +146,7 @@
 <meta property="og:description" content="&amp;#9742; 软件安装版本预览             Kubernetes v1.13.5 (v1.13.4有kubectl cp的bug)CNI v0.7.5Etcd v3.2.24Flannel v0.11.0 or Calico v3.4Docker CE 18.06.03            在官方的支持版本里，1.13.5并未支持18.09，为此这里使用的是18.06.03。 网络">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/pasted-15.png">
-<meta property="og:updated_time" content="2019-05-08T08:37:03.266Z">
+<meta property="og:updated_time" content="2019-05-09T01:52:23.485Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes HA">
 <meta name="twitter:description" content="&amp;#9742; 软件安装版本预览             Kubernetes v1.13.5 (v1.13.4有kubectl cp的bug)CNI v0.7.5Etcd v3.2.24Flannel v0.11.0 or Calico v3.4Docker CE 18.06.03            在官方的支持版本里，1.13.5并未支持18.09，为此这里使用的是18.06.03。 网络">
@@ -236,7 +236,7 @@
     </div>
     
       
-        <p class="site-subtitle">Kubernetes,Devops,Service Mesh 实践</p>
+        <p class="site-subtitle">我们的目标是星辰大海，通往伟大的旅程永不停歇</p>
       
     
     
@@ -1065,6 +1065,19 @@
 </ul>
 <p>flannel使用vxlan技术为各节点创建一个可以互通的Pod网络，使用的端口为 UDP 8472，需要开放该端口（如公有云 AWS 等）。</p>
 <p>flannel第一次启动时，从etcd获取Pod网段信息，为本节点分配一个未使用的 /24段地址，然后创建flannel.1（也可能是其它名称，如 flannel1等）接口。</p>
+<p>官方手动部署方法，采用ds创建<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml</span><br></pre></td></tr></table></figure></p>
+<p>验证是否正常启动<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system get po -l k8s-app=flannel</span><br><span class="line">NAME                READY     STATUS    RESTARTS   AGE</span><br><span class="line">kube-flannel-ds-27jwl   2/2       Running   0          59s</span><br><span class="line">kube-flannel-ds-4fgv6   2/2       Running   0          59s</span><br><span class="line">kube-flannel-ds-mvrt7   2/2       Running   0          59s</span><br><span class="line">kube-flannel-ds-p2q9g   2/2       Running   0          59s</span><br><span class="line">kube-flannel-ds-zchsz   2/2       Running   0          59s</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Calico</li>
+</ul>
+<p>Calico是一款纯 Layer3的网络，其好处是它整合了各种云原生平台(Docker、Mesos与OpenStack等)，且Calico不采用 vSwitch，而是在每个Kubernetes节点使用vRouter功能，并通过Linux Kernel既有的L3 forwarding功能，而当数据中心复杂度增加时，Calico也可以利用BGP route reflector來达成。</p>
+<div class="note warning">
+            <ul><li>想了解Caclio与传统overlay networks的差异，可以阅读<a href="https://www.projectcalico.org/learn/" target="_blank" rel="noopener">Difficulties with traditional overlay networks</a>文章</li></ul>
+          </div>
+<p>由于Calico提供了Kubernetes resources YAML文件来快速以容器方式部署网络插件至所有节点上，因此只需要在k8s-m1使用kubectl执行下面指令來建立<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://docs.projectcalico.org/v3.7/manifests/calico.yaml</span><br></pre></td></tr></table></figure></p>
+<p>验证是否正常启动<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system get po -l k8s-app=calico-node</span><br><span class="line">NAME                READY     STATUS    RESTARTS   AGE</span><br><span class="line">calico-node-bv7r9   2/2       Running   4          5m</span><br><span class="line">calico-node-cmh2w   2/2       Running   3          5m</span><br><span class="line">calico-node-klzrz   2/2       Running   4          5m</span><br><span class="line">calico-node-n4c9j   2/2       Running   4          5m</span><br></pre></td></tr></table></figure></p>
+<p>查找calicoctl的pod名字<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system get po -l k8s-app=calicoctl</span><br><span class="line">NAME                         READY     STATUS    RESTARTS   AGE</span><br><span class="line">calicoctl-6b5bf7cb74-d9gv8   1/1       Running   0          5m</span><br><span class="line">通过 kubectl <span class="built_in">exec</span> calicoctl pod 执行命令来检查功能是否正常</span><br></pre></td></tr></table></figure></p>
+<p>通过 kubectl exec calicoctl pod 执行命令来检查功能是否正常<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system <span class="built_in">exec</span> calicoctl-6b5bf7cb74-d9gv8 -- calicoctl get profiles -o wide</span><br><span class="line">NAME              LABELS   </span><br><span class="line">kns.default       map[]    </span><br><span class="line">kns.kube-public   map[]    </span><br><span class="line">kns.kube-system   map[]    </span><br><span class="line"></span><br><span class="line">$ kubectl -n kube-system <span class="built_in">exec</span> calicoctl-6b5bf7cb74-d9gv8 -- calicoctl get node -o wide</span><br><span class="line">NAME     ASN         IPV4                 IPV6   </span><br><span class="line">k8s-m1   (unknown)   192.168.88.111/24          </span><br><span class="line">k8s-m2   (unknown)   192.168.88.112/24          </span><br><span class="line">k8s-m3   (unknown)   192.168.88.113/24          </span><br><span class="line">k8s-n1   (unknown)   10.244.3.1/24</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -1434,7 +1447,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共18k字</span>
+  <span class="post-count">博客全站共18.4k字</span>
 </div>
 
         
