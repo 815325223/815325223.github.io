@@ -140,15 +140,15 @@
 
   <meta name="description" content="&amp;#9742; 软件安装版本预览             Kubernetes v1.13.5 (v1.13.4有kubectl cp的bug)CNI v0.7.5Etcd v3.2.24Flannel v0.11.0 or Calico v3.4Docker CE 18.06.03            在官方的支持版本里，1.13.5并未支持18.09，为此这里使用的是18.06.03。 网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kubernetes HA">
-<meta property="og:url" content="http://yoursite.com/2019/05/07/二进制部署Kubernetes-HA/index.html">
+<meta property="og:title" content="二进制Kubernetes HA部署方案">
+<meta property="og:url" content="http://yoursite.com/2019/05/07/进制部署Kubernetes-HA/index.html">
 <meta property="og:site_name" content="Mr.Cheng">
 <meta property="og:description" content="&amp;#9742; 软件安装版本预览             Kubernetes v1.13.5 (v1.13.4有kubectl cp的bug)CNI v0.7.5Etcd v3.2.24Flannel v0.11.0 or Calico v3.4Docker CE 18.06.03            在官方的支持版本里，1.13.5并未支持18.09，为此这里使用的是18.06.03。 网络">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/pasted-15.png">
-<meta property="og:updated_time" content="2019-05-09T02:34:29.784Z">
+<meta property="og:updated_time" content="2019-05-10T09:35:23.438Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kubernetes HA">
+<meta name="twitter:title" content="二进制Kubernetes HA部署方案">
 <meta name="twitter:description" content="&amp;#9742; 软件安装版本预览             Kubernetes v1.13.5 (v1.13.4有kubectl cp的bug)CNI v0.7.5Etcd v3.2.24Flannel v0.11.0 or Calico v3.4Docker CE 18.06.03            在官方的支持版本里，1.13.5并未支持18.09，为此这里使用的是18.06.03。 网络">
 <meta name="twitter:image" content="http://yoursite.com/images/pasted-15.png">
 
@@ -160,7 +160,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/05/07/二进制部署Kubernetes-HA/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/07/进制部署Kubernetes-HA/">
 
 
 
@@ -170,7 +170,7 @@
   };
 </script>
 
-  <title>Kubernetes HA | Mr.Cheng</title>
+  <title>二进制Kubernetes HA部署方案 | Mr.Cheng</title>
   
 
 
@@ -437,7 +437,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/07/二进制部署Kubernetes-HA/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/07/进制部署Kubernetes-HA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Mr.Cheng">
@@ -454,7 +454,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Kubernetes HA
+          <h1 class="post-title" itemprop="name headline">二进制Kubernetes HA部署方案
 
               
             
@@ -480,12 +480,30 @@
                 
               
 
-              <time title="创建时间：2019-05-07 17:09:08" itemprop="dateCreated datePublished" datetime="2019-05-07T17:09:08+08:00">2019-05-07 17:09:08</time>
+              <time title="创建时间：2019-05-07 17:09:00" itemprop="dateCreated datePublished" datetime="2019-05-07T17:09:00+08:00">2019-05-07 17:09:00</time>
             
 
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -1081,7 +1099,36 @@
 <p><strong>CoreDNS</strong></p>
 <p>1.11后CoreDNS已完全取代Kube DNS作为集群服务发现组件，由于Kubernetes需要让Pod与Pod之间能夠互相通信，然而要能够通信需要知道彼此的IP才行，而这种做法通常是通过Kubernetes API来获取，但是 Pod IP会因为生命周期变化而改变，因此这种做法无法弹性使用，且还会增加API Server负担，基于此问题Kubernetes提供了DNS服务来作为查询，让Pod能夠以Service名称作为域名来查询IP地址，因此使用者就再不需要关心实际Pod IP，而DNS也会根据Pod变化更新资源记录(Record resources)。</p>
 <p>CoreDNS是由CNCF维护的开源DNS方案，该方案前身是SkyDNS，其采用了Caddy 的一部分来开发伺服器框架，使其能够建立一套快速灵活的DNS，而CoreDNS每个功能都可以被当作成一个插件的中介软体，如 Log、Cache、Kubernetes等功能，甚至能够将源记录存储在Redis、Etcd中。</p>
-
+<p><a href="https://github.com/coredns/deployment/tree/master/kubernetes" target="_blank" rel="noopener">项目地址</a></p>
+<p>官方部署方式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./deploy.sh | kubectl apply -f -</span><br></pre></td></tr></table></figure></p>
+<p>验证是否正常启动<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system get po -l k8s-app=kube-dns</span><br><span class="line">NAMESPACE     NAME                              READY     STATUS              RESTARTS   AGE</span><br><span class="line">kube-system   coredns-6975654877-jjqkg          1/1       Running   0          1m</span><br><span class="line">kube-system   coredns-6975654877-ztqjh          1/1       Running   0          1m</span><br></pre></td></tr></table></figure></p>
+<p>完成后检查节点状态是否为Ready，以及Pod是否已经不再是Pending<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get nodes</span><br><span class="line">NAME      STATUS     ROLES     AGE       VERSION</span><br><span class="line">k8s-m1    Ready      master    17m       v1.13.5</span><br><span class="line">k8s-m2    Ready      master    16m       v1.13.5</span><br><span class="line">k8s-m3    Ready      master    16m       v1.13.5</span><br><span class="line">k8s-n1    Ready      node      6m        v1.13.5</span><br></pre></td></tr></table></figure></p>
+<p>验证CoreDNS域名解析，nslookup是否能返回地址<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ cat&lt;&lt;EOF | kubectl apply -f -</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: busybox</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: busybox</span><br><span class="line">    image: busybox:1.28</span><br><span class="line">    <span class="built_in">command</span>:</span><br><span class="line">      - sleep</span><br><span class="line">      - <span class="string">"3600"</span></span><br><span class="line">    imagePullPolicy: IfNotPresent</span><br><span class="line">  restartPolicy: Always</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">$ kubectl <span class="built_in">exec</span> -ti busybox -- nslookup kubernetes</span><br><span class="line">Server:    10.96.0.10</span><br><span class="line">Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local</span><br><span class="line"></span><br><span class="line">Name:      kubernetes</span><br><span class="line">Address 1: 10.96.0.1 kubernetes.default.svc.cluster.local</span><br></pre></td></tr></table></figure></p>
+<p>目前CoreDNS有部分BUG，官方无解，<a href="https://github.com/coredns/coredns/issues/2289" target="_blank" rel="noopener">issue地址</a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Server:    10.96.0.10</span><br><span class="line">Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local</span><br><span class="line"></span><br><span class="line">nslookup: can<span class="string">'t resolve '</span>kubernetes<span class="string">'</span></span><br><span class="line"><span class="string">command terminated with exit code 1</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>KubeDNS</strong><br>Kube DNS是Kubernetes集群内部Pod之间互相沟通的重要Addon，它允许Pod可以通过Domain Name方式来连接Service，其主要由Kube DNS与Sky DNS组合而成，通过Kube DNS监听Service与Endpoint变化，来提供给Sky DNS资讯，已更新解析位址。</p>
+<p>如果CoreDNS工作不正常,先删掉它,删掉后确保coredns的pod和svc不存在。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl delete -f addons/coredns/coredns.yml</span><br><span class="line">$ kubectl -n kube-system get pod,svc -l k8s-app=kube-dns</span><br><span class="line">No resources found.</span><br></pre></td></tr></table></figure></p>
+<p>创建Kube DNS<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f addons/Kubedns/kubedns.yml</span><br><span class="line">serviceaccount/kube-dns created</span><br><span class="line">service/kube-dns created</span><br><span class="line">deployment.extensions/kube-dns create</span><br></pre></td></tr></table></figure></p>
+<p>查看Pod状态<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl -n kube-system get pod,svc -l k8s-app=kube-dns</span><br><span class="line"></span><br><span class="line">NAME                            READY   STATUS    RESTARTS   AGE</span><br><span class="line">pod/kube-dns-59c677cb95-pxcbc   3/3     Running   0          3m</span><br><span class="line">pod/kube-dns-59c677cb95-wlprb   3/3     Running   0          3m</span><br><span class="line"></span><br><span class="line">NAME               TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)         AGE</span><br><span class="line">service/kube-dns   ClusterIP   10.96.0.10   &lt;none&gt;        53/UDP,53/TCP   3m</span><br></pre></td></tr></table></figure></p>
+<p>验证集群解析是否正常<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl <span class="built_in">exec</span> -ti busybox -- nslookup kubernetes</span><br><span class="line">Server:    10.96.0.10</span><br><span class="line">Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local</span><br><span class="line"></span><br><span class="line">Name:      kubernetes</span><br><span class="line">Address 1: 10.96.0.1 kubernetes.default.svc.cluster.local</span><br></pre></td></tr></table></figure></p>
+<p>等官方修复BUG后，可以使用先创建CoreDNS的deployment，svc会负载到CoreDNS之后，再删掉KubeDNS的deployment。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./deploy.sh | kubectl apply -f -</span><br><span class="line">$ kubectl delete --namespace=kube-system deployment kube-dns</span><br></pre></td></tr></table></figure></p>
+<p><strong>Metrics Server</strong><br>Metrics Server是实现了Metrics API的组件，其目标是取代Heapster作为Pod 与Node提供资源的Usage metrics，该组件会从每个Kubernetes节点上的kubelet所公开的Summary API中收集Metrics。但我认为prometheus的监控功能更强大，完全可以代替Metrics，当然如果你非要使用kubetcl top nodes，可以按照官方教程安装Metrics。&#10003;<a href="https://github.com/kubernetes-incubator/metrics-server/tree/master/deploy/1.8+" target="_blank" rel="noopener">项目地址</a></p>
+<ul>
+<li>Metrics API只可以查询当前的度量数据，并不保存历史数据。</li>
+<li>Metrics API URI为/apis/metrics.k8s.io/，在k8s.io/metrics维护。</li>
+<li>Horizontal Pod Autoscaler（HPA）控制器用于实现基于CPU使用率进行自动Pod伸缩的功能。</li>
+<li>HPA控制器基于Master的kube-controller-manager服务启动参数–horizontal-pod-autoscaler-sync-period定义是时长（默认30秒），周期性监控目标Pod的CPU使用率，并在满足条件时对ReplicationController或Deployment中的Pod副本数进行调整，以符合用户定义的平均Pod CPU使用率。</li>
+</ul>
+<p>未部署前<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl top node</span><br><span class="line">Error from server (NotFound): the server could not find the requested resource (get services http:heapster:)</span><br></pre></td></tr></table></figure></p>
+<p>部署Metrics Server<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> metrics-server</span><br><span class="line">$ <span class="keyword">for</span> file <span class="keyword">in</span> aggregated-metrics-reader.yaml auth-delegator.yaml auth-reader.yaml metrics-apiservice.yaml metrics-server-deployment.yaml metrics-server-service.yaml resource-reader.yaml; <span class="keyword">do</span> wget https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/<span class="variable">$file</span>; <span class="keyword">done</span></span><br><span class="line">$ kubectl create -f .</span><br><span class="line">$ kubectl -n kube-system get pods -l k8s-app=metrics-server</span><br></pre></td></tr></table></figure></p>
+<p> 配置清单需根据实际情况调整</p>
+<p> metrics-server-deployment.yaml<br> <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">containers:</span></span><br><span class="line"><span class="attr">     - name:</span> <span class="string">metrics-server</span></span><br><span class="line"><span class="attr">       image:</span> <span class="string">k8s.gcr.io/metrics-server-amd64:v0.3.2</span></span><br><span class="line"><span class="attr">       imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">containers:</span></span><br><span class="line"><span class="attr">     - name:</span> <span class="string">metrics-server</span></span><br><span class="line"><span class="attr">       image:</span> <span class="string">k8s.gcr.io/metrics-server-amd64:v0.3.2</span></span><br><span class="line"><span class="attr">       imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br><span class="line"><span class="attr">       args:</span></span><br><span class="line"><span class="bullet">       -</span> <span class="bullet">--kubelet-preferred-address-types=InternalIP</span></span><br><span class="line"><span class="bullet">       -</span> <span class="bullet">--kubelet-insecure-tls</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="string">kubernetes.io/cluster-service:</span> <span class="string">"true"</span> <span class="string">//删除这行</span></span><br></pre></td></tr></table></figure></p>
+<p>提示无法解析节点的主机名，是metrics-server这个容器不能通过CoreDNS 10.96.0.10:53解析各Node的主机名，metrics-server连节点时默认是连接节点的主机名，需要加个参数，让它连接节点的IP：“–kubelet-preferred-address-types=InternalIP”。因为10250是https端口，连接它时需要提供证书，所以加上–kubelet-insecure-tls，表示不验证客户端证书，此前的版本中使用–source=这个参数来指定不验证客户端证书。</p>
+<div class="note warning">
+            <p>值得提醒的是，master最好以Pod形式运行，是因为用户定义资源，也就是kind:xxxx和apiVersion:xxxx现在都是用自带的，后续开发和接触到CRD的时候会创建APIService，如果APIService里选中了svc，那么请求kube-apiserver的web路由的时候kube-apiserver会把请求转发到你选中的svc上，这里可以看官方文件里一部分内容。当我们使用kubectl top node的时候实际是请求kube-apiserver的url路径/apis/metrics.k8s.io/v1beta1/nodes,由于创建了metrics-server的APIService，请求会被转发到svc的pod，pod工作流程是获取node列表，然后去请求node上的kubelet的metrics端口获取metrics信息收集起来，信息包括了node的基本cpu和内存以及上面跑的pod的cpu和内存。这之前流量是kube-apiserver到pod上中间经过svc的ip，如果没有kube-proxy和网络组件就无法通信。</p>
+          </div>
+<p>等待30s-1m后，执行kubectl top指令查看<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get --raw /apis/metrics.k8s.io/v1beta1</span><br><span class="line">&#123;<span class="string">"kind"</span>:<span class="string">"APIResourceList"</span>,<span class="string">"apiVersion"</span>:<span class="string">"v1"</span>,<span class="string">"groupVersion"</span>:<span class="string">"metrics.k8s.io/v1beta1"</span>,<span class="string">"resources"</span>:[&#123;<span class="string">"name"</span>:<span class="string">"nodes"</span>,<span class="string">"singularName"</span>:<span class="string">""</span>,<span class="string">"namespaced"</span>:<span class="literal">false</span>,<span class="string">"kind"</span>:<span class="string">"NodeMetrics"</span>,<span class="string">"verbs"</span>:[<span class="string">"get"</span>,<span class="string">"list"</span>]&#125;,&#123;<span class="string">"name"</span>:<span class="string">"pods"</span>,<span class="string">"singularName"</span>:<span class="string">""</span>,<span class="string">"namespaced"</span>:<span class="literal">true</span>,<span class="string">"kind"</span>:<span class="string">"PodMetrics"</span>,<span class="string">"verbs"</span>:[<span class="string">"get"</span>,<span class="string">"list"</span>]&#125;]&#125;</span><br><span class="line"></span><br><span class="line">$ kubectl get apiservice|grep metrics</span><br><span class="line">v1beta1.metrics.k8s.io                 kube-system/metrics-server   True        2m</span><br><span class="line"></span><br><span class="line">$ kubectl top node</span><br><span class="line">NAME      CPU(cores)   CPU%      MEMORY(bytes)   MEMORY%   </span><br><span class="line">k8s-m1    113m         2%        1080Mi          14%       </span><br><span class="line">k8s-m2    133m         3%        1086Mi          14%       </span><br><span class="line">k8s-m3    100m         2%        1029Mi          13%       </span><br><span class="line">k8s-n1    146m         3%        403Mi           5%</span><br></pre></td></tr></table></figure></p>
+<p>这时若有使用 HPA 的话，就能够正确获取Pod的CPU与Memory使用量了。HPA使用Prometheus的Metrics的话，可以阅读<a href="https://github.com/stefanprodan/k8s-prom-hpa#setting-up-a-custom-metrics-server" target="_blank" rel="noopener">Custom Metrics Server</a>来了解。</p>
+<h6 id="Kubernetes-Extra-Addons"><a href="#Kubernetes-Extra-Addons" class="headerlink" title="Kubernetes Extra Addons"></a>Kubernetes Extra Addons</h6>
       
     </div>
 
@@ -1184,6 +1231,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/05/10/kubeadm-HA方案/" rel="prev" title="kubeadm HA部署方案">
+                kubeadm HA部署方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -1253,7 +1304,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1416,7 +1467,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#软件安装版本预览"><span class="nav-number">1.</span> <span class="nav-text">软件安装版本预览</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#网络信息"><span class="nav-number">2.</span> <span class="nav-text">网络信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#节点信息"><span class="nav-number">3.</span> <span class="nav-text">节点信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#准备工作"><span class="nav-number">4.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#建立集群CA-keys-与Certificates"><span class="nav-number">5.</span> <span class="nav-text">建立集群CA keys 与Certificates</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Master"><span class="nav-number">6.</span> <span class="nav-text">Kubernetes Master</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Nodes"><span class="nav-number">7.</span> <span class="nav-text">Kubernetes Nodes</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Core-Addons"><span class="nav-number">8.</span> <span class="nav-text">Kubernetes Core Addons</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#软件安装版本预览"><span class="nav-number">1.</span> <span class="nav-text">软件安装版本预览</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#网络信息"><span class="nav-number">2.</span> <span class="nav-text">网络信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#节点信息"><span class="nav-number">3.</span> <span class="nav-text">节点信息</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#准备工作"><span class="nav-number">4.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#建立集群CA-keys-与Certificates"><span class="nav-number">5.</span> <span class="nav-text">建立集群CA keys 与Certificates</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Master"><span class="nav-number">6.</span> <span class="nav-text">Kubernetes Master</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Nodes"><span class="nav-number">7.</span> <span class="nav-text">Kubernetes Nodes</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Core-Addons"><span class="nav-number">8.</span> <span class="nav-text">Kubernetes Core Addons</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Kubernetes-Extra-Addons"><span class="nav-number">9.</span> <span class="nav-text">Kubernetes Extra Addons</span></a></li></ol></div>
             
 
           </div>
@@ -1466,7 +1517,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共18.7k字</span>
+  <span class="post-count">博客全站共20.1k字</span>
 </div>
 
         
