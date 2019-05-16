@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-05-16T01:04:06.716Z</updated>
+  <updated>2019-05-16T01:18:47.599Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Harbor彻底删除镜像</title>
+    <link href="http://yoursite.com/2019/05/16/Harbor%E5%BD%BB%E5%BA%95%E5%88%A0%E9%99%A4%E9%95%9C%E5%83%8F/"/>
+    <id>http://yoursite.com/2019/05/16/Harbor彻底删除镜像/</id>
+    <published>2019-05-16T01:10:46.000Z</published>
+    <updated>2019-05-16T01:18:47.599Z</updated>
+    
+    <content type="html"><![CDATA[<p>Harbor私有仓库运行一段时间后，仓库中存有大量镜像，会占用太多的存储空间。直接通过Harbor界面删除相关镜像，并不会自动删除存储中的文件和镜像。需要停止Harbor服务，执行垃圾回收命令，进行存储空间清理和回收。</p><h1 id="先在Harbor-UI中删除不需要的镜像"><a href="#先在Harbor-UI中删除不需要的镜像" class="headerlink" title="先在Harbor UI中删除不需要的镜像"></a>先在Harbor UI中删除不需要的镜像</h1><p><img src="/images/pasted-16.png" alt="upload successful"></p><p><img src="/images/pasted-17.png" alt="upload successful"></p><h1 id="停止Harbor服务，执行垃圾回收命令"><a href="#停止Harbor服务，执行垃圾回收命令" class="headerlink" title="停止Harbor服务，执行垃圾回收命令"></a>停止Harbor服务，执行垃圾回收命令</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker-compose stop</span><br><span class="line">docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect --dry-run /etc/registry/config.yml \\使用--dry-run参数运行容器，预览运行效果，但不删除任何数据</span><br><span class="line">docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect  /etc/registry/config.yml \\不使用--dry-run参数，将删除相关的文件和镜像</span><br><span class="line">docker-compose start</span><br></pre></td></tr></table></figure><h1 id="验证效果"><a href="#验证效果" class="headerlink" title="验证效果"></a>验证效果</h1><ul><li><p>统计目录/data/registry/docker/registry/v2/blobs&amp;repositories，对比之前大小。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -sh /data/registry/docker/registry/v2/blobs&amp;repositories</span><br></pre></td></tr></table></figure></li><li><p>重新上传之前删除的镜像，如没成功删除会报镜像已存在。</p></li></ul><h1 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h1><p>搭建镜像仓库是容器云最核心的步骤之一。基本上最近几年大家都在自己的容器集群中搭建了镜像仓库。作为开源项目，Docker发布的Registry(V1版本)和最后发布了一份Distribution(V2版本)都在解决这个事情。但是不管是当初快速迭代的时候没有仔细考虑，还是迭代速度太快欠下来的技术债，反正是把我们这些实际应用者郁闷了良久。因为真正运营起一套容器云系统之后，会产生大量的镜像，这些镜像的管理就会摆上日程。一般用了没多久，就发现在单机上可以轻易删除镜像的操作在镜像仓库上尽然没有提供。当然在社区发现此问题后在第二个版本中，已经提供了相关的删除方案。当时因为其中细节有趣，我拿出来讲讲，让各位看官能顺着文字知道个前后因果。</p><p>在Distribution的代码库中查看ROADMAP.md中有明确的说明删除操作的利弊。首先，镜像内容是存储在一层虚拟文件系统(VFS)之上，由多个文件块(Blobs)、描述清单文件(Manifests)和 标签文件（tags）组成，因为镜像设计是多层的。所以这些文件会互相依赖，在没有确认文件块(Blob)是否被其他镜像使用的情况下，直接删除会让仓库不完整。所以一般的做法是只做删除标记，而不是真删除，通过垃圾回收机制来遍历当前仓库的有向关系图(DAG)，然后在删除没有被引用的文件块。</p><p>目前Docker Distribution属于维护阶段，已经再把实现标准往OCI社区迁移。所以未来大家应该以OCI镜像作为基准。通过<a href="https://github.com/docker/distribution/pull/2076" target="_blank" rel="noopener">代码补丁</a>来实现支持OCI版本的镜像仓库。</p><p>如何有效的删除镜像的方法也是有的，大致分为4种方法，请参考：</p><p>Reference Counting- 引用计数。</p><p>Lock the World GC- 全局垃圾回收。</p><p>Generational GC- 两代垃圾回收。</p><p>Centralized Oracle- 中央数据库。</p><p>每种方案都有利弊。所以在实现过程中一定要多考虑和实践。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Harbor私有仓库运行一段时间后，仓库中存有大量镜像，会占用太多的存储空间。直接通过Harbor界面删除相关镜像，并不会自动删除存储中的文件和镜像。需要停止Harbor服务，执行垃圾回收命令，进行存储空间清理和回收。&lt;/p&gt;
+&lt;h1 id=&quot;先在Harbor-UI中删除不
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>集群常用设置</title>
@@ -466,33 +488,6 @@
       
       
         &lt;h6 id=&quot;COPY&quot;&gt;&lt;a href=&quot;#COPY&quot; class=&quot;headerlink&quot; title=&quot;COPY&quot;&gt;&lt;/a&gt;COPY&lt;/h6&gt;&lt;p&gt;用法&lt;br&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gut
-      
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
-    
-    
-      <category term="Dockerfile" scheme="http://yoursite.com/tags/Dockerfile/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Dockerfile RUN</title>
-    <link href="http://yoursite.com/2019/04/30/Dockerfile-RUN/"/>
-    <id>http://yoursite.com/2019/04/30/Dockerfile-RUN/</id>
-    <published>2019-04-30T05:05:00.000Z</published>
-    <updated>2019-04-30T06:11:56.631Z</updated>
-    
-    <content type="html"><![CDATA[<h6 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h6><p>有两种形式</p><ul><li>RUN command ( 该命令在shell中运行，默认情况下在Linux上是/bin/sh -c或windows的cmd /S /C)</li><li>RUN [“executable”, “param1”, “param2”] (exec 形式)</li></ul><p>exec形式不会调用shell先展开变量，也就是不会解析ENV或者ARG的变量，所以一般来讲用得比较多的就是第一种形式，多行的话可以利用\换行。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RUN  .....\</span><br><span class="line">    &amp;&amp; addgroup -S nginx \</span><br><span class="line">&amp;&amp; adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \</span><br><span class="line">&amp;&amp; apk add --no-cache --virtual .build-deps \</span><br><span class="line">.....</span><br></pre></td></tr></table></figure></p><p>这里要注意的是一个RUN是一层，dockerfile的一些涉及到文件的指令和RUN都会是新的一层，主要是构建过程实际上还是容器去commit，目的相同的RUN尽量合并在同一个RUN里减少大小。下面我做个例子来说明原因<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine</span><br><span class="line">RUN apk add wget  &amp;&amp; wget https://www.baidu.com -O test.html</span><br><span class="line">RUN <span class="built_in">echo</span> 123 &gt; test.html</span><br></pre></td></tr></table></figure></p><p>构建并运行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker build -t test .</span></span><br><span class="line">Sending build context to Docker daemon  2.048kB</span><br><span class="line">Step 1/3 : FROM alpine</span><br><span class="line"> ---&gt; cdf98d1859c1</span><br><span class="line">Step 2/3 : RUN apk add wget  &amp;&amp; wget https://www.baidu.com -O test.html</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 07bd55d265b8</span><br><span class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86_64/APKINDEX.tar.gz</span><br><span class="line">fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/community/x86_64/APKINDEX.tar.gz</span><br><span class="line">(1/1) Installing wget (1.20.3-r0)</span><br><span class="line">Executing busybox-1.29.3-r10.trigger</span><br><span class="line">OK: 6 MiB <span class="keyword">in</span> 15 packages</span><br><span class="line">--2019-04-30 05:38:10--  https://www.baidu.com/</span><br><span class="line">Resolving www.baidu.com... 58.217.200.39, 58.217.200.37</span><br><span class="line">Connecting to www.baidu.com|58.217.200.39|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 2443 (2.4K) [text/html]</span><br><span class="line">Saving to: <span class="string">'test.html'</span></span><br><span class="line"></span><br><span class="line">     0K ..                                                    100% 21.8M=0s</span><br><span class="line"></span><br><span class="line">2019-04-30 05:38:10 (21.8 MB/s) - <span class="string">'test.html'</span> saved [2443/2443]</span><br><span class="line"></span><br><span class="line">Removing intermediate container 07bd55d265b8</span><br><span class="line"> ---&gt; 9420c50ef6f7</span><br><span class="line">Step 3/3 : RUN <span class="built_in">echo</span> 123 &gt; test.html</span><br><span class="line"> ---&gt; Running <span class="keyword">in</span> 8724c012ff49</span><br><span class="line">Removing intermediate container 8724c012ff49</span><br><span class="line"> ---&gt; b924abffdb62</span><br><span class="line">Successfully built b924abffdb62</span><br><span class="line">Successfully tagged <span class="built_in">test</span>:latest</span><br></pre></td></tr></table></figure></p><p>运行然后查看docker的存储目录查找<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@docker ~]<span class="comment"># docker run --rm test cat test.html</span></span><br><span class="line">123</span><br><span class="line">[root@docker ~]<span class="comment"># find /var/lib/docker/overlay2/ -type f -name test.html</span></span><br><span class="line">/var/lib/docker/overlay2/3c4530c7cd077e1d6ec74135679fe7234eddc88fe72ada21f632cebfd26de4f5/diff/test.html</span><br><span class="line">/var/lib/docker/overlay2/802018b95e4f9b16e9946e2e827db5c3b0cd8631ac0759c31dffea212ff06d4f/diff/test.html</span><br><span class="line">[root@docker ~]<span class="comment"># cat /var/lib/docker/overlay2/3c4530c7cd077e1d6ec74135679fe7234eddc88fe72ada21f632cebfd26de4f5/diff/test.html</span></span><br><span class="line">123</span><br><span class="line">[root@docker ~]<span class="comment"># cat /var/lib/docker/overlay2/802018b95e4f9b16e9946e2e827db5c3b0cd8631ac0759c31dffea212ff06d4f/diff/test.html</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br></pre></td></tr></table></figure></p><p>发现两个文件都存在，前面说到了容器在读取文件的时候从上层往下查找，查找到了就返回，但是我的这个Dockerfile里第一个RUN下载了index页面，第二个改了文件内容。</p><p>可以证明一个RUN是一层，也证明了之前容器读取文件的逻辑。同时假设我们的目的是最终的123，我们可以俩个RUN合并了，这样就不会有多余的第一个RUN产生的test.html文件。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h6 id=&quot;RUN&quot;&gt;&lt;a href=&quot;#RUN&quot; class=&quot;headerlink&quot; title=&quot;RUN&quot;&gt;&lt;/a&gt;RUN&lt;/h6&gt;&lt;p&gt;有两种形式&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;RUN command ( 该命令在shell中运行，默认情况下在Linux上是/bin/sh
       
     
     </summary>

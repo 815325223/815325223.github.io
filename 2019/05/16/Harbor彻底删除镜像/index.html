@@ -138,14 +138,20 @@
 
 
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+  <meta name="description" content="Harbor私有仓库运行一段时间后，仓库中存有大量镜像，会占用太多的存储空间。直接通过Harbor界面删除相关镜像，并不会自动删除存储中的文件和镜像。需要停止Harbor服务，执行垃圾回收命令，进行存储空间清理和回收。 先在Harbor UI中删除不需要的镜像  停止Harbor服务，执行垃圾回收命令1234docker-compose stopdocker run -it --name gc -">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Harbor彻底删除镜像">
+<meta property="og:url" content="http://yoursite.com/2019/05/16/Harbor彻底删除镜像/index.html">
 <meta property="og:site_name" content="Mr.Cheng">
+<meta property="og:description" content="Harbor私有仓库运行一段时间后，仓库中存有大量镜像，会占用太多的存储空间。直接通过Harbor界面删除相关镜像，并不会自动删除存储中的文件和镜像。需要停止Harbor服务，执行垃圾回收命令，进行存储空间清理和回收。 先在Harbor UI中删除不需要的镜像  停止Harbor服务，执行垃圾回收命令1234docker-compose stopdocker run -it --name gc -">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-10T03:26:42.359Z">
+<meta property="og:image" content="http://yoursite.com/images/pasted-16.png">
+<meta property="og:image" content="http://yoursite.com/images/pasted-17.png">
+<meta property="og:updated_time" content="2019-05-16T01:18:47.599Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
+<meta name="twitter:title" content="Harbor彻底删除镜像">
+<meta name="twitter:description" content="Harbor私有仓库运行一段时间后，仓库中存有大量镜像，会占用太多的存储空间。直接通过Harbor界面删除相关镜像，并不会自动删除存储中的文件和镜像。需要停止Harbor服务，执行垃圾回收命令，进行存储空间清理和回收。 先在Harbor UI中删除不需要的镜像  停止Harbor服务，执行垃圾回收命令1234docker-compose stopdocker run -it --name gc -">
+<meta name="twitter:image" content="http://yoursite.com/images/pasted-16.png">
 
 
 
@@ -155,7 +161,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/categories/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/16/Harbor彻底删除镜像/">
 
 
 
@@ -165,7 +171,7 @@
   };
 </script>
 
-  <title>categories | Mr.Cheng</title>
+  <title>Harbor彻底删除镜像 | Mr.Cheng</title>
   
 
 
@@ -290,7 +296,7 @@
         
         
           
-          <li class="menu-item menu-item-categories menu-item-active">
+          <li class="menu-item menu-item-categories">
 
     
     
@@ -412,105 +418,242 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/16/Harbor彻底删除镜像/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr.Cheng">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://raw.githubusercontent.com/815325223/images/master/timg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.Cheng">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">categories
-
-</h1>
-
-<div class="post-meta">
-  
-  
-
-
-
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="category-all-page">
-            <div class="category-all-title">
+          <h1 class="post-title" itemprop="name headline">Harbor彻底删除镜像
+
               
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-              目前共计 5 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/HPC/">HPC</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Kubernetes/">Kubernetes</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Proxmox/">Proxmox</a><span class="category-list-count">1</span></li></ul>
-            </div>
-          </div>
+            
+          </h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-16 09:10:46" itemprop="dateCreated datePublished" datetime="2019-05-16T09:10:46+08:00">2019-05-16 09:10:46</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <p>Harbor私有仓库运行一段时间后，仓库中存有大量镜像，会占用太多的存储空间。直接通过Harbor界面删除相关镜像，并不会自动删除存储中的文件和镜像。需要停止Harbor服务，执行垃圾回收命令，进行存储空间清理和回收。</p>
+<h1 id="先在Harbor-UI中删除不需要的镜像"><a href="#先在Harbor-UI中删除不需要的镜像" class="headerlink" title="先在Harbor UI中删除不需要的镜像"></a>先在Harbor UI中删除不需要的镜像</h1><p><img src="/images/pasted-16.png" alt="upload successful"></p>
+<p><img src="/images/pasted-17.png" alt="upload successful"></p>
+<h1 id="停止Harbor服务，执行垃圾回收命令"><a href="#停止Harbor服务，执行垃圾回收命令" class="headerlink" title="停止Harbor服务，执行垃圾回收命令"></a>停止Harbor服务，执行垃圾回收命令</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker-compose stop</span><br><span class="line">docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect --dry-run /etc/registry/config.yml \\使用--dry-run参数运行容器，预览运行效果，但不删除任何数据</span><br><span class="line">docker run -it --name gc --rm --volumes-from registry vmware/registry:2.6.2-photon garbage-collect  /etc/registry/config.yml \\不使用--dry-run参数，将删除相关的文件和镜像</span><br><span class="line">docker-compose start</span><br></pre></td></tr></table></figure>
+<h1 id="验证效果"><a href="#验证效果" class="headerlink" title="验证效果"></a>验证效果</h1><ul>
+<li><p>统计目录/data/registry/docker/registry/v2/blobs&amp;repositories，对比之前大小。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -sh /data/registry/docker/registry/v2/blobs&amp;repositories</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新上传之前删除的镜像，如没成功删除会报镜像已存在。</p>
+</li>
+</ul>
+<h1 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h1><p>搭建镜像仓库是容器云最核心的步骤之一。基本上最近几年大家都在自己的容器集群中搭建了镜像仓库。作为开源项目，Docker发布的Registry(V1版本)和最后发布了一份Distribution(V2版本)都在解决这个事情。但是不管是当初快速迭代的时候没有仔细考虑，还是迭代速度太快欠下来的技术债，反正是把我们这些实际应用者郁闷了良久。因为真正运营起一套容器云系统之后，会产生大量的镜像，这些镜像的管理就会摆上日程。一般用了没多久，就发现在单机上可以轻易删除镜像的操作在镜像仓库上尽然没有提供。当然在社区发现此问题后在第二个版本中，已经提供了相关的删除方案。当时因为其中细节有趣，我拿出来讲讲，让各位看官能顺着文字知道个前后因果。</p>
+<p>在Distribution的代码库中查看ROADMAP.md中有明确的说明删除操作的利弊。首先，镜像内容是存储在一层虚拟文件系统(VFS)之上，由多个文件块(Blobs)、描述清单文件(Manifests)和 标签文件（tags）组成，因为镜像设计是多层的。所以这些文件会互相依赖，在没有确认文件块(Blob)是否被其他镜像使用的情况下，直接删除会让仓库不完整。所以一般的做法是只做删除标记，而不是真删除，通过垃圾回收机制来遍历当前仓库的有向关系图(DAG)，然后在删除没有被引用的文件块。</p>
+<p>目前Docker Distribution属于维护阶段，已经再把实现标准往OCI社区迁移。所以未来大家应该以OCI镜像作为基准。通过<a href="https://github.com/docker/distribution/pull/2076" target="_blank" rel="noopener">代码补丁</a>来实现支持OCI版本的镜像仓库。</p>
+<p>如何有效的删除镜像的方法也是有的，大致分为4种方法，请参考：</p>
+<p>Reference Counting- 引用计数。</p>
+<p>Lock the World GC- 全局垃圾回收。</p>
+<p>Generational GC- 两代垃圾回收。</p>
+<p>Centralized Oracle- 中央数据库。</p>
+<p>每种方案都有利弊。所以在实现过程中一定要多考虑和实践。</p>
+
       
     </div>
+
     
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div class="social_share">
+            
+              <div>
+                
+
+<script src="//cdn.jsdelivr.net/npm/ilyabirman-likely@2/release/likely.js"></script>
 
 
 
-    
-    
-    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/ilyabirman-likely@2/release/likely.css">
+
+
+  
+
+
+<div class="likely">
+	
+ 	 	<div class="twitter">Tweet</div>
+	
+ 	 	<div class="facebook">Share</div>
+	
+ 	 	<div class="linkedin">Link</div>
+	
+ 	 	<div class="gplus">Plus</div>
+	
+ 	 	<div class="vkontakte">Share</div>
+	
+ 	 	<div class="odnoklassniki">Class</div>
+	
+ 	 	<div class="telegram">Send</div>
+	
+ 	 	<div class="whatsapp">Send</div>
+	
+ 	 	<div class="pinterest">Pin</div>
+	
+</div>
+
+              </div>
+            
+            
+            
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/15/集群常用设置/" rel="next" title="集群常用设置">
+                <i class="fa fa-chevron-left"></i> 集群常用设置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
   </div>
 
 
@@ -539,8 +682,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -711,6 +863,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#先在Harbor-UI中删除不需要的镜像"><span class="nav-number">1.</span> <span class="nav-text">先在Harbor UI中删除不需要的镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#停止Harbor服务，执行垃圾回收命令"><span class="nav-number">2.</span> <span class="nav-text">停止Harbor服务，执行垃圾回收命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#验证效果"><span class="nav-number">3.</span> <span class="nav-text">验证效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后续"><span class="nav-number">4.</span> <span class="nav-text">后续</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
