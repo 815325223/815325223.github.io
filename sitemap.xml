@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2019/05/15/%E9%9B%86%E7%BE%A4%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/</loc>
+    
+    <lastmod>2019-05-16T01:04:06.716Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/05/15/%E5%9C%A8Centos7%E9%83%A8%E7%BD%B2SGE/</loc>
+    
+    <lastmod>2019-05-15T15:06:29.637Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/05/12/cobbler%E6%89%B9%E9%87%8F%E9%83%A8%E7%BD%B2%E7%B3%BB%E7%BB%9F/</loc>
+    
+    <lastmod>2019-05-12T14:34:07.906Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2019/05/10/kubeadm-HA%E6%96%B9%E6%A1%88/</loc>
     
     <lastmod>2019-05-12T12:09:31.818Z</lastmod>
