@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/b92e0555.js","daovoice")
+  daovoice('init', {
+      app_id: ""
+  });
+  daovoice('update');
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="//fonts.lug.ustc.edu.cn/css?family=Monda:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext">
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="服务器CentOS系统安装完毕后的基本配置使用root用户在管理节点和计算节点上进行以下操作：  修改/etc/profile.d/perl-homedir.sh配置文件，以免每次登录用户，自动在家目录下生成perl5文件夹 12perl -p -i -e &apos;s/PERL_HOMEDIR=1/PERL_HOMEDIR=0/&apos; /etc/profile.d/perl-homedir.shecho &apos;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集群常用设置">
+<meta property="og:url" content="http://yoursite.com/2019/05/15/集群常用设置/index.html">
+<meta property="og:site_name" content="Mr.Cheng">
+<meta property="og:description" content="服务器CentOS系统安装完毕后的基本配置使用root用户在管理节点和计算节点上进行以下操作：  修改/etc/profile.d/perl-homedir.sh配置文件，以免每次登录用户，自动在家目录下生成perl5文件夹 12perl -p -i -e &apos;s/PERL_HOMEDIR=1/PERL_HOMEDIR=0/&apos; /etc/profile.d/perl-homedir.shecho &apos;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-08T15:21:19.713Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="集群常用设置">
+<meta name="twitter:description" content="服务器CentOS系统安装完毕后的基本配置使用root用户在管理节点和计算节点上进行以下操作：  修改/etc/profile.d/perl-homedir.sh配置文件，以免每次登录用户，自动在家目录下生成perl5文件夹 12perl -p -i -e &apos;s/PERL_HOMEDIR=1/PERL_HOMEDIR=0/&apos; /etc/profile.d/perl-homedir.shecho &apos;">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mr.Cheng" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/05/15/集群常用设置/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>集群常用设置 | Mr.Cheng</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/815325223" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mr.Cheng</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">While the world sleeps, you dream</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/404/" rel="section"><i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>公益 404</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/15/集群常用设置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr.Cheng">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://raw.githubusercontent.com/815325223/images/master/timg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.Cheng">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">集群常用设置
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-15 23:35:00" itemprop="dateCreated datePublished" datetime="2019-05-15T23:35:00+08:00">2019-05-15 23:35:00</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/HPC/" itemprop="url" rel="index"><span itemprop="name">HPC</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="服务器CentOS系统安装完毕后的基本配置"><a href="#服务器CentOS系统安装完毕后的基本配置" class="headerlink" title="服务器CentOS系统安装完毕后的基本配置"></a>服务器CentOS系统安装完毕后的基本配置</h1><p>使用root用户在管理节点和计算节点上进行以下操作：</p>
+<ul>
+<li><p>修改/etc/profile.d/perl-homedir.sh配置文件，以免每次登录用户，自动在家目录下生成perl5文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">perl -p -i -e <span class="string">'s/PERL_HOMEDIR=1/PERL_HOMEDIR=0/'</span> /etc/profile.d/perl-homedir.sh</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'eval "$(perl -Mlocal::lib=$HOME/.perl5)"'</span> &gt;&gt; ~/.bashrc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改/etc/sudoers配置文件，将自己的用户（例如 train）变成超级管理员用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -i.bak -e <span class="string">'while (&lt;&gt;) &#123; if (/^root/) &#123; print; print "train   ALL=(ALL)       NOPASSWD:ALL\n"; last; &#125; else &#123; print &#125; &#125;'</span> /etc/sudoers</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改/etc/selinux/config配置文件，永久关闭linux的一个安全机制，开启该安全机制会对很多操作造成阻碍。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">perl -p -i -e <span class="string">'s/SELINUX=enforcing/SELINUX=disabled/'</span> /etc/selinux/config</span><br><span class="line">setenforce 0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改/etc/ssh/sshd_config配置文件，使openssh远程登录更安全，更快速</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">perl -p -i -e <span class="string">'s/#RSAAuthentication/RSAAuthentication/'</span> /etc/ssh/sshd_config</span><br><span class="line">perl -p -i -e <span class="string">'s/#PubkeyAuthentication/PubkeyAuthentication/'</span> /etc/ssh/sshd_config</span><br><span class="line">perl -p -i -e <span class="string">'s/#AuthorizedKeysFile/AuthorizedKeysFile/'</span> /etc/ssh/sshd_config</span><br><span class="line">perl -p -i -e <span class="string">'s/.*PermitRootLogin.*/PermitRootLogin no/'</span> /etc/ssh/sshd_config</span><br><span class="line">perl -p -i -e <span class="string">'s/.*Protocol\s+2.*/Protocol 2/'</span> /etc/ssh/sshd_config</span><br><span class="line">perl -p -i -e <span class="string">'s/.*ClientAliveInterval.*/ClientAliveInterval 60/'</span> /etc/ssh/sshd_config</span><br><span class="line">perl -p -i -e <span class="string">'s/.*ClientAliveCountMax.*/ClientAliveCountMax 10/'</span> /etc/ssh/sshd_config</span><br><span class="line">perl -p -i -e <span class="string">'s/.*UseDNS.*/UseDNS no/'</span> /etc/ssh/sshd_config</span><br><span class="line">perl -p -i -e <span class="string">'s/GSSAPIAuthentication yes/GSSAPIAuthentication no/'</span> /etc/ssh/sshd_config</span><br><span class="line">systemctl restart sshd.service</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加系统资源权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">perl -p -i -e <span class="string">'s/^\*.*\n$//'</span> /etc/security/limits.conf</span><br><span class="line">cat &lt;&lt; EOF &gt;&gt; /etc/security/limits.conf</span><br><span class="line">*       soft    nofile  10240</span><br><span class="line">*       hard    nofile  102400</span><br><span class="line">*       soft    stack   10240</span><br><span class="line">*       hard    stack   102400</span><br><span class="line">*       soft    core    unlimited</span><br><span class="line">*       hard    core    unlimited</span><br><span class="line">*       soft    nproc   10240</span><br><span class="line">*       hard    nproc   102400</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="配置集群中各服务器的主机名和IP地址"><a href="#配置集群中各服务器的主机名和IP地址" class="headerlink" title="配置集群中各服务器的主机名和IP地址"></a>配置集群中各服务器的主机名和IP地址</h1><p>使用root用户在管理节点 和计算节点服务器上对infiniband网口进行配置，修改 /etc/sysconfig/network-scripts/ifcfg-ib0 配置文件内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BOOTPROTO=none</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.1.12</span><br><span class="line">PREFIX=24</span><br><span class="line">GATEWAY=192.168.1.1</span><br></pre></td></tr></table></figure></p>
+<p>修改好ifcfg文件后，重启网络服务，使生效：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart network</span><br></pre></td></tr></table></figure></p>
+<p>各节点服务器在infiniband网络之间的联通需要在控制节点node1上安装一些相关的系统软件，并启用相应服务：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install opensm* opensm-devel* infiniband-diags perftest* gperf* opensm*</span><br><span class="line">systemctl restart opensm.service</span><br><span class="line">systemctl <span class="built_in">enable</span> rdma.service</span><br><span class="line">systemctl <span class="built_in">enable</span> opensm.service</span><br></pre></td></tr></table></figure></p>
+<p>然后将所有节点服务器的 /etc/hosts 文件内容修改成同样的内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt; EOF &gt; /etc/hosts</span><br><span class="line">192.168.1.12    master</span><br><span class="line">192.168.1.13    node01</span><br><span class="line">192.168.1.14    node02</span><br><span class="line">192.168.1.15    node03</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure></p>
+<h1 id="将控制节点的以太网共享给计算节点"><a href="#将控制节点的以太网共享给计算节点" class="headerlink" title="将控制节点的以太网共享给计算节点"></a>将控制节点的以太网共享给计算节点</h1><p>控制节点通过电信100M宽带连接外网，通过网线将master控制节点连接到电信网关（光猫和路由器合一的电信盒子）上。设置网口自动使用DHCP方法分配IP地址即可。在外网可以正常连接的情况，可以将该网络通过infiniband网卡共享给其它计算节点。</p>
+<p>在master控制节点上使用root用户进行操作：</p>
+<ul>
+<li>开启NAT转发</li>
+<li>开放DNS使用的53端口并重启防火墙，否则可能导致内网服务器虽然设置正确的DNS，但是依然无法进行域名解析。</li>
+<li><p>控制节点上是在eth0网口连接外网，对其网络进行共享。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> firewall-cmd --permanent --zone=public --add-masquerade</span><br><span class="line"></span><br><span class="line"> firewall-cmd --zone=public --add-port=53/tcp --permanent</span><br><span class="line">systemctl restart firewalld.service</span><br><span class="line"></span><br><span class="line"> <span class="built_in">echo</span> <span class="string">'net.ipv4.ip_forward=1'</span> &gt;&gt; /etc/sysctl.conf</span><br><span class="line"> sysctl -p</span><br><span class="line"> firewall-cmd --permanent --direct --passthrough ipv4 -t nat -I POSTROUTING -o eth0 -j MASQUERADE -s 12.12.12.0/24</span><br><span class="line"> systemctl restart firewalld.service</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在计算节点上对infiniband网卡进行IP设置时，将网关设置成提供网络的主机IP即可，即将网关设置成master管理节点的IP地址。</p>
+<h1 id="将控制节点的存储共享给计算节点"><a href="#将控制节点的存储共享给计算节点" class="headerlink" title="将控制节点的存储共享给计算节点"></a>将控制节点的存储共享给计算节点</h1><p>在控制节点master服务器上，修改NFS配置文件/etc/sysconfig/nfs配置文件，打开所有带有PORT的注释行，表示使用相应的防火墙端口，并修改防火墙配置，开放对应端口：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">perl -p -i -e <span class="string">'s/^#(.*PORT)/$1/'</span> /etc/sysconfig/nfs</span><br><span class="line"></span><br><span class="line">firewall-cmd --add-port=32803/udp --permanent</span><br><span class="line">firewall-cmd --add-port=32803/tcp --permanent</span><br><span class="line">firewall-cmd --add-port=32769/udp --permanent</span><br><span class="line">firewall-cmd --add-port=32769/tcp --permanent</span><br><span class="line">firewall-cmd --add-port=892/udp --permanent</span><br><span class="line">firewall-cmd --add-port=892/tcp --permanent</span><br><span class="line">firewall-cmd --add-port=662/udp --permanent</span><br><span class="line">firewall-cmd --add-port=662/tcp --permanent</span><br><span class="line">firewall-cmd --add-port=2020/udp --permanent</span><br><span class="line">firewall-cmd --add-port=2020/tcp --permanent</span><br><span class="line">firewall-cmd --add-port=875/udp --permanent</span><br><span class="line">firewall-cmd --add-port=875/tcp --permanent</span><br><span class="line"></span><br><span class="line">systemctl restart firewalld.service</span><br></pre></td></tr></table></figure></p>
+<p>然后，在控制节点master服务器上，启动NFS服务，并设置成开机启动：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart rpcbind.service</span><br><span class="line">systemctl restart nfs.service</span><br><span class="line"></span><br><span class="line">systemctl <span class="built_in">enable</span> rpcbind.service</span><br><span class="line">systemctl <span class="built_in">enable</span> nfs.service</span><br></pre></td></tr></table></figure></p>
+<p>继续，在控制节点master服务器上， 修改/etc/exports文件内容，添加被共享的文件夹信息，并使配置生效：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt; EOF &gt;&gt; /etc/exports</span><br><span class="line">/disk   192.168.1.0/24(rw,sync,no_root_squash,no_subtree_check)</span><br><span class="line">/opt    192.168.1.0/24(rw,sync,no_root_squash,no_subtree_check)</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">exportfs -rv</span><br></pre></td></tr></table></figure></p>
+<p>在各计算节点服务器上，使用root用户修改配置文件/etc/fstab，对master的共享文件夹进行挂载：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir /disk</span><br><span class="line"></span><br><span class="line">cat &lt;&lt; EOF &gt;&gt; /etc/fstab</span><br><span class="line">192.168.1.12:/disk        /disk   nfs     defaults        0       0</span><br><span class="line">192.168.1.12:/opt /opt    nfs     defaults        0       0</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">mount -a</span><br></pre></td></tr></table></figure></p>
+<h1 id="在集群计算机上创建新用户"><a href="#在集群计算机上创建新用户" class="headerlink" title="在集群计算机上创建新用户"></a>在集群计算机上创建新用户</h1><p>首先，生成文件/disk/users.txt。该文件每行一个待生成的用户名。</p>
+<p>然后，在所有节点服务器中进行操作，生成用户并使create_random_passwd.pl命令赋予随机密码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /disk</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `cat users.txt`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    useradd <span class="variable">$i</span> 2&gt; /dev/null</span><br><span class="line">    ./create_random_passwd.pl <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
+<p>在控制节点master服务器中进行操作：在大容量存储对应的共享文件夹中建立新用户的专属文件夹；使用root用户生成新用户的ssh密钥对数据和授权文件信息并放入到各新用户的家目录下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/bin/rm /disk/ssh_info/ -rf</span><br><span class="line">mkdir -p /disk/ssh_info/</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `cat users.txt`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    mkdir /disk/ssh_info//<span class="variable">$i</span> /disk/<span class="variable">$i</span></span><br><span class="line">    chown -R <span class="variable">$i</span>:<span class="variable">$i</span> /disk/<span class="variable">$i</span></span><br><span class="line">    chmod 700 /disk/<span class="variable">$i</span></span><br><span class="line">    ssh-keygen -t dsa -P <span class="string">''</span> -f /disk/ssh_info/<span class="variable">$i</span>/id_dsa</span><br><span class="line">    chown -R <span class="variable">$i</span>:<span class="variable">$i</span> /disk/ssh_info/<span class="variable">$i</span></span><br><span class="line">    mkdir /home/<span class="variable">$i</span>/.ssh</span><br><span class="line">    /bin/cp -a /disk/ssh_info/<span class="variable">$i</span>/* /home/<span class="variable">$i</span>/.ssh</span><br><span class="line">    chown -R <span class="variable">$i</span>:<span class="variable">$i</span> /home/<span class="variable">$i</span>/.ssh</span><br><span class="line">    chmod 700 /home/<span class="variable">$i</span>/.ssh</span><br><span class="line">    cat /disk/ssh_info/<span class="variable">$i</span>/id_dsa.pub &gt;&gt; /home/<span class="variable">$i</span>/.ssh/authorized_keys</span><br><span class="line">    chown -R <span class="variable">$i</span>:<span class="variable">$i</span> /home/<span class="variable">$i</span>/.ssh/authorized_keys</span><br><span class="line">    chmod 600 /home/<span class="variable">$i</span>/.ssh/authorized_keys</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
+<p>在各个计算节点服务器中使用root用户将上一步生成的ssh密钥对数据和授权文件信息放入到计算节点服务器中各新用户的家目录下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /disk</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `cat users.txt`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    useradd <span class="variable">$i</span> 2&gt; /dev/null</span><br><span class="line">    ./create_random_passwd.pl <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `cat users.txt`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    mkdir /home/<span class="variable">$i</span>/.ssh </span><br><span class="line">    /bin/cp -a /disk/ssh_info/<span class="variable">$i</span>/* /home/<span class="variable">$i</span>/.ssh</span><br><span class="line">    chown -R <span class="variable">$i</span>:<span class="variable">$i</span> /home/<span class="variable">$i</span>/.ssh</span><br><span class="line">    chmod 700 /home/<span class="variable">$i</span>/.ssh</span><br><span class="line">    cat /disk/ssh_info/<span class="variable">$i</span>/id_dsa.pub &gt;&gt; /home/<span class="variable">$i</span>/.ssh/authorized_keys</span><br><span class="line">    chown -R <span class="variable">$i</span>:<span class="variable">$i</span> /home/<span class="variable">$i</span>/.ssh/authorized_keys</span><br><span class="line">    chmod 600 /home/<span class="variable">$i</span>/.ssh/authorized_keys</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
+<p>create_random_passwd.pl程序代码：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/perl</span></span><br><span class="line"><span class="comment">#use strict;</span></span><br><span class="line"><span class="keyword">use</span> Getopt::Long;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> $usage = &lt;&lt;USAGE;</span><br><span class="line">Usage:</span><br><span class="line">    $0 [options] username</span><br><span class="line"></span><br><span class="line">    使用root用户执行该程序，输入用户名，则能调用passwd命令给该用户创建一个随机密码。并将用户名及其密码输出到标准输出。</span><br><span class="line">    --<span class="keyword">length</span> &lt;<span class="keyword">int</span>&gt;    default:<span class="number">10</span></span><br><span class="line">    设置生成密码的字符长度。</span><br><span class="line"></span><br><span class="line">USAGE</span><br><span class="line"><span class="keyword">if</span> (@ARGV==<span class="number">0</span>) &#123; <span class="keyword">die</span> $usage &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> $length;</span><br><span class="line">GetOptions(</span><br><span class="line">    <span class="string">"length:i"</span> =&gt; \$length,</span><br><span class="line">);</span><br><span class="line">$length ||= <span class="number">10</span>;</span><br><span class="line"><span class="keyword">my</span> @cha = (<span class="string">'!'</span>, <span class="string">'@'</span>, <span class="string">'#'</span>, <span class="string">'$'</span>, <span class="string">'%'</span>, <span class="string">'^'</span>, <span class="string">'&amp;'</span>, <span class="string">'*'</span>, <span class="string">'.'</span>, <span class="string">'_'</span>);</span><br><span class="line"><span class="keyword">foreach</span> (<span class="number">0</span>..<span class="number">9</span>) &#123;</span><br><span class="line">    <span class="keyword">push</span> @cha, $_;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">foreach</span> (a..z) &#123;</span><br><span class="line">    <span class="keyword">push</span> @cha, $_;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">foreach</span> (A..Z) &#123;</span><br><span class="line">    <span class="keyword">push</span> @cha, $_;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> $passwd;</span><br><span class="line"><span class="keyword">for</span> (<span class="number">1</span>..$length) &#123;</span><br><span class="line">    <span class="keyword">my</span> $cha_num = <span class="keyword">rand</span>(@cha);</span><br><span class="line">    $passwd .= $cha[$cha_num];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span> <span class="string">"$ARGV[0]\t$passwd\n"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> $cmdString = <span class="string">"echo \'$passwd\' | passwd --stdin $ARGV[0] &amp;&gt; /dev/null"</span>;</span><br><span class="line">(<span class="keyword">system</span> $cmdString) == <span class="number">0</span> <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">"Faield to excute: $cmdString, $!\n"</span>;</span><br></pre></td></tr></table></figure></p>
+<h1 id="远程桌面软件vncserver安装和使用"><a href="#远程桌面软件vncserver安装和使用" class="headerlink" title="远程桌面软件vncserver安装和使用"></a>远程桌面软件vncserver安装和使用</h1><p>由于控制节点master是连接到了电信网关上，没有固定IP地址，推荐使用vnc来对内网服务器使用图形化桌面方法进行控制。</p>
+<p>首先，使用root用户在master服务器上进行操作，安装vncserver软件并开放相应的防火墙5901，5902，5903端口：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yum install vcn vnc-server</span><br><span class="line"></span><br><span class="line">firewall-cmd --zone=pulic --add-port=5901/tcp --permanent</span><br><span class="line">firewall-cmd --zone=pulic --add-port=5902/tcp --permanent</span><br><span class="line">firewall-cmd --zone=pulic --add-port=5903/tcp --permanent</span><br><span class="line">systemctl restart firewalld.service</span><br></pre></td></tr></table></figure></p>
+<p>然后，使用普通用户（例如，train）开启vncserver服务：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vncserver</span><br><span class="line"><span class="comment"># 第一次启动需要输入密码</span></span><br></pre></td></tr></table></figure></p>
+<p>进行其它vnc操作并修改桌面分辨率，提供更好的vnc体验：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">查看当前开启的vncserver桌面列表</span><br><span class="line">vncserver -list</span><br><span class="line"></span><br><span class="line">查看第一个vncserver桌面的端口号</span><br><span class="line">cat ~/.vnc/node1\:1.log</span><br><span class="line"></span><br><span class="line">关闭第一个vncserver桌面 </span><br><span class="line">vncserver -<span class="built_in">kill</span> :1</span><br><span class="line"></span><br><span class="line">修改vncserver桌面的分辨率</span><br><span class="line">cat &lt;&lt; EOF &gt;&gt; .vnc/config</span><br><span class="line">geometry=2000x1052</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">关闭后再次启动vncserver桌面，则分辨率变得更好了</span><br><span class="line">vncserve</span><br></pre></td></tr></table></figure></p>
+<p>为了让vnc能在外网对master进行控制。需要将master控制节点服务器和公网服务器使用ssh进行连接，开启反向隧道，并进行端口转发，在master服务器上进行操作。以下命令将master服务器VNC服务对应的5901端口映射到公网服务器xxx.xx.xxx.xx的4497端口上：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -N -f -R 4497:localhost:5901 train@xxx.xx.xxx.xx</span><br></pre></td></tr></table></figure></p>
+<p>注意，以上命令需要在公网服务器xxx.xx.xxx.xx上拥有train用户的密码，才能ssh连接成功；并且，还需要使用该公网服务器的root用户开启4497防火墙端口，同时在ssh配置文件设置允许端口转发，才能使vnc访问生效。</p>
+<p>最后，在windows系统下下载vncviewer软件，然后安装并打开软件，输入xxx.xx.xxx.xx:4497，再输入之前设置的密码，即可访问远程桌面。</p>
+<h1 id="在控制节点上控制计算节点的开机和关机"><a href="#在控制节点上控制计算节点的开机和关机" class="headerlink" title="在控制节点上控制计算节点的开机和关机"></a>在控制节点上控制计算节点的开机和关机</h1><p>在控制节点上，对计算节点可以使用ssh连接并导入shutdown指令的方法进关机。基于此原理，编写名为poweroff的Perl程序来对指定的节点进行关机。该程序代码：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/perl</span></span><br><span class="line"><span class="keyword">use</span> strict;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> $usage = &lt;&lt;USAGE;</span><br><span class="line">Usage:</span><br><span class="line">    $0 node1<span class="number">0</span> node11 node12 ...</span><br></pre></td></tr></table></figure></p>
+<p>使用此命令关闭目标节点。该命令后可以输入1个或多个主机名，关闭相应的计算节点。若命令后输入的主机名中有一个是all，则会关闭所有的计算节点（从node11到node20）。此外，支持node11-node15这样中间带有中划线的输入方法，表示多个连续的节点。<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">For example:</span><br><span class="line">    $0 node11 node13-node16 node2<span class="number">0</span></span><br><span class="line"></span><br><span class="line">USAGE</span><br><span class="line"><span class="keyword">if</span> (@ARGV==<span class="number">0</span>)&#123;<span class="keyword">die</span> $usage&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> @node = <span class="keyword">qw</span>/node1<span class="number">0</span> node11 node12 node13 node14 node15 node16 node17 node18 node19 node2<span class="number">0</span>/;</span><br><span class="line"><span class="keyword">my</span> %node;</span><br><span class="line"><span class="keyword">foreach</span> (@node) &#123; $node&#123;$_&#125; = <span class="number">1</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> %target;</span><br><span class="line"><span class="keyword">foreach</span> (@ARGV) &#123;</span><br><span class="line">    <span class="keyword">if</span> ($_ eq <span class="string">"all"</span>) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (@node) &#123; $target&#123;$_&#125; = <span class="number">1</span>; &#125;</span><br><span class="line">        <span class="keyword">last</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elsif</span> (<span class="regexp">m/(\d+)-node(\d+)/</span>) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> ($1 .. $2) &#123;</span><br><span class="line">            $target&#123;<span class="string">"node$_"</span>&#125; = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">exists</span> $node&#123;$_&#125;) &#123;</span><br><span class="line">            $target&#123;$_&#125; = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">print</span> STDERR <span class="string">"Warning: $_不是能控制的目标节点。\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="keyword">sort</span> <span class="keyword">keys</span> %target) &#123;</span><br><span class="line">    &amp;guanji($_);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">guanji</span> </span>&#123;</span><br><span class="line">    <span class="keyword">print</span> STDERR <span class="string">"正在检测到 $_ 的连接\n"</span>;</span><br><span class="line">    <span class="keyword">my</span> $ping = <span class="string">`ping $_ -c 1`</span>;</span><br><span class="line">    <span class="keyword">if</span> ($ping =~ <span class="regexp">m/Unreachable/</span>) &#123;</span><br><span class="line">        <span class="keyword">print</span> STDERR <span class="string">"Warning: $_连接失败，可能已经处于关机状态。\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">my</span> $cmdString = <span class="string">"ssh $_ 'sudo shutdown -h now' &amp;&gt; /dev/null"</span>;</span><br><span class="line">        <span class="keyword">system</span> $cmdString;</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"对主机 $_ 已经发送关机指令\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在控制节点node1上，可以使用<a href="http://www.chenlianfu.com/?p=2874" target="_blank" rel="noopener">wol软件基于网络唤醒的方法对计算节点进行开机</a>。基于此原理，编写名为 kaiji 的Perl程序对指定节点进行开机。该程序代码：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/perl</span></span><br><span class="line"><span class="keyword">use</span> strict;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> $usage = &lt;&lt;USAGE;</span><br><span class="line">Usage:</span><br><span class="line">    $0 node1<span class="number">0</span> node11 node12 ...</span><br></pre></td></tr></table></figure></p>
+<p>使用此命令开启目标节点。该命令后可以输入1个或多个主机名，开启相应的计算节点。若命令后输入的主机名中有一个是all，则会开启所有的计算节点（从node11到node20）。此外，支持node11-node15这样中间带有中划线的输入方法，表示多个连续的节点。<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">For example:</span><br><span class="line">    $0 node11 node13-node16 node2<span class="number">0</span></span><br><span class="line"></span><br><span class="line">USAGE</span><br><span class="line"><span class="keyword">if</span> (@ARGV==<span class="number">0</span>)&#123;<span class="keyword">die</span> $usage&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> @node = <span class="keyword">qw</span>/node1<span class="number">0</span> node11 node12 node13 node14 node15 node16 node17 node18 node19 node2<span class="number">0</span>/;</span><br><span class="line"><span class="keyword">my</span> %node = (<span class="string">"node10"</span> =&gt; <span class="string">"00:e0:ec:27:e9:f0"</span>,</span><br><span class="line"><span class="string">"node11"</span> =&gt; <span class="string">"e8:61:1f:11:e9:4b"</span>,</span><br><span class="line"><span class="string">"node12"</span> =&gt; <span class="string">"e8:61:1f:11:e8:3f"</span>,</span><br><span class="line"><span class="string">"node13"</span> =&gt; <span class="string">"e8:61:1f:1b:ec:80"</span>,</span><br><span class="line"><span class="string">"node14"</span> =&gt; <span class="string">"e8:61:1f:1b:ed:84"</span>,</span><br><span class="line"><span class="string">"node15"</span> =&gt; <span class="string">"e8:61:1f:1b:ec:9e"</span>,</span><br><span class="line"><span class="string">"node16"</span> =&gt; <span class="string">"e8:61:1f:1b:ed:0e"</span>,</span><br><span class="line"><span class="string">"node17"</span> =&gt; <span class="string">"e8:61:1f:1b:ed:b4"</span>,</span><br><span class="line"><span class="string">"node18"</span> =&gt; <span class="string">"e8:61:1f:1b:ec:94"</span>,</span><br><span class="line"><span class="string">"node19"</span> =&gt; <span class="string">"e8:61:1f:1b:ec:5a"</span>,</span><br><span class="line"><span class="string">"node20"</span> =&gt; <span class="string">"e8:61:1f:1b:eb:d0"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">my</span> %target;</span><br><span class="line"><span class="keyword">foreach</span> (@ARGV) &#123;</span><br><span class="line">    <span class="keyword">if</span> ($_ eq <span class="string">"all"</span>) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (@node) &#123; $target&#123;$_&#125; = <span class="number">1</span>; &#125;</span><br><span class="line">        <span class="keyword">last</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elsif</span> (<span class="regexp">m/(\d+)-node(\d+)/</span>) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> ($1 .. $2) &#123;</span><br><span class="line">            $target&#123;<span class="string">"node$_"</span>&#125; = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">exists</span> $node&#123;$_&#125;) &#123;</span><br><span class="line">            $target&#123;$_&#125; = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">print</span> STDERR <span class="string">"Warning: $_不是能控制的目标节点。\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="keyword">sort</span> <span class="keyword">keys</span> %target) &#123;</span><br><span class="line">        &amp;kaiji($_);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">sub</span> <span class="title">kaiji</span> </span>&#123;</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"对主机 $_ 已经发送开机指令\n"</span>;</span><br><span class="line">        <span class="keyword">my</span> $cmdString = <span class="string">"/opt/sysoft/wol-0.7.1/bin/wol --host=10.10.10.255 $node&#123;$_&#125;"</span>;</span><br><span class="line">        <span class="keyword">system</span> $cmdString;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div class="social_share">
+            
+              <div>
+                
+
+<script src="//cdn.jsdelivr.net/npm/ilyabirman-likely@2/release/likely.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/ilyabirman-likely@2/release/likely.css">
+
+
+  
+
+
+<div class="likely">
+	
+ 	 	<div class="twitter">Tweet</div>
+	
+ 	 	<div class="facebook">Share</div>
+	
+ 	 	<div class="linkedin">Link</div>
+	
+ 	 	<div class="gplus">Plus</div>
+	
+ 	 	<div class="vkontakte">Share</div>
+	
+ 	 	<div class="odnoklassniki">Class</div>
+	
+ 	 	<div class="telegram">Send</div>
+	
+ 	 	<div class="whatsapp">Send</div>
+	
+ 	 	<div class="pinterest">Pin</div>
+	
+</div>
+
+              </div>
+            
+            
+            
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/15/在Centos7部署SGE/" rel="next" title="在Centos7部署SGE">
+                <i class="fa fa-chevron-left"></i> 在Centos7部署SGE
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/16/Harbor彻底删除镜像/" rel="prev" title="Harbor彻底删除镜像">
+                Harbor彻底删除镜像 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://raw.githubusercontent.com/815325223/images/master/timg.jpg" alt="Mr.Cheng">
+            
+              <p class="site-author-name" itemprop="name">Mr.Cheng</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/815325223" title="GitHub &rarr; https://github.com/815325223" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/1099559735" title="Weibo &rarr; https://weibo.com/1099559735" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            </div>
+          
+
+           
+           <div>
+              <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="260" height="66" src="//music.163.com/outchain/player?type=2&id=167873&auto=1&height=66"></iframe>
+           </div>
+           
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://jimmysong.io/kubernetes-handbook/" title="https://jimmysong.io/kubernetes-handbook/" rel="noopener" target="_blank">Kubenetes Handbook</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://kubernetes.io/docs" title="https://kubernetes.io/docs" rel="noopener" target="_blank">Kubenetes Docs</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://istio.io/zh/docs/" title="https://istio.io/zh/docs/" rel="noopener" target="_blank">Istio Docs</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://mritd.me/" title="https://mritd.me/" rel="noopener" target="_blank">漠然</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qingmu.io/" title="https://qingmu.io/" rel="noopener" target="_blank">青木</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://zhangguanzhang.github.io" title="https://zhangguanzhang.github.io" rel="noopener" target="_blank">馆长</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://kuops.com/" title="https://kuops.com/" rel="noopener" target="_blank">kuops</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#服务器CentOS系统安装完毕后的基本配置"><span class="nav-number">1.</span> <span class="nav-text">服务器CentOS系统安装完毕后的基本配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置集群中各服务器的主机名和IP地址"><span class="nav-number">2.</span> <span class="nav-text">配置集群中各服务器的主机名和IP地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将控制节点的以太网共享给计算节点"><span class="nav-number">3.</span> <span class="nav-text">将控制节点的以太网共享给计算节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将控制节点的存储共享给计算节点"><span class="nav-number">4.</span> <span class="nav-text">将控制节点的存储共享给计算节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在集群计算机上创建新用户"><span class="nav-number">5.</span> <span class="nav-text">在集群计算机上创建新用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#远程桌面软件vncserver安装和使用"><span class="nav-number">6.</span> <span class="nav-text">远程桌面软件vncserver安装和使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在控制节点上控制计算节点的开机和关机"><span class="nav-number">7.</span> <span class="nav-text">在控制节点上控制计算节点的开机和关机</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Cheng</span>
+
+  
+
+  
+</div>
+
+<!--
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.1.0</div>
+
+
+
+-->
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共17.6k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+  
+  <script color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心，在末尾添加，避免找不到 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
+</html>

@@ -138,13 +138,17 @@
 
 
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Mr.Cheng">
-<meta property="og:url" content="http://yoursite.com/categories/Proxmox/index.html">
+  <meta name="description" content="设置防火墙，放行SGE所需端口1234# firewall-cmd --add-port=992/udp --permanent# firewall-cmd --add-port=6444/tcp --permanent# firewall-cmd --add-port=6445/tcp --permanent# systemctl restart firewalld.service 从SGE官网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Centos7部署SGE">
+<meta property="og:url" content="http://yoursite.com/2019/05/15/在Centos7部署SGE/index.html">
 <meta property="og:site_name" content="Mr.Cheng">
+<meta property="og:description" content="设置防火墙，放行SGE所需端口1234# firewall-cmd --add-port=992/udp --permanent# firewall-cmd --add-port=6444/tcp --permanent# firewall-cmd --add-port=6445/tcp --permanent# systemctl restart firewalld.service 从SGE官网">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-08T15:21:02.344Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mr.Cheng">
+<meta name="twitter:title" content="在Centos7部署SGE">
+<meta name="twitter:description" content="设置防火墙，放行SGE所需端口1234# firewall-cmd --add-port=992/udp --permanent# firewall-cmd --add-port=6444/tcp --permanent# firewall-cmd --add-port=6445/tcp --permanent# systemctl restart firewalld.service 从SGE官网">
 
 
 
@@ -154,7 +158,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/categories/Proxmox/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/15/在Centos7部署SGE/">
 
 
 
@@ -164,7 +168,7 @@
   };
 </script>
 
-  <title>分类: Proxmox | Mr.Cheng</title>
+  <title>在Centos7部署SGE | Mr.Cheng</title>
   
 
 
@@ -212,7 +216,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 <a href="https://github.com/815325223" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 
@@ -289,7 +293,7 @@
         
         
           
-          <li class="menu-item menu-item-categories menu-item-active">
+          <li class="menu-item menu-item-categories">
 
     
     
@@ -411,86 +415,274 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Proxmox<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/15/在Centos7部署SGE/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr.Cheng">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://raw.githubusercontent.com/815325223/images/master/timg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.Cheng">
+    </span>
+
+    
+      <header class="post-header">
+
         
-          <a class="post-title-link" href="/2019/04/18/proxmox中cloud-init使用方法/" itemprop="url">
-            
-              <span itemprop="name">proxmox中cloud-init使用方法</span>
-            
-          </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">在Centos7部署SGE
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-04-18T11:06:00+08:00" content="2019-04-18">
-          04-18
-        </time>
-      </div>
+              
+            
+          </h1>
+        
 
-    </header>
-  </article>
+        <div class="post-meta">
+          <span class="post-time">
 
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-15 22:41:00" itemprop="dateCreated datePublished" datetime="2019-05-15T22:41:00+08:00">2019-05-15 22:41:00</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/HPC/" itemprop="url" rel="index"><span itemprop="name">HPC</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="设置防火墙，放行SGE所需端口"><a href="#设置防火墙，放行SGE所需端口" class="headerlink" title="设置防火墙，放行SGE所需端口"></a>设置防火墙，放行SGE所需端口</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># firewall-cmd --add-port=992/udp --permanent</span></span><br><span class="line"><span class="comment"># firewall-cmd --add-port=6444/tcp --permanent</span></span><br><span class="line"><span class="comment"># firewall-cmd --add-port=6445/tcp --permanent</span></span><br><span class="line"><span class="comment"># systemctl restart firewalld.service</span></span><br></pre></td></tr></table></figure>
+<h1 id="从SGE官网下载最新版本的SGE源码包并进行编译和安装"><a href="#从SGE官网下载最新版本的SGE源码包并进行编译和安装" class="headerlink" title="从SGE官网下载最新版本的SGE源码包并进行编译和安装"></a>从SGE官网下载最新版本的SGE源码包并进行编译和安装</h1><h2 id="安装依赖的系统软件"><a href="#安装依赖的系统软件" class="headerlink" title="安装依赖的系统软件"></a>安装依赖的系统软件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install csh java-1.8.0-openjdk java-1.8.0-openjdk-devel gcc ant automake hwloc-devel openssl-devel libdb-devel pam-devel libXt-devel motif-devel ncurses-libs ncurses-devel</span></span><br><span class="line"><span class="comment"># yum install ant-junit junit javacc</span></span><br></pre></td></tr></table></figure>
+<h2 id="下载SGE软件并进行编译"><a href="#下载SGE软件并进行编译" class="headerlink" title="下载SGE软件并进行编译"></a>下载SGE软件并进行编译</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://arc.liv.ac.uk/downloads/SGE/releases/8.1.9/sge-8.1.9.tar.gz -P ~/software/</span><br><span class="line">$ tar zxf ~/software/sge-8.1.9.tar.gz</span><br><span class="line">$ <span class="built_in">cd</span> sge-8.1.9/<span class="built_in">source</span></span><br><span class="line">$ ./scripts/bootstrap.sh</span><br><span class="line">$ ./aimk -no-herd -no-java</span><br></pre></td></tr></table></figure>
+<h2 id="将编译好的SGE安装到指定的文件夹"><a href="#将编译好的SGE安装到指定的文件夹" class="headerlink" title="将编译好的SGE安装到指定的文件夹"></a>将编译好的SGE安装到指定的文件夹</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mkdir /opt/sysoft/sge</span></span><br><span class="line"><span class="comment"># export SGE_ROOT=/opt/sysoft/sge</span></span><br><span class="line"><span class="comment"># ./scripts/distinst -local -allall -noexit</span></span><br><span class="line"><span class="comment"># cd ../../ &amp;&amp; rm sge-8.1.9/ -rf</span></span><br><span class="line"><span class="comment"># echo 'export SGE_ROOT=/opt/sysoft/sge' &gt;&gt; ~/.bashrc</span></span><br><span class="line"><span class="comment"># echo 'PATH=$PATH:/opt/sysoft/sge/bin/:/opt/sysoft/sge/bin/lx-amd64/' &gt;&gt; ~/.bashrc</span></span><br><span class="line"><span class="comment"># source ~/.bashrc</span></span><br></pre></td></tr></table></figure>
+<h1 id="部署SGE前设置主机名"><a href="#部署SGE前设置主机名" class="headerlink" title="部署SGE前设置主机名"></a>部署SGE前设置主机名</h1><p>部署SGE前，需要设置好各个节点的主机名，需要修改3个文件。修改配置文件 /etc/sysconfig/network 内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NETWORKING=yes</span><br><span class="line">HOSTNAME=master</span><br></pre></td></tr></table></figure></p>
+<p>修改配置文件 /proc/sys/kernel/hostname 内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">master</span><br></pre></td></tr></table></figure></p>
+<p>修改配置文件 /etc/hosts 内容（注意删除掉127.0.0.1和localhost的行）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">192.168.30.1 master</span><br><span class="line">192.168.30.2 node1</span><br><span class="line">192.168.30.3 node2</span><br><span class="line">192.168.30.4 node3</span><br></pre></td></tr></table></figure></p>
+<h1 id="在所有节点上部署SGE"><a href="#在所有节点上部署SGE" class="headerlink" title="在所有节点上部署SGE"></a>在所有节点上部署SGE</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="variable">$SGE_ROOT</span></span><br><span class="line">./install_qmaster</span><br></pre></td></tr></table></figure>
+<p>运行部署命令后，会进入交互式界面。基本上全部都按Enter键使用默认设置即可。需要注意的事项是：</p>
+<div class="note warning">
+            <ol><li>有一步骤是启动Grid Engine qmasster服务，可能会启动不了导致失败。原因是多次运行该命令进行部署，第一次会成功运行qmaster daemon，以后重新运行该程序进行部署则会失败。需要删除相应的sge_qmaster进程再进行部署。 </li><li>启动Grid Engine qmasster服务，要提供部署SGE的节点主机名信息，按y和Enter键使用一个文件来提供主机信息，输入文件路径/etc/hosts提供主机信息。</li></ol>
+          </div>
+<p>只有先进行一个控制节点部署后，才能对各个计算节点进行部署。计算节点的部署比较简单，交互过程全部按Enter即可。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./install_execd</span><br></pre></td></tr></table></figure></p>
+<h1 id="启动SGE软件"><a href="#启动SGE软件" class="headerlink" title="启动SGE软件"></a>启动SGE软件</h1><p>部署完毕后，若需要使用SGE软件，则执行如下命令载入SGE的环境变量信息：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> /opt/sysoft/sge/default/common/settings.sh</span><br></pre></td></tr></table></figure></p>
+<p>或将该信息添加到~/.bashrc从而永久生效：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">'source /opt/sysoft/sge/default/common/settings.sh'</span> &gt;&gt; ~/.bashrc</span><br><span class="line">$ <span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure></p>
+<p>启动SGE软件方法：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ /opt/sysoft/sge/default/common/sgemaster    <span class="comment"># 控制节点启动</span></span><br><span class="line">$ /opt/sysoft/sge/default/common/sgeexecd     <span class="comment"># 计算节点启动</span></span><br></pre></td></tr></table></figure></p>
+<p>查看SGE软件运行日志文件：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Qmaster:      /opt/sysoft/sge/default/spool/qmaster/messages</span><br><span class="line">Exec daemon:  /opt/sysoft/sge/default/spool/&lt;hostname&gt;/messages</span><br></pre></td></tr></table></figure></p>
+<h1 id="使用SGE软件"><a href="#使用SGE软件" class="headerlink" title="使用SGE软件"></a>使用SGE软件</h1><p>部署完毕SGE后，会生成一个默认主机用户组@allhosts，它包含所有的执行节点；生成一个默认的all.q队列名，它包含所有节点所有计算资源。默认的队列包含的计算资源是最大的。 通过使用命令qconf -mq queuename来对队列进行配置。修改hostlist来配置该队列可以使用执行主机；修改slots来配置各台执行主机可使用的线程数。从而对队列的计算资源进行设置。</p>
+<p>使用qconf命令对SGE进行配置：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">qconf -ae hostname</span><br><span class="line">    添加执行主机</span><br><span class="line">qconf -de hostname</span><br><span class="line">    删除执行主机</span><br><span class="line">qconf -sel</span><br><span class="line">    显示执行主机列表</span><br><span class="line"></span><br><span class="line">qconf -ah hostname</span><br><span class="line">    添加管理主机</span><br><span class="line">qconf -dh hostname</span><br><span class="line">    删除管理主机</span><br><span class="line">qconf -sh</span><br><span class="line">    显示管理主机列表</span><br><span class="line"></span><br><span class="line">qconf -as hostname</span><br><span class="line">    添加提交主机</span><br><span class="line">qconf -ds hostname</span><br><span class="line">    删除提交主机</span><br><span class="line">qconf -ss</span><br><span class="line">    显示提交主机列表</span><br><span class="line"></span><br><span class="line">qconf -ahgrp groupname</span><br><span class="line">    添加主机用户组</span><br><span class="line">qconf -mhgrp groupname</span><br><span class="line">    修改主机用户组</span><br><span class="line">qconf -shgrp groupname</span><br><span class="line">    显示主机用户组成员</span><br><span class="line">qconf -shgrpl</span><br><span class="line">    显示主机用户组列表</span><br><span class="line"></span><br><span class="line">qconf -aq queuename</span><br><span class="line">    添加集群队列</span><br><span class="line">qconf -dq queuename</span><br><span class="line">    删除集群队列</span><br><span class="line">qconf -mq queuename</span><br><span class="line">    修改集群队列配置</span><br><span class="line">qconf -sq queuename</span><br><span class="line">    显示集群队列配置</span><br><span class="line">qconf -sql</span><br><span class="line">    显示集群队列列表</span><br><span class="line"></span><br><span class="line">qconf -ap PE_name</span><br><span class="line">    添加并行化环境</span><br><span class="line">qconf -mp PE_name</span><br><span class="line">    修改并行化环境</span><br><span class="line">qconf -dp PE_name</span><br><span class="line">    删除并行化环境</span><br><span class="line">qconf -sp PE_name</span><br><span class="line">    显示并行化环境</span><br><span class="line">qconf -spl</span><br><span class="line">    显示并行化环境名称列表</span><br><span class="line"></span><br><span class="line">qstat -f</span><br><span class="line">    显示执行主机状态</span><br><span class="line">qstat -u user</span><br><span class="line">    查看用户的作业</span><br><span class="line">qhost</span><br><span class="line">    显示执行主机资源信息</span><br></pre></td></tr></table></figure></p>
+<p>使用qsub提交作业<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">qsub简单示例：</span><br><span class="line">$ qsub -V -cwd -o stdout.txt -e stderr.txt run.sh</span><br><span class="line"></span><br><span class="line">其中run.sh中包含需要运行的程序，其内容示例为如下三行：</span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#$ -S /bin/bash</span></span><br><span class="line">perl -e <span class="string">'print "abc\n";print STDERR "123\n";'</span></span><br><span class="line"></span><br><span class="line">qsub的常用参数：</span><br><span class="line">-V</span><br><span class="line">    将当前shell中的环境变量输出到本次提交的任务中。</span><br><span class="line">-cwd</span><br><span class="line">    在当前工作目录下运行程序。默认设置下，程序的运行目录是当前用户在其计算节点的家目录。</span><br><span class="line">-o</span><br><span class="line">    将标准输出添加到指定文件尾部。默认输出文件名是<span class="variable">$job_name</span>.o<span class="variable">$job_id</span>。</span><br><span class="line">-e</span><br><span class="line">    将标准错误输出添加到指定文件尾部。默认输出文件名是<span class="variable">$job_name</span>.e<span class="variable">$job_id</span>。</span><br><span class="line">-q</span><br><span class="line">    指定投递的队列，若不指定，则会尝试寻找最小负荷且有权限的队列开始任务。</span><br><span class="line">-S</span><br><span class="line">    指定运行run.sh中命令行的软件，默认是tcsh。推荐使用bash，设置该参数的值为 /bin/bash 即可，或者在run.sh文件首部添加一行<span class="comment">#$ -S /bin/bash。若不设置为bash，则会在标准输出中给出警告信息：Warning: no access to tty (Bad file descriptor)。</span></span><br><span class="line">-hold_jid</span><br><span class="line">    后接多个使用逗号分隔的job_id，表示只有在这些job运行完毕后，才开始运行此任务。</span><br><span class="line">-N</span><br><span class="line">    设置任务名称。默认的job name为qsub的输入文件名。</span><br><span class="line">-p</span><br><span class="line">    设置任务优先级。其参数值范围为 -1023 ~ 1024 ，该值越高，越优先运行。但是该参数设置为正数需要较高的权限，系统普通用户不能设置为正数。</span><br><span class="line">-j y|n</span><br><span class="line">    设置是否将标准输出和标准错误输出流合并到 -o 参数结果中。</span><br><span class="line">-pe</span><br><span class="line">    设置并行化环境。</span><br></pre></td></tr></table></figure></p>
+<p>任务提交后的管理：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ qstat -f</span><br><span class="line">    查看当前用户在当前节点提交的所有任务，任务的状态有4中情况：qw，等待状态，刚提交任务的时候是该状态，一旦有计算资源了会马上运行；hqw，该任务依赖于其它正在运行的job，待前面的job执行完毕后再开始运行，qsub提交任务的时候使用-hold_jid参数则会是该状态；Eqw，投递任务出错；r，任务正在运行；s，被暂时挂起，往往是由于优先级更高的任务抢占了资源；dr，节点挂掉后，删除任务就会出现这个状态，只有节点重启后，任务才会消失。</span><br><span class="line"></span><br><span class="line">$ qstat -j jobID</span><br><span class="line">    按照任务id查看</span><br><span class="line"></span><br><span class="line">$ qstat -u user</span><br><span class="line">    按照用户查看</span><br><span class="line"></span><br><span class="line">$ qdel -j jobID</span><br><span class="line">    删除任务</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
 
+    
+
+    
+    
+    
+
+<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div class="social_share">
+            
+              <div>
+                
+
+<script src="//cdn.jsdelivr.net/npm/ilyabirman-likely@2/release/likely.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/ilyabirman-likely@2/release/likely.css">
+
+
+  
+
+
+<div class="likely">
+	
+ 	 	<div class="twitter">Tweet</div>
+	
+ 	 	<div class="facebook">Share</div>
+	
+ 	 	<div class="linkedin">Link</div>
+	
+ 	 	<div class="gplus">Plus</div>
+	
+ 	 	<div class="vkontakte">Share</div>
+	
+ 	 	<div class="odnoklassniki">Class</div>
+	
+ 	 	<div class="telegram">Send</div>
+	
+ 	 	<div class="whatsapp">Send</div>
+	
+ 	 	<div class="pinterest">Pin</div>
+	
+</div>
+
+              </div>
+            
+            
+            
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/12/cobbler批量部署系统/" rel="next" title="cobbler批量部署系统">
+                <i class="fa fa-chevron-left"></i> cobbler批量部署系统
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/15/集群常用设置/" rel="prev" title="集群常用设置">
+                集群常用设置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -510,8 +702,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -683,6 +884,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#设置防火墙，放行SGE所需端口"><span class="nav-number">1.</span> <span class="nav-text">设置防火墙，放行SGE所需端口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#从SGE官网下载最新版本的SGE源码包并进行编译和安装"><span class="nav-number">2.</span> <span class="nav-text">从SGE官网下载最新版本的SGE源码包并进行编译和安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装依赖的系统软件"><span class="nav-number">2.1.</span> <span class="nav-text">安装依赖的系统软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载SGE软件并进行编译"><span class="nav-number">2.2.</span> <span class="nav-text">下载SGE软件并进行编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将编译好的SGE安装到指定的文件夹"><span class="nav-number">2.3.</span> <span class="nav-text">将编译好的SGE安装到指定的文件夹</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署SGE前设置主机名"><span class="nav-number">3.</span> <span class="nav-text">部署SGE前设置主机名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在所有节点上部署SGE"><span class="nav-number">4.</span> <span class="nav-text">在所有节点上部署SGE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动SGE软件"><span class="nav-number">5.</span> <span class="nav-text">启动SGE软件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用SGE软件"><span class="nav-number">6.</span> <span class="nav-text">使用SGE软件</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -826,6 +1044,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
 
   
 
@@ -841,6 +1063,8 @@
 
   
 
+
+  
 
 
   
