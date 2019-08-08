@@ -247,7 +247,7 @@
   <entry>
     <title><![CDATA[Dockerfile MAINTAINER]]></title>
     <url>%2F2019%2F04%2F30%2FDockerfile-MAINTAINER%2F</url>
-    <content type="text"><![CDATA[MAINTAINER已经弃用，推荐使用LABEL，例如nginx dockerfile里的 LABEL maintainer=”NGINX Docker Maintainers &#x64;&#x6f;&#99;&#x6b;&#x65;&#x72;&#45;&#109;&#97;&#105;&#110;&#116;&#64;&#x6e;&#103;&#105;&#110;&#x78;&#46;&#x63;&#111;&#x6d;“]]></content>
+    <content type="text"><![CDATA[MAINTAINER已经弃用，推荐使用LABEL，例如nginx dockerfile里的 LABEL maintainer=”NGINX Docker Maintainers &#x64;&#x6f;&#99;&#107;&#x65;&#x72;&#45;&#109;&#97;&#x69;&#x6e;&#116;&#x40;&#110;&#103;&#105;&#110;&#120;&#46;&#x63;&#x6f;&#x6d;“]]></content>
       <categories>
         <category>Docker</category>
       </categories>
